@@ -1,4 +1,4 @@
-package nl.fontys.s3.huister.business.exception;
+package nl.fontys.s3.huister.business.exception.city;
 
 import org.springframework.http.HttpStatusCode;
 import org.springframework.web.server.ResponseStatusException;

@@ -18,9 +18,22 @@ public class FakePropertyRepositoryImpl implements PropertyRepository {
 
     @Override
     public List<Property> getAllNotRentedProperties() {
-        List<Property> filteredProperties=properties.stream().filter(property ->
+        List<Property> notRentedProperties=this.properties.stream().filter(property ->
                 !property.isRented()
         ).toList();
-        return Collections.unmodifiableList(filteredProperties);
+        return Collections.unmodifiableList(notRentedProperties);
+    }
+
+    @Override
+    public List<Property> getAllProperties() {
+        return Collections.unmodifiableList(this.properties);
+    }
+
+    @Override
+    public List<Property> getPropertiesByOwner(int ownerId) {
+        List<Property>ownedProperties= this.properties.stream().filter(property ->
+                    property.getOwnerId()==ownerId
+                ).toList();
+        return Collections.unmodifiableList(ownedProperties);
     }
 }
