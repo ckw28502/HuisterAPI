@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @Data
 @NoArgsConstructor
-public class GetAllPropertiesForCustomerResponse {
+public class GetAllPropertiesResponse {
     private int id,price;
     private String streetName,postCode,description,ownerName,cityName,imageUrl;
     private long area;

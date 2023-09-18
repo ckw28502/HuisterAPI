@@ -5,7 +5,7 @@ import nl.fontys.s3.huister.Model.City;
 import nl.fontys.s3.huister.business.GetAllPropertiesForCustomerUseCase;
 import nl.fontys.s3.huister.business.exception.CityNotFoundException;
 import nl.fontys.s3.huister.business.exception.UserNotFoundException;
-import nl.fontys.s3.huister.domain.response.property.GetAllPropertiesForCustomerResponse;
+import nl.fontys.s3.huister.domain.response.property.GetAllPropertiesResponse;
 import nl.fontys.s3.huister.persistence.CityRepository;
 import nl.fontys.s3.huister.persistence.PropertyRepository;
 import nl.fontys.s3.huister.persistence.UserRepository;
@@ -25,13 +25,13 @@ public class GetAllPropertiesForCustomerUseCaseImpl implements GetAllPropertiesF
     private final UserRepository userRepository;
     private final CityRepository cityRepository;
     @Override
-    public List<GetAllPropertiesForCustomerResponse> GetAllPropertiesForCustomer() {
+    public List<GetAllPropertiesResponse> GetAllPropertiesForCustomer() {
 
         //Get all properties that is not rented yet
         List<Property>properties=propertyRepository.getAllNotRentedProperties();
 
         //Define list of response
-        List<GetAllPropertiesForCustomerResponse>responses=new ArrayList<>();
+        List<GetAllPropertiesResponse>responses=new ArrayList<>();
 
 
         for (Property property:properties){
@@ -51,7 +51,7 @@ public class GetAllPropertiesForCustomerUseCaseImpl implements GetAllPropertiesF
             String cityName=city.get().getName();
 
             //add all current property's data to the responses
-            GetAllPropertiesForCustomerResponse response=GetAllPropertiesForCustomerResponse.builder()
+            GetAllPropertiesResponse response= GetAllPropertiesResponse.builder()
                     .id(property.getId())
                     .area(property.getArea())
                     .description(property.getDescription())
@@ -64,6 +64,7 @@ public class GetAllPropertiesForCustomerUseCaseImpl implements GetAllPropertiesF
                     .build();
             responses.add(response);
         }
+
         //return responses to controller
         return responses;
     }
