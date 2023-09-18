@@ -17,9 +17,9 @@ import java.util.List;
 public class PropertyController {
     private final GetAllPropertiesUseCase getAllPropertiesUseCase;
 
-    @GetMapping("{id}")
+    @GetMapping("{userId}")
     public ResponseEntity<List<GetAllPropertiesResponse>>getAllPropertiesForCustomer(
-            @PathVariable(value = "id")int id){
-        return ResponseEntity.ok(getAllPropertiesUseCase.GetAllProperties(id));
+            @PathVariable(value = "userId")int userId){
+        return ResponseEntity.ok(getAllPropertiesUseCase.GetAllProperties(userId));
     }
 }

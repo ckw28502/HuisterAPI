@@ -26,17 +26,17 @@ public class GetAllPropertiesUseCaseImpl implements GetAllPropertiesUseCase {
     private final CityRepository cityRepository;
 
     @Override
-    public List<GetAllPropertiesResponse> GetAllProperties(int id) {
+    public List<GetAllPropertiesResponse> GetAllProperties(int userId) {
 
         //get current logged in user
-        User user=userRepository.getUserById(id).get();
+        User user=userRepository.getUserById(userId).get();
 
         //get retrieved data based on user role
         List<Property>properties=switch (user.getRole()){
             case 0:
                 yield propertyRepository.getAllProperties();
             case 1:
-                yield propertyRepository.getPropertiesByOwner(user.getId());
+                yield propertyRepository.getPropertiesByOwner(userId);
             case 2:
                 yield propertyRepository.getAllNotRentedProperties();
             default:
