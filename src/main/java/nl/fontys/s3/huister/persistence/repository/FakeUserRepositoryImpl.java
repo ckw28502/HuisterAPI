@@ -1,6 +1,7 @@
 package nl.fontys.s3.huister.persistence.repository;
 
 import nl.fontys.s3.huister.domain.request.user.CreateUserRequest;
+import nl.fontys.s3.huister.domain.request.user.UpdateUserRequest;
 import nl.fontys.s3.huister.persistence.UserRepository;
 import nl.fontys.s3.huister.Model.User;
 import org.springframework.stereotype.Repository;
@@ -35,5 +36,15 @@ public class FakeUserRepositoryImpl implements UserRepository {
                 .username(request.getUsername())
                 .build());
         NEXT_ID+=1;
+    }
+
+    @Override
+    public void updateUser(UpdateUserRequest request) {
+        User user=getUserById(request.getId()).get();
+        int index=users.indexOf(user);
+        user.setName(request.getName());
+        user.setPhoneNumber(request.getPhoneNumber());
+        user.setProfilePictureUrl(request.getProfilePictureUrl());
+        users.set(index,user);
     }
 }
