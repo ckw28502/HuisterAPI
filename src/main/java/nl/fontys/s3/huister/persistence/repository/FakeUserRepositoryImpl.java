@@ -1,5 +1,6 @@
 package nl.fontys.s3.huister.persistence.repository;
 
+import nl.fontys.s3.huister.domain.request.user.CreateUserRequest;
 import nl.fontys.s3.huister.persistence.UserRepository;
 import nl.fontys.s3.huister.Model.User;
 import org.springframework.stereotype.Repository;
@@ -20,5 +21,19 @@ public class FakeUserRepositoryImpl implements UserRepository {
     @Override
     public Optional<User> getUserById(int id) {
         return users.stream().filter(user->user.getId()==id).findFirst();
+    }
+
+    @Override
+    public void createUser(CreateUserRequest request) {
+        users.add(User.builder()
+                .id(NEXT_ID)
+                .name(request.getName())
+                .phoneNumber(request.getPhoneNumber())
+                .role(request.getRole())
+                .profilePictureUrl(request.getProfilePictureUrl())
+                .password(request.getPassword())
+                .username(request.getUsername())
+                .build());
+        NEXT_ID+=1;
     }
 }

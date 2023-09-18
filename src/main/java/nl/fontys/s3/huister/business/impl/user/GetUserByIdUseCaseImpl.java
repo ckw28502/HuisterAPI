@@ -21,7 +21,7 @@ public class GetUserByIdUseCaseImpl implements GetUserByIdUseCase {
         if (userOptional.isEmpty()){
             throw new UserNotFoundException();
         }
-        User user=new User();
+        User user=userOptional.get();
         return GetUserByIdResponse.builder()
                 .id(id)
                 .name(user.getName())
