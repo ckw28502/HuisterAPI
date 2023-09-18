@@ -1,9 +1,11 @@
 package nl.fontys.s3.huister.persistence;
 
 import nl.fontys.s3.huister.Model.User;
+import nl.fontys.s3.huister.domain.request.user.CreateUserRequest;
 
 import java.util.Optional;
 
 public interface UserRepository {
     Optional<User> getUserById(final int id);
+    void createUser(CreateUserRequest request);
 }
