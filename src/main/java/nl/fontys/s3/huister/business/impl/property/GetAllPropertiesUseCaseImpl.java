@@ -11,7 +11,6 @@ import nl.fontys.s3.huister.persistence.PropertyRepository;
 import nl.fontys.s3.huister.persistence.UserRepository;
 import nl.fontys.s3.huister.Model.Property;
 import nl.fontys.s3.huister.Model.User;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -52,14 +51,14 @@ public class GetAllPropertiesUseCaseImpl implements GetAllPropertiesUseCase {
             //Get owner name
             Optional<User> owner=userRepository.getUserById(property.getOwnerId());
             if (owner.isEmpty()){
-                throw new UserNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
+                throw new UserNotFoundException();
             }
             String ownerName=owner.get().getName();
 
             //Get city name
             Optional<City> city=cityRepository.getCityById(property.getCityId());
             if (city.isEmpty()){
-                throw new CityNotFoundException(HttpStatus.INTERNAL_SERVER_ERROR);
+                throw new CityNotFoundException();
             }
             String cityName=city.get().getName();
 

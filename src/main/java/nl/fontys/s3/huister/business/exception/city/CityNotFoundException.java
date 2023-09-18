@@ -1,10 +1,10 @@
 package nl.fontys.s3.huister.business.exception.city;
 
-import org.springframework.http.HttpStatusCode;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
 public class CityNotFoundException extends ResponseStatusException {
-    public CityNotFoundException(HttpStatusCode status) {
-        super(status,"CITY_NOT_FOUND");
+    public CityNotFoundException() {
+        super(HttpStatus.BAD_REQUEST,"CITY_NOT_FOUND");
     }
 }
