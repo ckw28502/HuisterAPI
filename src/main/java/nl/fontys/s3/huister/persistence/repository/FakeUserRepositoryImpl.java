@@ -25,6 +25,11 @@ public class FakeUserRepositoryImpl implements UserRepository {
     }
 
     @Override
+    public boolean usernameExist(String username) {
+        return users.stream().anyMatch(user -> username.equalsIgnoreCase(user.getUsername()));
+    }
+
+    @Override
     public void createUser(CreateUserRequest request) {
         users.add(User.builder()
                 .id(NEXT_ID)
