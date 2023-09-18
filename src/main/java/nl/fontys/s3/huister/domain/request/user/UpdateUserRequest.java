@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class UpdateUserRequest {
-    private String username,password,name,profilePictureUrl,phoneNumber;
-    private int id,role;
+    private String name,profilePictureUrl,phoneNumber;
+    private int id;
 }
