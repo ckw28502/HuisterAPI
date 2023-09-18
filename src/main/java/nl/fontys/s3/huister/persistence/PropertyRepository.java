@@ -6,4 +6,7 @@ import java.util.List;
 
 public interface PropertyRepository {
     List<Property>getAllNotRentedProperties();
+
+    List<Property> getAllProperties();
+    List<Property>getPropertiesByOwner(int id);
 }

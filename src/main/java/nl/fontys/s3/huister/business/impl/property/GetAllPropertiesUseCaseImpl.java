@@ -2,9 +2,9 @@ package nl.fontys.s3.huister.business.impl.property;
 
 import lombok.AllArgsConstructor;
 import nl.fontys.s3.huister.Model.City;
-import nl.fontys.s3.huister.business.GetAllPropertiesForCustomerUseCase;
-import nl.fontys.s3.huister.business.exception.CityNotFoundException;
-import nl.fontys.s3.huister.business.exception.UserNotFoundException;
+import nl.fontys.s3.huister.business.property.GetAllPropertiesUseCase;
+import nl.fontys.s3.huister.business.exception.city.CityNotFoundException;
+import nl.fontys.s3.huister.business.exception.user.UserNotFoundException;
 import nl.fontys.s3.huister.domain.response.property.GetAllPropertiesResponse;
 import nl.fontys.s3.huister.persistence.CityRepository;
 import nl.fontys.s3.huister.persistence.PropertyRepository;
@@ -20,20 +20,33 @@ import java.util.Optional;
 
 @Service
 @AllArgsConstructor
-public class GetAllPropertiesForCustomerUseCaseImpl implements GetAllPropertiesForCustomerUseCase {
+public class GetAllPropertiesUseCaseImpl implements GetAllPropertiesUseCase {
     private final PropertyRepository propertyRepository;
     private final UserRepository userRepository;
     private final CityRepository cityRepository;
-    @Override
-    public List<GetAllPropertiesResponse> GetAllPropertiesForCustomer() {
 
-        //Get all properties that is not rented yet
-        List<Property>properties=propertyRepository.getAllNotRentedProperties();
+    @Override
+    public List<GetAllPropertiesResponse> GetAllProperties(int id) {
+
+        //get current logged in user
+        User user=userRepository.getUserById(id).get();
+
+        //get retrieved data based on user role
+        List<Property>properties=switch (user.getRole()){
+            case 0:
+                yield propertyRepository.getAllProperties();
+            case 1:
+                yield propertyRepository.getPropertiesByOwner(user.getId());
+            case 2:
+                yield propertyRepository.getAllNotRentedProperties();
+            default:
+                throw new IllegalStateException("Unexpected value: " + user.getRole());
+        };
 
         //Define list of response
         List<GetAllPropertiesResponse>responses=new ArrayList<>();
 
-
+        //iterate the property list
         for (Property property:properties){
 
             //Get owner name
@@ -50,7 +63,7 @@ public class GetAllPropertiesForCustomerUseCaseImpl implements GetAllPropertiesF
             }
             String cityName=city.get().getName();
 
-            //add all current property's data to the responses
+            //add all current property's data to the response
             GetAllPropertiesResponse response= GetAllPropertiesResponse.builder()
                     .id(property.getId())
                     .area(property.getArea())
@@ -62,6 +75,8 @@ public class GetAllPropertiesForCustomerUseCaseImpl implements GetAllPropertiesF
                     .cityName(cityName)
                     .imageUrl(property.getImageUrls().get(0))
                     .build();
+
+            //add the response above to the responses list
             responses.add(response);
         }
 
