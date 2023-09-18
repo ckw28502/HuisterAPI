@@ -1,4 +1,4 @@
-package nl.fontys.s3.huister.persistence.entity;
+package nl.fontys.s3.huister.Model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,7 +11,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class PropertyEntity {
+public class Property {
     private int id,ownerId,cityId,price;
     private String streetName,postCode,description;
     private List<String>imageUrls;

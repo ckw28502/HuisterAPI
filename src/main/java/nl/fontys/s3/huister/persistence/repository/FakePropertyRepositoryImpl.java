@@ -1,7 +1,7 @@
 package nl.fontys.s3.huister.persistence.repository;
 
 import nl.fontys.s3.huister.persistence.PropertyRepository;
-import nl.fontys.s3.huister.persistence.entity.PropertyEntity;
+import nl.fontys.s3.huister.Model.Property;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -10,15 +10,15 @@ import java.util.List;
 
 @Repository
 public class FakePropertyRepositoryImpl implements PropertyRepository {
-    private final List<PropertyEntity>properties;
+    private final List<Property>properties;
 
     public FakePropertyRepositoryImpl() {
         this.properties = new ArrayList<>();
     }
 
     @Override
-    public List<PropertyEntity> getAllPropertiesForCustomer() {
-        List<PropertyEntity> filteredProperties=properties.stream().filter(property ->
+    public List<Property> getAllNotRentedProperties() {
+        List<Property> filteredProperties=properties.stream().filter(property ->
                 !property.isRented()
         ).toList();
         return Collections.unmodifiableList(filteredProperties);

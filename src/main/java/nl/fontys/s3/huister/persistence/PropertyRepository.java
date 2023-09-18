@@ -1,9 +1,9 @@
 package nl.fontys.s3.huister.persistence;
 
-import nl.fontys.s3.huister.persistence.entity.PropertyEntity;
+import nl.fontys.s3.huister.Model.Property;
 
 import java.util.List;
 
 public interface PropertyRepository {
-    List<PropertyEntity>getAllPropertiesForCustomer();
+    List<Property>getAllNotRentedProperties();
 }
