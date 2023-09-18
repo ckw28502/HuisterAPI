@@ -12,7 +12,7 @@ import java.util.Optional;
 
 @Service
 @AllArgsConstructor
-public class UpdateUserRequestImpl implements UpdateUserUseCase {
+public class UpdateUserUseCaseImpl implements UpdateUserUseCase {
     private final UserRepository userRepository;
     @Override
     public void updateUser(UpdateUserRequest request) {
