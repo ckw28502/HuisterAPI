@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class FakePropertyRepositoryImpl implements PropertyRepository {
@@ -14,6 +15,13 @@ public class FakePropertyRepositoryImpl implements PropertyRepository {
 
     public FakePropertyRepositoryImpl() {
         this.properties = new ArrayList<>();
+    }
+
+    @Override
+    public Optional<Property> getPropertyById(int id) {
+        return properties.stream().filter(property ->
+                property.getId()==id
+                ).findFirst();
     }
 
     @Override
