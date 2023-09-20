@@ -49,6 +49,11 @@ public class FakePropertyRepositoryImpl implements PropertyRepository {
     }
 
     @Override
+    public boolean isCityHasNoProperty(int cityId) {
+        return properties.stream().noneMatch(property -> property.getCityId()==cityId);
+    }
+
+    @Override
     public void createProperty(CreatePropertyRequest request) {
         properties.add(Property.builder()
                 .area(request.getArea())
@@ -72,5 +77,10 @@ public class FakePropertyRepositoryImpl implements PropertyRepository {
         updatedProperty.setPrice(request.getPrice());
         updatedProperty.getImageUrls().addAll(request.getImageUrls());
         Collections.fill(properties, updatedProperty);
+    }
+
+    @Override
+    public void deleteProperty(int id) {
+        properties.removeIf(property -> property.getId()==id);
     }
 }
