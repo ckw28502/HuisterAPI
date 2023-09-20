@@ -9,4 +9,5 @@ public interface CityRepository {
     Optional<City>getCityById(final int id);
     boolean cityNameExists(String name);
     void createCity(CreateCityRequest request);
+    void deleteCity(final int id);
 }
