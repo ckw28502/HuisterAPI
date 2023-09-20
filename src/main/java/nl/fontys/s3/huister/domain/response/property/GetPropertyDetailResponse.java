@@ -12,8 +12,8 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class GetPropertyDetailResponse {
-    private int id,ownerId,price;
+    private int id,ownerId;
     private String streetName,postCode,description,ownerName,cityName;
     private List<String> imageUrls;
-    private long area;
+    private long area,price;
 }

@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class GetAllPropertiesResponse {
-    private int id,price;
+    private int id;
     private String streetName,postCode,description,ownerName,cityName,imageUrl;
-    private long area;
+    private long area,price;
 }

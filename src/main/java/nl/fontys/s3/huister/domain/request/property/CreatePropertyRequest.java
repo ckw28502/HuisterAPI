@@ -12,8 +12,8 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CreatePropertyRequest {
-    private int ownerId,cityId,price;
+    private int ownerId,cityId;
     private String streetName,postCode,description;
     private List<String> imageUrls;
-    private long area;
+    private long area,price;
 }
