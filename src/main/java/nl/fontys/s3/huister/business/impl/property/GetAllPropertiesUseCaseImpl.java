@@ -2,7 +2,7 @@ package nl.fontys.s3.huister.business.impl.property;
 
 import lombok.AllArgsConstructor;
 import nl.fontys.s3.huister.Model.City;
-import nl.fontys.s3.huister.business.property.GetAllPropertiesUseCase;
+import nl.fontys.s3.huister.business.interfaces.property.GetAllPropertiesUseCase;
 import nl.fontys.s3.huister.business.exception.city.CityNotFoundException;
 import nl.fontys.s3.huister.business.exception.user.UserNotFoundException;
 import nl.fontys.s3.huister.domain.response.property.GetAllPropertiesResponse;

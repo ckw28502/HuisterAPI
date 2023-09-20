@@ -2,9 +2,9 @@ package nl.fontys.s3.huister.controller;
 
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import nl.fontys.s3.huister.business.property.CreatePropertyUseCase;
-import nl.fontys.s3.huister.business.property.GetAllPropertiesUseCase;
-import nl.fontys.s3.huister.business.property.GetPropertyDetailUseCase;
+import nl.fontys.s3.huister.business.interfaces.property.CreatePropertyUseCase;
+import nl.fontys.s3.huister.business.interfaces.property.GetAllPropertiesUseCase;
+import nl.fontys.s3.huister.business.interfaces.property.GetPropertyDetailUseCase;
 import nl.fontys.s3.huister.domain.request.property.CreatePropertyRequest;
 import nl.fontys.s3.huister.domain.response.property.GetAllPropertiesResponse;
 import nl.fontys.s3.huister.domain.response.property.GetPropertyDetailResponse;
