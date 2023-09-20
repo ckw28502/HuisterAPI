@@ -1,6 +1,6 @@
 package nl.fontys.s3.huister.persistence;
 
-import nl.fontys.s3.huister.Model.Property;
+import nl.fontys.s3.huister.model.Property;
 import nl.fontys.s3.huister.domain.request.property.CreatePropertyRequest;
 import nl.fontys.s3.huister.domain.request.property.UpdatePropertyRequest;
 

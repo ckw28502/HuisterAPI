@@ -1,4 +1,4 @@
-package nl.fontys.s3.huister.Model;
+package nl.fontys.s3.huister.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,6 +11,6 @@ import lombok.NoArgsConstructor;
 @Builder
 public class User {
     private int id;
-    private int role; //0 = admin, 1 = Owner, 2 = Customer
+    private UserRole role;
     private String username,password,name,phoneNumber,profilePictureUrl;
 }

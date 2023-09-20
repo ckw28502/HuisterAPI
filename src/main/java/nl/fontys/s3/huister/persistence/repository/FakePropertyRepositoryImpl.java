@@ -3,7 +3,7 @@ package nl.fontys.s3.huister.persistence.repository;
 import nl.fontys.s3.huister.domain.request.property.CreatePropertyRequest;
 import nl.fontys.s3.huister.domain.request.property.UpdatePropertyRequest;
 import nl.fontys.s3.huister.persistence.PropertyRepository;
-import nl.fontys.s3.huister.Model.Property;
+import nl.fontys.s3.huister.model.Property;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;

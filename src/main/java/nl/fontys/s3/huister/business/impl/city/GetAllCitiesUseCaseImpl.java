@@ -1,9 +1,9 @@
 package nl.fontys.s3.huister.business.impl.city;
 
 import lombok.AllArgsConstructor;
-import nl.fontys.s3.huister.Model.City;
-import nl.fontys.s3.huister.Model.Property;
-import nl.fontys.s3.huister.Model.User;
+import nl.fontys.s3.huister.model.City;
+import nl.fontys.s3.huister.model.Property;
+import nl.fontys.s3.huister.model.User;
 import nl.fontys.s3.huister.business.exception.user.UserNotFoundException;
 import nl.fontys.s3.huister.business.interfaces.city.GetAllCitiesUseCase;
 import nl.fontys.s3.huister.domain.response.city.GetAllCitiesResponse;
@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
 @Service
 @AllArgsConstructor
 public class GetAllCitiesUseCaseImpl implements GetAllCitiesUseCase {
@@ -31,10 +30,9 @@ public class GetAllCitiesUseCaseImpl implements GetAllCitiesUseCase {
         }
         User user=userOptional.get();
         List<City>cities=switch (user.getRole()) {
-            case 0 -> cityRepository.getAllCities();
-            case 1 -> cityRepository.getAllCities(getCityIdsForOwner(userId));
-            case 2 -> cityRepository.getAllCities(getCityIdsWhichAreNotRented());
-            default -> throw new IllegalStateException("Unexpected value: " + user.getRole());
+            case ADMIN -> cityRepository.getAllCities();
+            case OWNER -> cityRepository.getAllCities(getCityIdsForOwner(userId));
+            case CUSTOMER -> cityRepository.getAllCities(getCityIdsWhichAreNotRented());
         };
         return GetAllCitiesResponse.builder()
                 .cities(cities)

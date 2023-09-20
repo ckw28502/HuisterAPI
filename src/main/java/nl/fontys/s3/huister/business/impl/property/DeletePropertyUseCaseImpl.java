@@ -1,7 +1,7 @@
 package nl.fontys.s3.huister.business.impl.property;
 
 import lombok.AllArgsConstructor;
-import nl.fontys.s3.huister.Model.Property;
+import nl.fontys.s3.huister.model.Property;
 import nl.fontys.s3.huister.business.exception.property.PropertyNotFoundException;
 import nl.fontys.s3.huister.business.interfaces.property.DeletePropertyUseCase;
 import nl.fontys.s3.huister.persistence.CityRepository;

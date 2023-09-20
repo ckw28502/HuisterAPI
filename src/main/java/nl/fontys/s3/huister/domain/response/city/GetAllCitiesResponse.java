@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import nl.fontys.s3.huister.Model.City;
+import nl.fontys.s3.huister.model.City;
 
 import java.util.List;
 @Data
