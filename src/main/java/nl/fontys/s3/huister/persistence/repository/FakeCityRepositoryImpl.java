@@ -1,7 +1,6 @@
 package nl.fontys.s3.huister.persistence.repository;
 
 import nl.fontys.s3.huister.Model.City;
-import nl.fontys.s3.huister.domain.request.City.CreateCityRequest;
 import nl.fontys.s3.huister.persistence.CityRepository;
 import org.springframework.stereotype.Repository;
 
@@ -24,17 +23,24 @@ public class FakeCityRepositoryImpl implements CityRepository {
     }
 
     @Override
+    public Optional<City> getCityByName(String name) {
+        return cities.stream().filter(city -> city.getName().equalsIgnoreCase(name))
+                .findFirst();
+    }
+
+    @Override
     public boolean cityNameExists(String name) {
         return cities.stream().anyMatch(city->name.equalsIgnoreCase(city.getName()));
     }
 
     @Override
-    public void createCity(CreateCityRequest request) {
+    public int createCity(String name) {
         cities.add(City.builder()
                 .id(NEXT_ID)
-                .name(request.getName())
+                .name(name)
                 .build());
         NEXT_ID++;
+        return NEXT_ID-1;
     }
 
     @Override
