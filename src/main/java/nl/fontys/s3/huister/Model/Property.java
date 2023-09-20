@@ -12,9 +12,9 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 public class Property {
-    private int id,ownerId,cityId,price;
+    private int id,ownerId,cityId;
     private String streetName,postCode,description;
     private List<String>imageUrls;
-    private long area;
+    private long area,price;
     private boolean isRented;
 }
