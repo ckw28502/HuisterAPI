@@ -36,4 +36,9 @@ public class FakeCityRepositoryImpl implements CityRepository {
                 .build());
         NEXT_ID++;
     }
+
+    @Override
+    public void deleteCity(int id) {
+        cities.removeIf(city -> city.getId()==id);
+    }
 }
