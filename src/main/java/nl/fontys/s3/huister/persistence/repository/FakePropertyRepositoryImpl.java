@@ -1,6 +1,7 @@
 package nl.fontys.s3.huister.persistence.repository;
 
 import nl.fontys.s3.huister.domain.request.property.CreatePropertyRequest;
+import nl.fontys.s3.huister.domain.request.property.UpdatePropertyRequest;
 import nl.fontys.s3.huister.persistence.PropertyRepository;
 import nl.fontys.s3.huister.Model.Property;
 import org.springframework.stereotype.Repository;
@@ -62,5 +63,14 @@ public class FakePropertyRepositoryImpl implements PropertyRepository {
                 .ownerId(request.getOwnerId())
                 .build());
         NEXT_ID++;
+    }
+
+    @Override
+    public void updateProperty(UpdatePropertyRequest request) {
+        Property updatedProperty=properties.stream().findFirst().get();
+        updatedProperty.setDescription(request.getDescription());
+        updatedProperty.setPrice(request.getPrice());
+        updatedProperty.getImageUrls().addAll(request.getImageUrls());
+        Collections.fill(properties, updatedProperty);
     }
 }
