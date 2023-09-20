@@ -13,6 +13,8 @@ public interface PropertyRepository {
 
     List<Property> getAllProperties();
     List<Property>getPropertiesByOwner(int id);
+    boolean isCityHasNoProperty(int id);
     void createProperty(CreatePropertyRequest request);
     void updateProperty(UpdatePropertyRequest request);
+    void deleteProperty(final int id);
 }
