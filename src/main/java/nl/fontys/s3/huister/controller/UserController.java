@@ -2,9 +2,9 @@ package nl.fontys.s3.huister.controller;
 
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import nl.fontys.s3.huister.business.user.CreateUserUseCase;
-import nl.fontys.s3.huister.business.user.GetUserByIdUseCase;
-import nl.fontys.s3.huister.business.user.UpdateUserUseCase;
+import nl.fontys.s3.huister.business.interfaces.user.CreateUserUseCase;
+import nl.fontys.s3.huister.business.interfaces.user.GetUserByIdUseCase;
+import nl.fontys.s3.huister.business.interfaces.user.UpdateUserUseCase;
 import nl.fontys.s3.huister.domain.request.user.CreateUserRequest;
 import nl.fontys.s3.huister.domain.request.user.UpdateUserRequest;
 import nl.fontys.s3.huister.domain.response.user.GetUserByIdResponse;
