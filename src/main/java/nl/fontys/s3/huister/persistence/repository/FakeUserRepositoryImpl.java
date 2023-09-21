@@ -41,6 +41,7 @@ public class FakeUserRepositoryImpl implements UserRepository {
                 .username(request.getUsername())
                 .build());
         NEXT_ID+=1;
+        System.out.println(NEXT_ID);
     }
 
     @Override

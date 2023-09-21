@@ -11,6 +11,14 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class CreateUserUseCaseImpl implements CreateUserUseCase {
     private final UserRepository userRepository;
+
+    /**
+     *
+     * @param request contains new user data
+     *
+     * @should throw exception when username not unique
+     * @should add new repository when username is unique
+     */
     @Override
     public void createUser(CreateUserRequest request) {
         if (userRepository.usernameExist(request.getUsername())){

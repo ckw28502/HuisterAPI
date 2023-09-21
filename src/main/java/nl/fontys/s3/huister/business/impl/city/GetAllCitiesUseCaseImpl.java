@@ -22,6 +22,14 @@ public class GetAllCitiesUseCaseImpl implements GetAllCitiesUseCase {
     private final UserRepository userRepository;
     private final PropertyRepository propertyRepository;
 
+    /**
+     *
+     * @param userId Logged in user id
+     * @return GetAllCitiesResponse containing list of cities
+     *
+     * @should throw UserNotFoundException when user is not found
+     * @should return list of cities according to logged in user's role
+     */
     @Override
     public GetAllCitiesResponse getAllCities(int userId) {
         Optional<User>userOptional=userRepository.getUserById(userId);
