@@ -15,6 +15,14 @@ import java.util.Optional;
 public class GetUserByIdUseCaseImpl implements GetUserByIdUseCase {
     private final UserRepository userRepository;
 
+    /**
+     *
+     * @param id user id
+     * @return user
+     *
+     * @should throw UserNotFoundException when user not found
+     * @should return GetUserByIdResponse containing found user
+     */
     @Override
     public GetUserByIdResponse getUserById(int id) {
         Optional<User>userOptional=userRepository.getUserById(id);

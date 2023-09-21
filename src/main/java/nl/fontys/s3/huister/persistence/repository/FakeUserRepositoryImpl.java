@@ -9,7 +9,6 @@ import org.springframework.stereotype.Repository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.logging.Logger;
 
 @Repository
 public class FakeUserRepositoryImpl implements UserRepository {
@@ -53,10 +52,5 @@ public class FakeUserRepositoryImpl implements UserRepository {
         user.setPhoneNumber(request.getPhoneNumber());
         user.setProfilePictureUrl(request.getProfilePictureUrl());
         users.set(index,user);
-    }
-
-    @Override
-    public List<User> getAllUser() {
-        return users;
     }
 }
