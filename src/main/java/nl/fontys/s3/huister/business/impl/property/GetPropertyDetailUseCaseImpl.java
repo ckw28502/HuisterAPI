@@ -20,6 +20,14 @@ public class GetPropertyDetailUseCaseImpl implements GetPropertyDetailUseCase {
     private final UserRepository userRepository;
     private final CityRepository cityRepository;
 
+    /**
+     *
+     * @param id id of property that is searched
+     * @return GetPropertyDetailResponse with searched property data
+     *
+     * @should throw PropertyNotFoundException when property can't be found
+     * @should return appropriate response after a successful validation
+     */
     @Override
     public GetPropertyDetailResponse getPropertyDetail(int id) {
 
