@@ -24,8 +24,17 @@ public class GetAllPropertiesUseCaseImpl implements GetAllPropertiesUseCase {
     private final UserRepository userRepository;
     private final CityRepository cityRepository;
 
+    /**
+     *
+     * @param userId logged in user id
+     * @return List of properties data
+     *
+     * @should throw UserNotFoundException when cannot get user data from userId parameter
+     * @should throw CityNotFoundException when cannot get city data from cityId parameter
+     * @should return List of responses when all data are valid
+     */
     @Override
-    public List<GetAllPropertiesResponse> GetAllProperties(int userId) {
+    public List<GetAllPropertiesResponse> getAllProperties(int userId) {
 
         //get current logged in user
         User user=userRepository.getUserById(userId).get();

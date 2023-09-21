@@ -26,7 +26,7 @@ public class PropertyController {
     @GetMapping("{userId}")
     public ResponseEntity<List<GetAllPropertiesResponse>>getAllPropertiesForCustomer(
             @PathVariable(value = "userId")int userId){
-        return ResponseEntity.ok(getAllPropertiesUseCase.GetAllProperties(userId));
+        return ResponseEntity.ok(getAllPropertiesUseCase.getAllProperties(userId));
     }
     @GetMapping("detail/{id}")
     public ResponseEntity<GetPropertyDetailResponse>getPropertyDetail(
