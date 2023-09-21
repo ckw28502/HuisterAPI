@@ -12,6 +12,13 @@ import org.springframework.stereotype.Service;
 public class UpdatePropertyUseCaseImpl implements UpdatePropertyUseCase {
     private final PropertyRepository propertyRepository;
 
+    /**
+     *
+     * @param request new property data from client
+     *
+     * @should throw new PropertyNotFoundException if property is not found in repository
+     * @should update the chosen property
+     */
     @Override
     public void updateProperty(UpdatePropertyRequest request) {
         if (propertyRepository.getPropertyById(request.getId()).isEmpty()){
