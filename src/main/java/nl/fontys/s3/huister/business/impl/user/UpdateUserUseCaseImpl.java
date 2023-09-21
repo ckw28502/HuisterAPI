@@ -14,6 +14,14 @@ import java.util.Optional;
 @AllArgsConstructor
 public class UpdateUserUseCaseImpl implements UpdateUserUseCase {
     private final UserRepository userRepository;
+
+    /**
+     *
+     * @param request new user data from client
+     *
+     * @should throw UserNotFoundException when user is not found
+     * @should update user when user is found
+     */
     @Override
     public void updateUser(UpdateUserRequest request) {
         Optional<User>user=userRepository.getUserById(request.getId());
