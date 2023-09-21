@@ -152,6 +152,7 @@ public class GetAllPropertiesUseCaseImplTest {
                 .name("user1")
                 .phoneNumber("0123456789")
                 .build();
+
         User user2=User.builder()
                 .id(2)
                 .username("user2")
