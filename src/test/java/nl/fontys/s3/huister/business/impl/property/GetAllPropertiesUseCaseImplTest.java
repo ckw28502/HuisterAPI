@@ -117,6 +117,7 @@ public class GetAllPropertiesUseCaseImplTest {
     @ParameterizedTest
     @ValueSource(strings = {"ADMIN","OWNER","CUSTOMER"})
     public void GetAllProperties_shouldReturnListOfResponsesWhenAllDataAreValid(UserRole role) {
+        //Arrange
         Property property1=Property.builder()
                 .id(1)
                 .ownerId(1)
