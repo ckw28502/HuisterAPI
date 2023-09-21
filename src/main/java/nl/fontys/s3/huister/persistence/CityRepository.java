@@ -1,6 +1,6 @@
 package nl.fontys.s3.huister.persistence;
 
-import nl.fontys.s3.huister.Model.City;
+import nl.fontys.s3.huister.model.City;
 
 import java.util.List;
 import java.util.Optional;

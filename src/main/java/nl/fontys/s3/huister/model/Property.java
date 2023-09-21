@@ -1,4 +1,4 @@
-package nl.fontys.s3.huister.Model;
+package nl.fontys.s3.huister.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

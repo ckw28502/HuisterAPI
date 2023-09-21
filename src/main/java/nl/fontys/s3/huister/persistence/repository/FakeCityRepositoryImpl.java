@@ -1,7 +1,7 @@
 package nl.fontys.s3.huister.persistence.repository;
 
 import lombok.AllArgsConstructor;
-import nl.fontys.s3.huister.Model.City;
+import nl.fontys.s3.huister.model.City;
 import nl.fontys.s3.huister.persistence.CityRepository;
 import org.springframework.stereotype.Repository;
 

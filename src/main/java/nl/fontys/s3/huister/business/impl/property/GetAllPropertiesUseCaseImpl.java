@@ -1,7 +1,7 @@
 package nl.fontys.s3.huister.business.impl.property;
 
 import lombok.AllArgsConstructor;
-import nl.fontys.s3.huister.Model.City;
+import nl.fontys.s3.huister.model.City;
 import nl.fontys.s3.huister.business.interfaces.property.GetAllPropertiesUseCase;
 import nl.fontys.s3.huister.business.exception.city.CityNotFoundException;
 import nl.fontys.s3.huister.business.exception.user.UserNotFoundException;
@@ -9,8 +9,8 @@ import nl.fontys.s3.huister.domain.response.property.GetAllPropertiesResponse;
 import nl.fontys.s3.huister.persistence.CityRepository;
 import nl.fontys.s3.huister.persistence.PropertyRepository;
 import nl.fontys.s3.huister.persistence.UserRepository;
-import nl.fontys.s3.huister.Model.Property;
-import nl.fontys.s3.huister.Model.User;
+import nl.fontys.s3.huister.model.Property;
+import nl.fontys.s3.huister.model.User;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -32,14 +32,12 @@ public class GetAllPropertiesUseCaseImpl implements GetAllPropertiesUseCase {
 
         //get retrieved data based on user role
         List<Property>properties=switch (user.getRole()){
-            case 0:
+            case ADMIN:
                 yield propertyRepository.getAllProperties();
-            case 1:
+            case OWNER:
                 yield propertyRepository.getPropertiesByOwner(userId);
-            case 2:
+            case CUSTOMER:
                 yield propertyRepository.getAllNotRentedProperties();
-            default:
-                throw new IllegalStateException("Unexpected value: " + user.getRole());
         };
 
         //Define list of response
