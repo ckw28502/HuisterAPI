@@ -31,4 +31,11 @@ public class FakeOrderRepositoryImpl implements OrderRepository {
                 .build());
         NEXT_ID++;
     }
+
+    @Override
+    public List<Order> getAllOrder(int userId) {
+        return orders.stream().filter(order ->
+                userId== order.getOwnerId()||userId== order.getCustomerId())
+                .toList();
+    }
 }
