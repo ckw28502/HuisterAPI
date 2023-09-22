@@ -12,6 +12,13 @@ import org.springframework.stereotype.Service;
 public class UpdateOrderUseCaseImpl implements UpdateOrderUseCase {
     private final OrderRepository orderRepository;
 
+    /**
+     *
+     * @param request contains new status for order and order id
+     *
+     * @should throw an OrderNotFoundException when order is not found
+     * @should update the order when order is found
+     */
     @Override
     public void updateOrder(UpdateOrderRequest request) {
         if (!orderRepository.doesOrderExists(request.getId())){
