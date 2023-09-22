@@ -16,6 +16,14 @@ public class DeletePropertyUseCaseImpl implements DeletePropertyUseCase {
     private final PropertyRepository propertyRepository;
     private final CityRepository cityRepository;
 
+    /**
+     *
+     * @param id id of the property which will be deleted
+     *
+     * @should throw PropertyNotFoundException if id is invalid
+     * @should delete property if id is valid
+     * @should delete city object if there are no property in the city
+     */
     @Override
     public void deleteProperty(int id) {
         Optional<Property> propertyOptional=propertyRepository.getPropertyById(id);
