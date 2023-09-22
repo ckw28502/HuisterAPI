@@ -18,6 +18,15 @@ public class CreateOrderUseCaseImpl implements CreateOrderUseCase {
     private final UserRepository userRepository;
     private final PropertyRepository propertyRepository;
 
+    /**
+     *
+     * @param request contains new order request from client
+     *
+     * @should throw UserNotFoundException when owner or customer is not in the repository
+     * @should throw PropertyNotFoundException when property is not found in the repository
+     * @should throw PriceMustBeMoreThanZeroException when price is equals or below zero
+     * @should create new Order object when request data are valid
+     */
     @Override
     public void createOrder(CreateOrderRequest request) {
         checkUserExist(request.getOwnerId());
