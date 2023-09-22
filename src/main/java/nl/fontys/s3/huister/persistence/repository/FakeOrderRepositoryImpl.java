@@ -1,12 +1,14 @@
 package nl.fontys.s3.huister.persistence.repository;
 
 import nl.fontys.s3.huister.domain.request.order.CreateOrderRequest;
+import nl.fontys.s3.huister.domain.request.order.UpdateOrderRequest;
 import nl.fontys.s3.huister.model.Order;
 import nl.fontys.s3.huister.model.OrderStatus;
 import nl.fontys.s3.huister.persistence.OrderRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Repository
@@ -33,9 +35,21 @@ public class FakeOrderRepositoryImpl implements OrderRepository {
     }
 
     @Override
+    public void     updateOrder(UpdateOrderRequest request) {
+        Order updatedOrder=orders.stream().filter(order -> order.getId()==request.getId()).findFirst().get();
+        updatedOrder.setStatus(request.getStatus());
+        Collections.fill(orders,updatedOrder);
+    }
+
+    @Override
     public List<Order> getAllOrder(int userId) {
         return orders.stream().filter(order ->
                 userId== order.getOwnerId()||userId== order.getCustomerId())
                 .toList();
+    }
+
+    @Override
+    public boolean doesOrderExists(int id) {
+        return orders.stream().anyMatch(order -> order.getId()==id);
     }
 }
