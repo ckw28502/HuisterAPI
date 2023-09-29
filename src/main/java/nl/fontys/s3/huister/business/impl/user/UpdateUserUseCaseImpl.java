@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import nl.fontys.s3.huister.model.User;
 import nl.fontys.s3.huister.business.exception.user.UserNotFoundException;
 import nl.fontys.s3.huister.business.interfaces.user.UpdateUserUseCase;
-import nl.fontys.s3.huister.domain.request.user.UpdateUserRequest;
+import nl.fontys.s3.huister.business.request.user.UpdateUserRequest;
 import nl.fontys.s3.huister.persistence.UserRepository;
 import org.springframework.stereotype.Service;
 

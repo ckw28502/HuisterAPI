@@ -3,7 +3,7 @@ package nl.fontys.s3.huister.business.impl.property;
 import lombok.AllArgsConstructor;
 import nl.fontys.s3.huister.business.exception.property.PropertyNotFoundException;
 import nl.fontys.s3.huister.business.interfaces.property.UpdatePropertyUseCase;
-import nl.fontys.s3.huister.domain.request.property.UpdatePropertyRequest;
+import nl.fontys.s3.huister.business.request.property.UpdatePropertyRequest;
 import nl.fontys.s3.huister.persistence.PropertyRepository;
 import org.springframework.stereotype.Service;
 

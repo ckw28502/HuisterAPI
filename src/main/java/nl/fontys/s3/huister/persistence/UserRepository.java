@@ -1,8 +1,8 @@
 package nl.fontys.s3.huister.persistence;
 
 import nl.fontys.s3.huister.model.User;
-import nl.fontys.s3.huister.domain.request.user.CreateUserRequest;
-import nl.fontys.s3.huister.domain.request.user.UpdateUserRequest;
+import nl.fontys.s3.huister.business.request.user.CreateUserRequest;
+import nl.fontys.s3.huister.business.request.user.UpdateUserRequest;
 
 import java.util.Optional;
 

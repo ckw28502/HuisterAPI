@@ -1,4 +1,4 @@
-package nl.fontys.s3.huister.domain.request.property;
+package nl.fontys.s3.huister.business.response.property;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,9 +11,9 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreatePropertyRequest {
-    private int ownerId,cityId;
-    private String streetName,postCode,description,cityName;
+public class GetPropertyDetailResponse {
+    private int id,ownerId;
+    private String streetName,postCode,description,ownerName,cityName;
     private List<String> imageUrls;
     private long area,price;
 }

@@ -1,4 +1,4 @@
-package nl.fontys.s3.huister.domain.response.user;
+package nl.fontys.s3.huister.business.response.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

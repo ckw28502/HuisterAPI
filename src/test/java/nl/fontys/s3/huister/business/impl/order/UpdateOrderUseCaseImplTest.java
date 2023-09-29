@@ -1,7 +1,7 @@
 package nl.fontys.s3.huister.business.impl.order;
 
 import nl.fontys.s3.huister.business.exception.order.OrderNotFoundException;
-import nl.fontys.s3.huister.domain.request.order.UpdateOrderRequest;
+import nl.fontys.s3.huister.business.request.order.UpdateOrderRequest;
 import nl.fontys.s3.huister.model.OrderStatus;
 import nl.fontys.s3.huister.persistence.OrderRepository;
 import org.junit.jupiter.api.Test;
@@ -22,7 +22,7 @@ public class UpdateOrderUseCaseImplTest {
     private UpdateOrderUseCaseImpl updateOrderUseCase;
     /**
      * @verifies throw an OrderNotFoundException when order is not found
-     * @see UpdateOrderUseCaseImpl#updateOrder(nl.fontys.s3.huister.domain.request.order.UpdateOrderRequest)
+     * @see UpdateOrderUseCaseImpl#updateOrder(UpdateOrderRequest)
      */
     @Test
     public void updateOrder_shouldThrowAnOrderNotFoundExceptionWhenOrderIsNotFound() {
@@ -38,7 +38,7 @@ public class UpdateOrderUseCaseImplTest {
 
     /**
      * @verifies update the order when order is found
-     * @see UpdateOrderUseCaseImpl#updateOrder(nl.fontys.s3.huister.domain.request.order.UpdateOrderRequest)
+     * @see UpdateOrderUseCaseImpl#updateOrder(UpdateOrderRequest)
      */
     @Test
     public void updateOrder_shouldUpdateTheOrderWhenOrderIsFound() {

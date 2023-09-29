@@ -3,7 +3,7 @@ package nl.fontys.s3.huister.business.impl.order;
 import nl.fontys.s3.huister.business.exception.price.PriceMustBeMoreThanZeroException;
 import nl.fontys.s3.huister.business.exception.property.PropertyNotFoundException;
 import nl.fontys.s3.huister.business.exception.user.UserNotFoundException;
-import nl.fontys.s3.huister.domain.request.order.CreateOrderRequest;
+import nl.fontys.s3.huister.business.request.order.CreateOrderRequest;
 import nl.fontys.s3.huister.model.Property;
 import nl.fontys.s3.huister.model.User;
 import nl.fontys.s3.huister.model.UserRole;
@@ -37,7 +37,7 @@ public class CreateOrderUseCaseImplTest {
     private CreateOrderUseCaseImpl createOrderUseCase;
     /**
      * @verifies throw UserNotFoundException when owner or customer is not in the repository
-     * @see CreateOrderUseCaseImpl#createOrder(nl.fontys.s3.huister.domain.request.order.CreateOrderRequest)
+     * @see CreateOrderUseCaseImpl#createOrder(CreateOrderRequest)
      */
     @ParameterizedTest
     @ValueSource(strings = {"OWNER","CUSTOMER"})
@@ -73,7 +73,7 @@ public class CreateOrderUseCaseImplTest {
 
     /**
      * @verifies throw PropertyNotFoundException when property is not found in the repository
-     * @see CreateOrderUseCaseImpl#createOrder(nl.fontys.s3.huister.domain.request.order.CreateOrderRequest)
+     * @see CreateOrderUseCaseImpl#createOrder(CreateOrderRequest)
      */
     @Test
     public void createOrder_shouldThrowPropertyNotFoundExceptionWhenPropertyIsNotFoundInTheRepository() {
@@ -116,7 +116,7 @@ public class CreateOrderUseCaseImplTest {
 
     /**
      * @verifies throw PriceMustBeMoreThanZeroException when price is equals or below zero
-     * @see CreateOrderUseCaseImpl#createOrder(nl.fontys.s3.huister.domain.request.order.CreateOrderRequest)
+     * @see CreateOrderUseCaseImpl#createOrder(CreateOrderRequest)
      */
     @Test
     public void createOrder_shouldThrowPriceMustBeMoreThanZeroExceptionWhenPriceIsEqualsOrBelowZero() {
@@ -172,7 +172,7 @@ public class CreateOrderUseCaseImplTest {
 
     /**
      * @verifies create new Order object when request data are valid
-     * @see CreateOrderUseCaseImpl#createOrder(nl.fontys.s3.huister.domain.request.order.CreateOrderRequest)
+     * @see CreateOrderUseCaseImpl#createOrder(CreateOrderRequest)
      */
     @Test
     public void createOrder_shouldCreateNewOrderObjectWhenRequestDataAreValid() {

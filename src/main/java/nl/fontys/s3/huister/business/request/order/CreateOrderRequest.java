@@ -1,4 +1,4 @@
-package nl.fontys.s3.huister.domain.request.order;
+package nl.fontys.s3.huister.business.request.order;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

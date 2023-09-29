@@ -1,16 +1,15 @@
-package nl.fontys.s3.huister.domain.request.order;
+package nl.fontys.s3.huister.business.request.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import nl.fontys.s3.huister.model.OrderStatus;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class UpdateOrderRequest {
+public class UpdateUserRequest {
+    private String name,profilePictureUrl,phoneNumber;
     private int id;
-    private OrderStatus status;
 }

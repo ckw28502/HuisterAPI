@@ -1,8 +1,8 @@
 package nl.fontys.s3.huister.persistence;
 
 import nl.fontys.s3.huister.model.Property;
-import nl.fontys.s3.huister.domain.request.property.CreatePropertyRequest;
-import nl.fontys.s3.huister.domain.request.property.UpdatePropertyRequest;
+import nl.fontys.s3.huister.business.request.property.CreatePropertyRequest;
+import nl.fontys.s3.huister.business.request.property.UpdatePropertyRequest;
 
 import java.util.List;
 import java.util.Optional;

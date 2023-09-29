@@ -2,7 +2,7 @@ package nl.fontys.s3.huister.controller;
 
 import lombok.AllArgsConstructor;
 import nl.fontys.s3.huister.business.interfaces.city.GetAllCitiesUseCase;
-import nl.fontys.s3.huister.domain.response.city.GetAllCitiesResponse;
+import nl.fontys.s3.huister.business.response.city.GetAllCitiesResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

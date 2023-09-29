@@ -1,7 +1,7 @@
 package nl.fontys.s3.huister.persistence.repository;
 
-import nl.fontys.s3.huister.domain.request.order.CreateOrderRequest;
-import nl.fontys.s3.huister.domain.request.order.UpdateOrderRequest;
+import nl.fontys.s3.huister.business.request.order.CreateOrderRequest;
+import nl.fontys.s3.huister.business.request.order.UpdateOrderRequest;
 import nl.fontys.s3.huister.model.Order;
 import nl.fontys.s3.huister.model.OrderStatus;
 import nl.fontys.s3.huister.persistence.OrderRepository;

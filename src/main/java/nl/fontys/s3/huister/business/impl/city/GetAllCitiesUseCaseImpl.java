@@ -6,7 +6,7 @@ import nl.fontys.s3.huister.model.Property;
 import nl.fontys.s3.huister.model.User;
 import nl.fontys.s3.huister.business.exception.user.UserNotFoundException;
 import nl.fontys.s3.huister.business.interfaces.city.GetAllCitiesUseCase;
-import nl.fontys.s3.huister.domain.response.city.GetAllCitiesResponse;
+import nl.fontys.s3.huister.business.response.city.GetAllCitiesResponse;
 import nl.fontys.s3.huister.persistence.CityRepository;
 import nl.fontys.s3.huister.persistence.PropertyRepository;
 import nl.fontys.s3.huister.persistence.UserRepository;

@@ -1,7 +1,7 @@
 package nl.fontys.s3.huister.business.impl.order;
 
 import nl.fontys.s3.huister.business.exception.user.UserNotFoundException;
-import nl.fontys.s3.huister.domain.response.order.GetAllOrdersResponse;
+import nl.fontys.s3.huister.business.response.order.GetAllOrdersResponse;
 import nl.fontys.s3.huister.model.Order;
 import nl.fontys.s3.huister.model.User;
 import nl.fontys.s3.huister.model.UserRole;

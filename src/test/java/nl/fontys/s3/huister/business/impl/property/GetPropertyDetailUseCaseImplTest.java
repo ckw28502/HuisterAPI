@@ -1,7 +1,7 @@
 package nl.fontys.s3.huister.business.impl.property;
 
 import nl.fontys.s3.huister.business.exception.property.PropertyNotFoundException;
-import nl.fontys.s3.huister.domain.response.property.GetPropertyDetailResponse;
+import nl.fontys.s3.huister.business.response.property.GetPropertyDetailResponse;
 import nl.fontys.s3.huister.model.City;
 import nl.fontys.s3.huister.model.Property;
 import nl.fontys.s3.huister.model.User;

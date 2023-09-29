@@ -1,7 +1,7 @@
 package nl.fontys.s3.huister.business.impl.city;
 
 import nl.fontys.s3.huister.business.exception.user.UserNotFoundException;
-import nl.fontys.s3.huister.domain.response.city.GetAllCitiesResponse;
+import nl.fontys.s3.huister.business.response.city.GetAllCitiesResponse;
 import nl.fontys.s3.huister.model.City;
 import nl.fontys.s3.huister.model.Property;
 import nl.fontys.s3.huister.model.User;
