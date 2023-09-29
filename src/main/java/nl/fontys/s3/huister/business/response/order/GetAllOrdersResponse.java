@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import nl.fontys.s3.huister.model.Order;
+import nl.fontys.s3.huister.domain.entities.OrderEntity;
 
 import java.util.List;
 
@@ -13,5 +13,5 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 public class GetAllOrdersResponse {
-    private List<Order>orders;
+    private List<OrderEntity>orders;
 }

@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import nl.fontys.s3.huister.model.City;
+import nl.fontys.s3.huister.domain.entities.CityEntity;
 
 import java.util.List;
 @Data
@@ -12,5 +12,5 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 public class GetAllCitiesResponse {
-    private List<City>cities;
+    private List<CityEntity>cities;
 }

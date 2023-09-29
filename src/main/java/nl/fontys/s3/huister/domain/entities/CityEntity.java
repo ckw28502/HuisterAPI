@@ -1,4 +1,4 @@
-package nl.fontys.s3.huister.model;
+package nl.fontys.s3.huister.domain.entities;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class City {
+public class CityEntity {
     private int id;
     private String name;
 }

@@ -2,7 +2,7 @@ package nl.fontys.s3.huister.business.impl.property;
 
 import nl.fontys.s3.huister.business.exception.property.PropertyNotFoundException;
 import nl.fontys.s3.huister.business.request.property.UpdatePropertyRequest;
-import nl.fontys.s3.huister.model.Property;
+import nl.fontys.s3.huister.domain.entities.PropertyEntity;
 import nl.fontys.s3.huister.persistence.PropertyRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -56,7 +56,7 @@ public class UpdatePropertyUseCaseImplTest {
                 .price(600)
                 .build();
 
-        Property property=Property.builder()
+        PropertyEntity property= PropertyEntity.builder()
                 .id(1)
                 .ownerId(1)
                 .cityId(1)

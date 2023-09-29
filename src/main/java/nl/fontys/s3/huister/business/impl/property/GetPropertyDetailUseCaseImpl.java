@@ -1,8 +1,8 @@
 package nl.fontys.s3.huister.business.impl.property;
 
 import lombok.AllArgsConstructor;
-import nl.fontys.s3.huister.model.Property;
-import nl.fontys.s3.huister.model.User;
+import nl.fontys.s3.huister.domain.entities.PropertyEntity;
+import nl.fontys.s3.huister.domain.entities.UserEntity;
 import nl.fontys.s3.huister.business.exception.property.PropertyNotFoundException;
 import nl.fontys.s3.huister.business.interfaces.property.GetPropertyDetailUseCase;
 import nl.fontys.s3.huister.business.response.property.GetPropertyDetailResponse;
@@ -32,16 +32,16 @@ public class GetPropertyDetailUseCaseImpl implements GetPropertyDetailUseCase {
     public GetPropertyDetailResponse getPropertyDetail(int id) {
 
         //Get property from repository
-        Optional<Property>propertyOptional=propertyRepository.getPropertyById(id);
+        Optional<PropertyEntity>propertyOptional=propertyRepository.getPropertyById(id);
 
         //Check whether property exists or not
         if(propertyOptional.isEmpty()){
             throw new PropertyNotFoundException();
         }
-        Property property=propertyOptional.get();
+        PropertyEntity property=propertyOptional.get();
 
         //Get owner object and city name
-        User owner=userRepository.getUserById(property.getOwnerId()).get();
+        UserEntity owner=userRepository.getUserById(property.getOwnerId()).get();
         String cityName=cityRepository.getCityById(property.getCityId()).get().getName();
 
         //return response

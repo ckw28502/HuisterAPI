@@ -1,7 +1,7 @@
 package nl.fontys.s3.huister.business.impl.property;
 
 import nl.fontys.s3.huister.business.exception.property.PropertyNotFoundException;
-import nl.fontys.s3.huister.model.Property;
+import nl.fontys.s3.huister.domain.entities.PropertyEntity;
 import nl.fontys.s3.huister.persistence.CityRepository;
 import nl.fontys.s3.huister.persistence.PropertyRepository;
 import org.junit.jupiter.api.Test;
@@ -46,7 +46,7 @@ public class DeletePropertyUseCaseImplTest {
     @Test
     public void deleteProperty_shouldDeletePropertyIfIdIsValid() {
         //Arrange
-        Property property1=Property.builder()
+        PropertyEntity property1= PropertyEntity.builder()
                 .id(1)
                 .ownerId(1)
                 .cityId(1)
@@ -75,7 +75,7 @@ public class DeletePropertyUseCaseImplTest {
     @Test
     public void deleteProperty_shouldDeleteCityObjectIfThereAreNoPropertyInTheCity() {
         //Arrange
-        Property property1=Property.builder()
+        PropertyEntity property1= PropertyEntity.builder()
                 .id(1)
                 .ownerId(1)
                 .cityId(1)

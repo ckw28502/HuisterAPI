@@ -2,7 +2,7 @@ package nl.fontys.s3.huister.business.impl.user;
 
 import nl.fontys.s3.huister.business.exception.user.UsernameExistException;
 import nl.fontys.s3.huister.business.request.user.CreateUserRequest;
-import nl.fontys.s3.huister.model.UserRole;
+import nl.fontys.s3.huister.domain.entities.enumerator.UserRole;
 import nl.fontys.s3.huister.persistence.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

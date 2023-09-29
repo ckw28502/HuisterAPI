@@ -3,7 +3,7 @@ package nl.fontys.s3.huister.persistence.repository;
 import nl.fontys.s3.huister.business.request.property.CreatePropertyRequest;
 import nl.fontys.s3.huister.business.request.property.UpdatePropertyRequest;
 import nl.fontys.s3.huister.persistence.PropertyRepository;
-import nl.fontys.s3.huister.model.Property;
+import nl.fontys.s3.huister.domain.entities.PropertyEntity;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -13,7 +13,7 @@ import java.util.Optional;
 
 @Repository
 public class FakePropertyRepositoryImpl implements PropertyRepository {
-    private final List<Property>properties;
+    private final List<PropertyEntity>properties;
     private static int NEXT_ID=1;
 
     public FakePropertyRepositoryImpl() {
@@ -21,28 +21,28 @@ public class FakePropertyRepositoryImpl implements PropertyRepository {
     }
 
     @Override
-    public Optional<Property> getPropertyById(int id) {
+    public Optional<PropertyEntity> getPropertyById(int id) {
         return properties.stream().filter(property ->
                 property.getId()==id
                 ).findFirst();
     }
 
     @Override
-    public List<Property> getAllNotRentedProperties() {
-        List<Property> notRentedProperties=this.properties.stream().filter(property ->
+    public List<PropertyEntity> getAllNotRentedProperties() {
+        List<PropertyEntity> notRentedProperties=this.properties.stream().filter(property ->
                 !property.isRented()
         ).toList();
         return Collections.unmodifiableList(notRentedProperties);
     }
 
     @Override
-    public List<Property> getAllProperties() {
+    public List<PropertyEntity> getAllProperties() {
         return Collections.unmodifiableList(this.properties);
     }
 
     @Override
-    public List<Property> getPropertiesByOwner(int ownerId) {
-        List<Property>ownedProperties= this.properties.stream().filter(property ->
+    public List<PropertyEntity> getPropertiesByOwner(int ownerId) {
+        List<PropertyEntity>ownedProperties= this.properties.stream().filter(property ->
                     property.getOwnerId()==ownerId
                 ).toList();
         return Collections.unmodifiableList(ownedProperties);
@@ -55,7 +55,7 @@ public class FakePropertyRepositoryImpl implements PropertyRepository {
 
     @Override
     public void createProperty(CreatePropertyRequest request) {
-        properties.add(Property.builder()
+        properties.add(PropertyEntity.builder()
                 .area(request.getArea())
                 .description(request.getDescription())
                 .cityId(request.getCityId())
@@ -72,7 +72,7 @@ public class FakePropertyRepositoryImpl implements PropertyRepository {
 
     @Override
     public void updateProperty(UpdatePropertyRequest request) {
-        Property updatedProperty=properties.stream().findFirst().get();
+        PropertyEntity updatedProperty=properties.stream().findFirst().get();
         updatedProperty.setDescription(request.getDescription());
         updatedProperty.setPrice(request.getPrice());
         updatedProperty.getImageUrls().addAll(request.getImageUrls());

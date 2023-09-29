@@ -1,9 +1,9 @@
 package nl.fontys.s3.huister.business.impl.city;
 
 import lombok.AllArgsConstructor;
-import nl.fontys.s3.huister.model.City;
-import nl.fontys.s3.huister.model.Property;
-import nl.fontys.s3.huister.model.User;
+import nl.fontys.s3.huister.domain.entities.CityEntity;
+import nl.fontys.s3.huister.domain.entities.PropertyEntity;
+import nl.fontys.s3.huister.domain.entities.UserEntity;
 import nl.fontys.s3.huister.business.exception.user.UserNotFoundException;
 import nl.fontys.s3.huister.business.interfaces.city.GetAllCitiesUseCase;
 import nl.fontys.s3.huister.business.response.city.GetAllCitiesResponse;
@@ -32,12 +32,12 @@ public class GetAllCitiesUseCaseImpl implements GetAllCitiesUseCase {
      */
     @Override
     public GetAllCitiesResponse getAllCities(int userId) {
-        Optional<User>userOptional=userRepository.getUserById(userId);
+        Optional<UserEntity>userOptional=userRepository.getUserById(userId);
         if (userOptional.isEmpty()){
             throw new UserNotFoundException();
         }
-        User user=userOptional.get();
-        List<City>cities=switch (user.getRole()) {
+        UserEntity user=userOptional.get();
+        List<CityEntity>cities=switch (user.getRole()) {
             case ADMIN -> cityRepository.getAllCities();
             case OWNER -> cityRepository.getAllCities(getCityIdsForOwner(userId));
             case CUSTOMER -> cityRepository.getAllCities(getCityIdsWhichAreNotRented());
@@ -55,9 +55,9 @@ public class GetAllCitiesUseCaseImpl implements GetAllCitiesUseCase {
         return getCityIds(propertyRepository.getPropertiesByOwner(ownerId));
     }
 
-    private List<Integer> getCityIds(List<Property> properties) {
+    private List<Integer> getCityIds(List<PropertyEntity> properties) {
         List<Integer>cityIds= new ArrayList<>();
-        for (Property property:properties){
+        for (PropertyEntity property:properties){
             int cityId=property.getCityId();
             if (!cityIds.contains(cityId)){
                 cityIds.add(cityId);

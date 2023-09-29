@@ -3,7 +3,7 @@ package nl.fontys.s3.huister.persistence.repository;
 import nl.fontys.s3.huister.business.request.user.CreateUserRequest;
 import nl.fontys.s3.huister.business.request.user.UpdateUserRequest;
 import nl.fontys.s3.huister.persistence.UserRepository;
-import nl.fontys.s3.huister.model.User;
+import nl.fontys.s3.huister.domain.entities.UserEntity;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -13,14 +13,14 @@ import java.util.Optional;
 @Repository
 public class FakeUserRepositoryImpl implements UserRepository {
     private static int NEXT_ID=1;
-    private final List<User>users;
+    private final List<UserEntity>users;
 
     public FakeUserRepositoryImpl() {
         this.users = new ArrayList<>();
     }
 
     @Override
-    public Optional<User> getUserById(int id) {
+    public Optional<UserEntity> getUserById(int id) {
         return users.stream().filter(user->user.getId()==id).findFirst();
     }
 
@@ -31,7 +31,7 @@ public class FakeUserRepositoryImpl implements UserRepository {
 
     @Override
     public void createUser(CreateUserRequest request) {
-        users.add(User.builder()
+        users.add(UserEntity.builder()
                 .id(NEXT_ID)
                 .name(request.getName())
                 .phoneNumber(request.getPhoneNumber())
@@ -46,7 +46,7 @@ public class FakeUserRepositoryImpl implements UserRepository {
 
     @Override
     public void updateUser(UpdateUserRequest request) {
-        User user=getUserById(request.getId()).get();
+        UserEntity user=getUserById(request.getId()).get();
         int index=users.indexOf(user);
         user.setName(request.getName());
         user.setPhoneNumber(request.getPhoneNumber());

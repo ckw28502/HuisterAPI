@@ -2,8 +2,8 @@ package nl.fontys.s3.huister.business.impl.user;
 
 import nl.fontys.s3.huister.business.exception.user.UserNotFoundException;
 import nl.fontys.s3.huister.business.request.user.UpdateUserRequest;
-import nl.fontys.s3.huister.model.User;
-import nl.fontys.s3.huister.model.UserRole;
+import nl.fontys.s3.huister.domain.entities.UserEntity;
+import nl.fontys.s3.huister.domain.entities.enumerator.UserRole;
 import nl.fontys.s3.huister.persistence.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -54,7 +54,7 @@ public class UpdateUserUseCaseImplTest {
                 .profilePictureUrl("image.jpg")
                 .name("user1")
                 .build();
-        User user=User.builder()
+        UserEntity user= UserEntity.builder()
                 .id(1)
                 .phoneNumber("0123456789")
                 .profilePictureUrl("image.jpg")

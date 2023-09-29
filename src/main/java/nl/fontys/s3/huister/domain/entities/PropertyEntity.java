@@ -1,4 +1,4 @@
-package nl.fontys.s3.huister.model;
+package nl.fontys.s3.huister.domain.entities;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,7 +11,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Property {
+public class PropertyEntity {
     private int id,ownerId,cityId;
     private String streetName,postCode,description;
     private List<String>imageUrls;

@@ -2,8 +2,8 @@ package nl.fontys.s3.huister.persistence.repository;
 
 import nl.fontys.s3.huister.business.request.order.CreateOrderRequest;
 import nl.fontys.s3.huister.business.request.order.UpdateOrderRequest;
-import nl.fontys.s3.huister.model.Order;
-import nl.fontys.s3.huister.model.OrderStatus;
+import nl.fontys.s3.huister.domain.entities.OrderEntity;
+import nl.fontys.s3.huister.domain.entities.enumerator.OrderStatus;
 import nl.fontys.s3.huister.persistence.OrderRepository;
 import org.springframework.stereotype.Repository;
 
@@ -13,7 +13,7 @@ import java.util.List;
 
 @Repository
 public class FakeOrderRepositoryImpl implements OrderRepository {
-    private final List<Order>orders;
+    private final List<OrderEntity>orders;
     private static int NEXT_ID=1;
 
     public FakeOrderRepositoryImpl() {
@@ -22,7 +22,7 @@ public class FakeOrderRepositoryImpl implements OrderRepository {
 
     @Override
     public void createOrder(CreateOrderRequest request) {
-        orders.add(Order.builder()
+        orders.add(OrderEntity.builder()
                 .id(NEXT_ID)
                 .propertyId(request.getPropertyId())
                 .ownerId(request.getOwnerId())
@@ -36,13 +36,13 @@ public class FakeOrderRepositoryImpl implements OrderRepository {
 
     @Override
     public void     updateOrder(UpdateOrderRequest request) {
-        Order updatedOrder=orders.stream().filter(order -> order.getId()==request.getId()).findFirst().get();
+        OrderEntity updatedOrder=orders.stream().filter(order -> order.getId()==request.getId()).findFirst().get();
         updatedOrder.setStatus(request.getStatus());
         Collections.fill(orders,updatedOrder);
     }
 
     @Override
-    public List<Order> getAllOrder(int userId) {
+    public List<OrderEntity> getAllOrder(int userId) {
         return orders.stream().filter(order ->
                 userId== order.getOwnerId()||userId== order.getCustomerId())
                 .toList();

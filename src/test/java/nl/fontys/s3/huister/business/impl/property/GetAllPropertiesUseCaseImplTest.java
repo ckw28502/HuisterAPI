@@ -3,10 +3,10 @@ package nl.fontys.s3.huister.business.impl.property;
 import nl.fontys.s3.huister.business.exception.city.CityNotFoundException;
 import nl.fontys.s3.huister.business.exception.user.UserNotFoundException;
 import nl.fontys.s3.huister.business.response.property.GetAllPropertiesResponse;
-import nl.fontys.s3.huister.model.City;
-import nl.fontys.s3.huister.model.Property;
-import nl.fontys.s3.huister.model.User;
-import nl.fontys.s3.huister.model.UserRole;
+import nl.fontys.s3.huister.domain.entities.CityEntity;
+import nl.fontys.s3.huister.domain.entities.PropertyEntity;
+import nl.fontys.s3.huister.domain.entities.UserEntity;
+import nl.fontys.s3.huister.domain.entities.enumerator.UserRole;
 import nl.fontys.s3.huister.persistence.CityRepository;
 import nl.fontys.s3.huister.persistence.PropertyRepository;
 import nl.fontys.s3.huister.persistence.UserRepository;
@@ -42,7 +42,7 @@ public class GetAllPropertiesUseCaseImplTest {
     @Test
     public void GetAllProperties_shouldThrowUserNotFoundExceptionWhenCannotGetUserDataFromUserIdParameter() {
         //Arrange
-        Property property=Property.builder()
+        PropertyEntity property= PropertyEntity.builder()
                 .id(1)
                 .ownerId(2)
                 .cityId(1)
@@ -55,7 +55,7 @@ public class GetAllPropertiesUseCaseImplTest {
                 .area(10)
                 .build();
 
-        User user=User.builder()
+        UserEntity user= UserEntity.builder()
                 .id(1)
                 .username("user1")
                 .role(UserRole.ADMIN)
@@ -79,7 +79,7 @@ public class GetAllPropertiesUseCaseImplTest {
     @Test
     public void GetAllProperties_shouldThrowCityNotFoundExceptionWhenCannotGetCityDataFromCityIdParameter() {
         //Arrange
-        Property property=Property.builder()
+        PropertyEntity property= PropertyEntity.builder()
                 .id(1)
                 .ownerId(1)
                 .cityId(1)
@@ -92,7 +92,7 @@ public class GetAllPropertiesUseCaseImplTest {
                 .area(10)
                 .build();
 
-        User user=User.builder()
+        UserEntity user= UserEntity.builder()
                 .id(1)
                 .username("user1")
                 .role(UserRole.OWNER)
@@ -118,7 +118,7 @@ public class GetAllPropertiesUseCaseImplTest {
     @ValueSource(strings = {"ADMIN","OWNER","CUSTOMER"})
     public void GetAllProperties_shouldReturnListOfResponsesWhenAllDataAreValid(UserRole role) {
         //Arrange
-        Property property1=Property.builder()
+        PropertyEntity property1= PropertyEntity.builder()
                 .id(1)
                 .ownerId(1)
                 .cityId(1)
@@ -131,7 +131,7 @@ public class GetAllPropertiesUseCaseImplTest {
                 .area(10)
                 .build();
 
-        Property property2=Property.builder()
+        PropertyEntity property2= PropertyEntity.builder()
                 .id(2)
                 .ownerId(2)
                 .cityId(1)
@@ -144,7 +144,7 @@ public class GetAllPropertiesUseCaseImplTest {
                 .area(12)
                 .build();
 
-        User user1=User.builder()
+        UserEntity user1= UserEntity.builder()
                 .id(1)
                 .username("user1")
                 .role(UserRole.valueOf(String.valueOf(role)))
@@ -154,7 +154,7 @@ public class GetAllPropertiesUseCaseImplTest {
                 .phoneNumber("0123456789")
                 .build();
 
-        User user2=User.builder()
+        UserEntity user2= UserEntity.builder()
                 .id(2)
                 .username("user2")
                 .role(UserRole.valueOf(String.valueOf(role)))
@@ -164,7 +164,7 @@ public class GetAllPropertiesUseCaseImplTest {
                 .phoneNumber("9876543210")
                 .build();
 
-        City city1=City.builder()
+        CityEntity city1= CityEntity.builder()
                 .id(1)
                 .name("city1")
                 .build();

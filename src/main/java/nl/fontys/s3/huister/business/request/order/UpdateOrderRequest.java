@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import nl.fontys.s3.huister.model.OrderStatus;
+import nl.fontys.s3.huister.domain.entities.enumerator.OrderStatus;
 
 @Data
 @AllArgsConstructor

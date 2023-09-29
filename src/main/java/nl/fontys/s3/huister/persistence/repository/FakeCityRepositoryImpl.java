@@ -1,7 +1,7 @@
 package nl.fontys.s3.huister.persistence.repository;
 
 import lombok.AllArgsConstructor;
-import nl.fontys.s3.huister.model.City;
+import nl.fontys.s3.huister.domain.entities.CityEntity;
 import nl.fontys.s3.huister.persistence.CityRepository;
 import org.springframework.stereotype.Repository;
 
@@ -14,29 +14,29 @@ import java.util.Optional;
 @AllArgsConstructor
 public class FakeCityRepositoryImpl implements CityRepository {
     private static int NEXT_ID=1;
-    private final List<City>cities;
+    private final List<CityEntity>cities;
 
     public FakeCityRepositoryImpl() {
         this.cities = new ArrayList<>();
     }
     @Override
-    public Optional<City> getCityById(int id) {
+    public Optional<CityEntity> getCityById(int id) {
         return cities.stream().filter(city -> city.getId()==id).findFirst();
     }
 
     @Override
-    public Optional<City> getCityByName(String name) {
+    public Optional<CityEntity> getCityByName(String name) {
         return cities.stream().filter(city -> city.getName().equalsIgnoreCase(name))
                 .findFirst();
     }
 
     @Override
-    public List<City> getAllCities() {
+    public List<CityEntity> getAllCities() {
         return Collections.unmodifiableList(cities);
     }
 
     @Override
-    public List<City> getAllCities(List<Integer> propertyCityIds) {
+    public List<CityEntity> getAllCities(List<Integer> propertyCityIds) {
         return Collections.unmodifiableList(cities.stream().filter(city ->
                 propertyCityIds.contains(city.getId())).toList()
         );
@@ -49,7 +49,7 @@ public class FakeCityRepositoryImpl implements CityRepository {
 
     @Override
     public int createCity(String name) {
-        cities.add(City.builder()
+        cities.add(CityEntity.builder()
                 .id(NEXT_ID)
                 .name(name)
                 .build());

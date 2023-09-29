@@ -2,10 +2,10 @@ package nl.fontys.s3.huister.business.impl.city;
 
 import nl.fontys.s3.huister.business.exception.user.UserNotFoundException;
 import nl.fontys.s3.huister.business.response.city.GetAllCitiesResponse;
-import nl.fontys.s3.huister.model.City;
-import nl.fontys.s3.huister.model.Property;
-import nl.fontys.s3.huister.model.User;
-import nl.fontys.s3.huister.model.UserRole;
+import nl.fontys.s3.huister.domain.entities.CityEntity;
+import nl.fontys.s3.huister.domain.entities.PropertyEntity;
+import nl.fontys.s3.huister.domain.entities.UserEntity;
+import nl.fontys.s3.huister.domain.entities.enumerator.UserRole;
 import nl.fontys.s3.huister.persistence.CityRepository;
 import nl.fontys.s3.huister.persistence.PropertyRepository;
 import nl.fontys.s3.huister.persistence.UserRepository;
@@ -54,7 +54,7 @@ public class GetAllCitiesUseCaseImplTest {
     @ValueSource(strings={"ADMIN","OWNER","CUSTOMER"})
     public void getAllCities_shouldReturnListOfCitiesAccordingToLoggedInUsersRole(UserRole role) {
         //Arrange
-        Property property1=Property.builder()
+        PropertyEntity property1= PropertyEntity.builder()
                 .id(1)
                 .ownerId(1)
                 .cityId(1)
@@ -67,7 +67,7 @@ public class GetAllCitiesUseCaseImplTest {
                 .area(10)
                 .build();
 
-        Property property2=Property.builder()
+        PropertyEntity property2= PropertyEntity.builder()
                 .id(2)
                 .ownerId(2)
                 .cityId(2)
@@ -80,7 +80,7 @@ public class GetAllCitiesUseCaseImplTest {
                 .area(12)
                 .build();
 
-        User user1=User.builder()
+        UserEntity user1= UserEntity.builder()
                 .id(1)
                 .username("user1")
                 .role(UserRole.valueOf(String.valueOf(role)))
@@ -90,12 +90,12 @@ public class GetAllCitiesUseCaseImplTest {
                 .phoneNumber("0123456789")
                 .build();
 
-        City city1=City.builder()
+        CityEntity city1= CityEntity.builder()
                 .id(1)
                 .name("city1")
                 .build();
 
-        City city2=City.builder()
+        CityEntity city2= CityEntity.builder()
                 .id(1)
                 .name("city2")
                 .build();

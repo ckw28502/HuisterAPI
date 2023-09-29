@@ -2,9 +2,9 @@ package nl.fontys.s3.huister.business.impl.order;
 
 import nl.fontys.s3.huister.business.exception.user.UserNotFoundException;
 import nl.fontys.s3.huister.business.response.order.GetAllOrdersResponse;
-import nl.fontys.s3.huister.model.Order;
-import nl.fontys.s3.huister.model.User;
-import nl.fontys.s3.huister.model.UserRole;
+import nl.fontys.s3.huister.domain.entities.OrderEntity;
+import nl.fontys.s3.huister.domain.entities.UserEntity;
+import nl.fontys.s3.huister.domain.entities.enumerator.UserRole;
 import nl.fontys.s3.huister.persistence.OrderRepository;
 import nl.fontys.s3.huister.persistence.UserRepository;
 import org.junit.jupiter.api.Test;
@@ -48,7 +48,7 @@ public class GetAllOrdersUseCaseImplTest {
     @Test
     public void getAllOrders_shouldReturnListOfOrdersWhenUserIsFound() {
         //Arrange
-        User user=User.builder()
+        UserEntity user= UserEntity.builder()
                 .id(1)
                 .username("user1")
                 .role(UserRole.OWNER)
@@ -58,7 +58,7 @@ public class GetAllOrdersUseCaseImplTest {
                 .phoneNumber("0123456789")
                 .build();
 
-        Order order=Order.builder()
+        OrderEntity order= OrderEntity.builder()
                 .id(1)
                 .ownerId(1)
                 .customerId(2)
