@@ -1,11 +1,11 @@
 package nl.fontys.s3.huister.business.impl.property;
 
 import nl.fontys.s3.huister.business.exception.property.PropertyNotFoundException;
-import nl.fontys.s3.huister.domain.response.property.GetPropertyDetailResponse;
-import nl.fontys.s3.huister.model.City;
-import nl.fontys.s3.huister.model.Property;
-import nl.fontys.s3.huister.model.User;
-import nl.fontys.s3.huister.model.UserRole;
+import nl.fontys.s3.huister.business.response.property.GetPropertyDetailResponse;
+import nl.fontys.s3.huister.domain.entities.CityEntity;
+import nl.fontys.s3.huister.domain.entities.PropertyEntity;
+import nl.fontys.s3.huister.domain.entities.UserEntity;
+import nl.fontys.s3.huister.domain.entities.enumerator.UserRole;
 import nl.fontys.s3.huister.persistence.CityRepository;
 import nl.fontys.s3.huister.persistence.PropertyRepository;
 import nl.fontys.s3.huister.persistence.UserRepository;
@@ -53,7 +53,7 @@ public class GetPropertyDetailUseCaseImplTest {
     @Test
     public void getPropertyDetail_shouldReturnAppropriateResponseAfterASuccessfulValidation() {
        //Arrange
-        Property property1=Property.builder()
+        PropertyEntity property1= PropertyEntity.builder()
                 .id(1)
                 .ownerId(1)
                 .cityId(1)
@@ -66,7 +66,7 @@ public class GetPropertyDetailUseCaseImplTest {
                 .area(10)
                 .build();
 
-        User user1=User.builder()
+        UserEntity user1= UserEntity.builder()
                 .id(1)
                 .username("user1")
                 .role(UserRole.ADMIN)
@@ -76,7 +76,7 @@ public class GetPropertyDetailUseCaseImplTest {
                 .phoneNumber("0123456789")
                 .build();
 
-        City city1=City.builder()
+        CityEntity city1= CityEntity.builder()
                 .id(1)
                 .name("city1")
                 .build();

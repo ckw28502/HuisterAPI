@@ -3,7 +3,7 @@ package nl.fontys.s3.huister.business.impl.order;
 import lombok.AllArgsConstructor;
 import nl.fontys.s3.huister.business.exception.order.OrderNotFoundException;
 import nl.fontys.s3.huister.business.interfaces.order.UpdateOrderUseCase;
-import nl.fontys.s3.huister.domain.request.order.UpdateOrderRequest;
+import nl.fontys.s3.huister.business.request.order.UpdateOrderRequest;
 import nl.fontys.s3.huister.persistence.OrderRepository;
 import org.springframework.stereotype.Service;
 

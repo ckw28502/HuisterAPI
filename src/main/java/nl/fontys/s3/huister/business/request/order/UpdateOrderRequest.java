@@ -1,16 +1,16 @@
-package nl.fontys.s3.huister.model;
+package nl.fontys.s3.huister.business.request.order;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import nl.fontys.s3.huister.domain.entities.enumerator.OrderStatus;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Order {
-    private int id,ownerId,customerId,propertyId,duration;
-    private long price;
+public class UpdateOrderRequest {
+    private int id;
     private OrderStatus status;
 }

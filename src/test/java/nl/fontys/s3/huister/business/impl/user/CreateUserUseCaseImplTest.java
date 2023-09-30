@@ -1,9 +1,8 @@
 package nl.fontys.s3.huister.business.impl.user;
 
 import nl.fontys.s3.huister.business.exception.user.UsernameExistException;
-import nl.fontys.s3.huister.domain.request.user.CreateUserRequest;
-import nl.fontys.s3.huister.model.User;
-import nl.fontys.s3.huister.model.UserRole;
+import nl.fontys.s3.huister.business.request.user.CreateUserRequest;
+import nl.fontys.s3.huister.domain.entities.enumerator.UserRole;
 import nl.fontys.s3.huister.persistence.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -11,7 +10,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
@@ -24,10 +22,10 @@ public class CreateUserUseCaseImplTest {
 
     /**
      * @verifies throw exception when username not unique
-     * @see CreateUserUseCaseImpl#createUser(nl.fontys.s3.huister.domain.request.user.CreateUserRequest)
+     * @see CreateUserUseCaseImpl#createUser(CreateUserRequest)
      */
     @Test
-    public void createUser_shouldThrowExceptionWhenUsernameNotUnique() throws Exception {
+    public void createUser_shouldThrowExceptionWhenUsernameNotUnique() {
         //Arrange
         CreateUserRequest request=CreateUserRequest.builder()
                 .username("user1")
@@ -44,7 +42,7 @@ public class CreateUserUseCaseImplTest {
 
     /**
      * @verifies add new repository when username is unique
-     * @see CreateUserUseCaseImpl#createUser(nl.fontys.s3.huister.domain.request.user.CreateUserRequest)
+     * @see CreateUserUseCaseImpl#createUser(CreateUserRequest)
      */
     @Test
     public void createUser_shouldAddNewRepositoryWhenUsernameIsUnique(){

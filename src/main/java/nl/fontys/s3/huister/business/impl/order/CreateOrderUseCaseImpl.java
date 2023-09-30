@@ -5,7 +5,7 @@ import nl.fontys.s3.huister.business.exception.price.PriceMustBeMoreThanZeroExce
 import nl.fontys.s3.huister.business.exception.property.PropertyNotFoundException;
 import nl.fontys.s3.huister.business.exception.user.UserNotFoundException;
 import nl.fontys.s3.huister.business.interfaces.order.CreateOrderUseCase;
-import nl.fontys.s3.huister.domain.request.order.CreateOrderRequest;
+import nl.fontys.s3.huister.business.request.order.CreateOrderRequest;
 import nl.fontys.s3.huister.persistence.OrderRepository;
 import nl.fontys.s3.huister.persistence.PropertyRepository;
 import nl.fontys.s3.huister.persistence.UserRepository;

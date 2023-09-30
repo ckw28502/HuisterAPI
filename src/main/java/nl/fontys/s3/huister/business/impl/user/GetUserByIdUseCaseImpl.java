@@ -1,10 +1,10 @@
 package nl.fontys.s3.huister.business.impl.user;
 
 import lombok.AllArgsConstructor;
-import nl.fontys.s3.huister.model.User;
+import nl.fontys.s3.huister.domain.entities.UserEntity;
 import nl.fontys.s3.huister.business.exception.user.UserNotFoundException;
 import nl.fontys.s3.huister.business.interfaces.user.GetUserByIdUseCase;
-import nl.fontys.s3.huister.domain.response.user.GetUserByIdResponse;
+import nl.fontys.s3.huister.business.response.user.GetUserByIdResponse;
 import nl.fontys.s3.huister.persistence.UserRepository;
 import org.springframework.stereotype.Service;
 
@@ -25,11 +25,11 @@ public class GetUserByIdUseCaseImpl implements GetUserByIdUseCase {
      */
     @Override
     public GetUserByIdResponse getUserById(int id) {
-        Optional<User>userOptional=userRepository.getUserById(id);
+        Optional<UserEntity>userOptional=userRepository.getUserById(id);
         if (userOptional.isEmpty()){
             throw new UserNotFoundException();
         }
-        User user=userOptional.get();
+        UserEntity user=userOptional.get();
         return GetUserByIdResponse.builder()
                 .id(id)
                 .name(user.getName())

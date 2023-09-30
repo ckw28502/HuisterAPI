@@ -1,16 +1,16 @@
 package nl.fontys.s3.huister.business.impl.property;
 
 import lombok.AllArgsConstructor;
-import nl.fontys.s3.huister.model.City;
+import nl.fontys.s3.huister.domain.entities.CityEntity;
 import nl.fontys.s3.huister.business.interfaces.property.GetAllPropertiesUseCase;
 import nl.fontys.s3.huister.business.exception.city.CityNotFoundException;
 import nl.fontys.s3.huister.business.exception.user.UserNotFoundException;
-import nl.fontys.s3.huister.domain.response.property.GetAllPropertiesResponse;
+import nl.fontys.s3.huister.business.response.property.GetAllPropertiesResponse;
 import nl.fontys.s3.huister.persistence.CityRepository;
 import nl.fontys.s3.huister.persistence.PropertyRepository;
 import nl.fontys.s3.huister.persistence.UserRepository;
-import nl.fontys.s3.huister.model.Property;
-import nl.fontys.s3.huister.model.User;
+import nl.fontys.s3.huister.domain.entities.PropertyEntity;
+import nl.fontys.s3.huister.domain.entities.UserEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -37,10 +37,10 @@ public class GetAllPropertiesUseCaseImpl implements GetAllPropertiesUseCase {
     public List<GetAllPropertiesResponse> getAllProperties(int userId) {
 
         //get current logged in user
-        User user=userRepository.getUserById(userId).get();
+        UserEntity user=userRepository.getUserById(userId).get();
 
         //get retrieved data based on user role
-        List<Property>properties=switch (user.getRole()){
+        List<PropertyEntity>properties=switch (user.getRole()){
             case ADMIN:
                 yield propertyRepository.getAllProperties();
             case OWNER:
@@ -53,17 +53,17 @@ public class GetAllPropertiesUseCaseImpl implements GetAllPropertiesUseCase {
         List<GetAllPropertiesResponse>responses=new ArrayList<>();
 
         //iterate the property list
-        for (Property property:properties){
+        for (PropertyEntity property:properties){
 
             //Get owner name
-            Optional<User> owner=userRepository.getUserById(property.getOwnerId());
+            Optional<UserEntity> owner=userRepository.getUserById(property.getOwnerId());
             if (owner.isEmpty()){
                 throw new UserNotFoundException();
             }
             String ownerName=owner.get().getName();
 
             //Get city name
-            Optional<City> city=cityRepository.getCityById(property.getCityId());
+            Optional<CityEntity> city=cityRepository.getCityById(property.getCityId());
             if (city.isEmpty()){
                 throw new CityNotFoundException();
             }

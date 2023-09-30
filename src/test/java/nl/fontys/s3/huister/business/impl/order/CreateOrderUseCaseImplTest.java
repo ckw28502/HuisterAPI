@@ -3,10 +3,10 @@ package nl.fontys.s3.huister.business.impl.order;
 import nl.fontys.s3.huister.business.exception.price.PriceMustBeMoreThanZeroException;
 import nl.fontys.s3.huister.business.exception.property.PropertyNotFoundException;
 import nl.fontys.s3.huister.business.exception.user.UserNotFoundException;
-import nl.fontys.s3.huister.domain.request.order.CreateOrderRequest;
-import nl.fontys.s3.huister.model.Property;
-import nl.fontys.s3.huister.model.User;
-import nl.fontys.s3.huister.model.UserRole;
+import nl.fontys.s3.huister.business.request.order.CreateOrderRequest;
+import nl.fontys.s3.huister.domain.entities.PropertyEntity;
+import nl.fontys.s3.huister.domain.entities.UserEntity;
+import nl.fontys.s3.huister.domain.entities.enumerator.UserRole;
 import nl.fontys.s3.huister.persistence.OrderRepository;
 import nl.fontys.s3.huister.persistence.PropertyRepository;
 import nl.fontys.s3.huister.persistence.UserRepository;
@@ -37,7 +37,7 @@ public class CreateOrderUseCaseImplTest {
     private CreateOrderUseCaseImpl createOrderUseCase;
     /**
      * @verifies throw UserNotFoundException when owner or customer is not in the repository
-     * @see CreateOrderUseCaseImpl#createOrder(nl.fontys.s3.huister.domain.request.order.CreateOrderRequest)
+     * @see CreateOrderUseCaseImpl#createOrder(CreateOrderRequest)
      */
     @ParameterizedTest
     @ValueSource(strings = {"OWNER","CUSTOMER"})
@@ -51,7 +51,7 @@ public class CreateOrderUseCaseImplTest {
                 .price(500)
                 .build();
 
-        User user1=User.builder()
+        UserEntity user1= UserEntity.builder()
                 .id(1)
                 .username("user1")
                 .role(UserRole.OWNER)
@@ -73,7 +73,7 @@ public class CreateOrderUseCaseImplTest {
 
     /**
      * @verifies throw PropertyNotFoundException when property is not found in the repository
-     * @see CreateOrderUseCaseImpl#createOrder(nl.fontys.s3.huister.domain.request.order.CreateOrderRequest)
+     * @see CreateOrderUseCaseImpl#createOrder(CreateOrderRequest)
      */
     @Test
     public void createOrder_shouldThrowPropertyNotFoundExceptionWhenPropertyIsNotFoundInTheRepository() {
@@ -86,7 +86,7 @@ public class CreateOrderUseCaseImplTest {
                 .price(500)
                 .build();
 
-        User user1=User.builder()
+        UserEntity user1= UserEntity.builder()
                 .id(1)
                 .username("user1")
                 .role(UserRole.OWNER)
@@ -96,7 +96,7 @@ public class CreateOrderUseCaseImplTest {
                 .phoneNumber("0123456789")
                 .build();
 
-        User user2=User.builder()
+        UserEntity user2= UserEntity.builder()
                 .id(2)
                 .username("user2")
                 .role(UserRole.CUSTOMER)
@@ -116,7 +116,7 @@ public class CreateOrderUseCaseImplTest {
 
     /**
      * @verifies throw PriceMustBeMoreThanZeroException when price is equals or below zero
-     * @see CreateOrderUseCaseImpl#createOrder(nl.fontys.s3.huister.domain.request.order.CreateOrderRequest)
+     * @see CreateOrderUseCaseImpl#createOrder(CreateOrderRequest)
      */
     @Test
     public void createOrder_shouldThrowPriceMustBeMoreThanZeroExceptionWhenPriceIsEqualsOrBelowZero() {
@@ -129,7 +129,7 @@ public class CreateOrderUseCaseImplTest {
                 .price(0)
                 .build();
 
-        User user1=User.builder()
+        UserEntity user1= UserEntity.builder()
                 .id(1)
                 .username("user1")
                 .role(UserRole.OWNER)
@@ -139,7 +139,7 @@ public class CreateOrderUseCaseImplTest {
                 .phoneNumber("0123456789")
                 .build();
 
-        User user2=User.builder()
+        UserEntity user2= UserEntity.builder()
                 .id(2)
                 .username("user2")
                 .role(UserRole.CUSTOMER)
@@ -149,7 +149,7 @@ public class CreateOrderUseCaseImplTest {
                 .phoneNumber("9876543210")
                 .build();
 
-        Property property1=Property.builder()
+        PropertyEntity property1= PropertyEntity.builder()
                 .id(1)
                 .ownerId(1)
                 .cityId(1)
@@ -172,7 +172,7 @@ public class CreateOrderUseCaseImplTest {
 
     /**
      * @verifies create new Order object when request data are valid
-     * @see CreateOrderUseCaseImpl#createOrder(nl.fontys.s3.huister.domain.request.order.CreateOrderRequest)
+     * @see CreateOrderUseCaseImpl#createOrder(CreateOrderRequest)
      */
     @Test
     public void createOrder_shouldCreateNewOrderObjectWhenRequestDataAreValid() {
@@ -185,7 +185,7 @@ public class CreateOrderUseCaseImplTest {
                 .price(500)
                 .build();
 
-        User user1=User.builder()
+        UserEntity user1= UserEntity.builder()
                 .id(1)
                 .username("user1")
                 .role(UserRole.OWNER)
@@ -195,7 +195,7 @@ public class CreateOrderUseCaseImplTest {
                 .phoneNumber("0123456789")
                 .build();
 
-        User user2=User.builder()
+        UserEntity user2= UserEntity.builder()
                 .id(2)
                 .username("user2")
                 .role(UserRole.CUSTOMER)
@@ -205,7 +205,7 @@ public class CreateOrderUseCaseImplTest {
                 .phoneNumber("9876543210")
                 .build();
 
-        Property property1=Property.builder()
+        PropertyEntity property1= PropertyEntity.builder()
                 .id(1)
                 .ownerId(1)
                 .cityId(1)

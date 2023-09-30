@@ -1,10 +1,10 @@
 package nl.fontys.s3.huister.business.impl.user;
 
 import lombok.AllArgsConstructor;
-import nl.fontys.s3.huister.model.User;
+import nl.fontys.s3.huister.domain.entities.UserEntity;
 import nl.fontys.s3.huister.business.exception.user.UserNotFoundException;
 import nl.fontys.s3.huister.business.interfaces.user.UpdateUserUseCase;
-import nl.fontys.s3.huister.domain.request.user.UpdateUserRequest;
+import nl.fontys.s3.huister.business.request.user.UpdateUserRequest;
 import nl.fontys.s3.huister.persistence.UserRepository;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +24,7 @@ public class UpdateUserUseCaseImpl implements UpdateUserUseCase {
      */
     @Override
     public void updateUser(UpdateUserRequest request) {
-        Optional<User>user=userRepository.getUserById(request.getId());
+        Optional<UserEntity>user=userRepository.getUserById(request.getId());
         if (user.isEmpty()){
             throw new UserNotFoundException();
         }

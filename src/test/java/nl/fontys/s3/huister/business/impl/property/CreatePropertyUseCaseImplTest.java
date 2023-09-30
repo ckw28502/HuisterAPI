@@ -1,7 +1,7 @@
 package nl.fontys.s3.huister.business.impl.property;
 
-import nl.fontys.s3.huister.domain.request.property.CreatePropertyRequest;
-import nl.fontys.s3.huister.model.City;
+import nl.fontys.s3.huister.business.request.property.CreatePropertyRequest;
+import nl.fontys.s3.huister.domain.entities.CityEntity;
 import nl.fontys.s3.huister.persistence.CityRepository;
 import nl.fontys.s3.huister.persistence.PropertyRepository;
 import org.junit.jupiter.api.Test;
@@ -26,7 +26,7 @@ public class CreatePropertyUseCaseImplTest {
     private CreatePropertyUseCaseImpl createPropertyUseCase;
     /**
      * @verifies create new City object when cityName doesn't exist in CityRepository then create the property
-     * @see CreatePropertyUseCaseImpl#createProperty(nl.fontys.s3.huister.domain.request.property.CreatePropertyRequest)
+     * @see CreatePropertyUseCaseImpl#createProperty(CreatePropertyRequest)
      */
     @Test
     public void createProperty_shouldCreateNewCityObjectWhenCityNameDoesntExistInCityRepositoryThenCreateTheProperty() {
@@ -42,7 +42,7 @@ public class CreatePropertyUseCaseImplTest {
                 .imageUrls(List.of("image1.jpg","image2.png"))
                 .build();
 
-        City city1=City.builder()
+        CityEntity city1= CityEntity.builder()
                 .id(1)
                 .name("city1")
                 .build();
@@ -65,7 +65,7 @@ public class CreatePropertyUseCaseImplTest {
 
     /**
      * @verifies add the existing cityId to request before creating new Property
-     * @see CreatePropertyUseCaseImpl#createProperty(nl.fontys.s3.huister.domain.request.property.CreatePropertyRequest)
+     * @see CreatePropertyUseCaseImpl#createProperty(CreatePropertyRequest)
      */
     @Test
     public void createProperty_shouldAddTheExistingCityIdToRequestBeforeCreatingNewProperty() {
@@ -81,7 +81,7 @@ public class CreatePropertyUseCaseImplTest {
                 .imageUrls(List.of("image1.jpg","image2.png"))
                 .build();
 
-        City city1=City.builder()
+        CityEntity city1= CityEntity.builder()
                 .id(1)
                 .name("city1")
                 .build();

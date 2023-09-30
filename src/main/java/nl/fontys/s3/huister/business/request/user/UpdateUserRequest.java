@@ -1,4 +1,4 @@
-package nl.fontys.s3.huister.model;
+package nl.fontys.s3.huister.business.request.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -6,10 +6,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
-public class City {
+public class UpdateUserRequest {
+    private String name,profilePictureUrl,phoneNumber;
     private int id;
-    private String name;
 }

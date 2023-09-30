@@ -1,7 +1,7 @@
 package nl.fontys.s3.huister.business.impl.property;
 
 import lombok.AllArgsConstructor;
-import nl.fontys.s3.huister.model.Property;
+import nl.fontys.s3.huister.domain.entities.PropertyEntity;
 import nl.fontys.s3.huister.business.exception.property.PropertyNotFoundException;
 import nl.fontys.s3.huister.business.interfaces.property.DeletePropertyUseCase;
 import nl.fontys.s3.huister.persistence.CityRepository;
@@ -26,11 +26,11 @@ public class DeletePropertyUseCaseImpl implements DeletePropertyUseCase {
      */
     @Override
     public void deleteProperty(int id) {
-        Optional<Property> propertyOptional=propertyRepository.getPropertyById(id);
+        Optional<PropertyEntity> propertyOptional=propertyRepository.getPropertyById(id);
         if (propertyOptional.isEmpty()){
             throw new PropertyNotFoundException();
         }
-        Property property=propertyOptional.get();
+        PropertyEntity property=propertyOptional.get();
         int cityId=property.getCityId();
         propertyRepository.deleteProperty(id);
         if (propertyRepository.isCityHasNoProperty(cityId)){

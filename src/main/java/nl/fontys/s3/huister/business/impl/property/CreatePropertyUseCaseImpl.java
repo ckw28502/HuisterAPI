@@ -2,7 +2,7 @@ package nl.fontys.s3.huister.business.impl.property;
 
 import lombok.AllArgsConstructor;
 import nl.fontys.s3.huister.business.interfaces.property.CreatePropertyUseCase;
-import nl.fontys.s3.huister.domain.request.property.CreatePropertyRequest;
+import nl.fontys.s3.huister.business.request.property.CreatePropertyRequest;
 import nl.fontys.s3.huister.persistence.CityRepository;
 import nl.fontys.s3.huister.persistence.PropertyRepository;
 import org.springframework.stereotype.Service;
