@@ -1,0 +1,33 @@
+@startuml Context
+!include  https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+!define DEVICONS https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/devicons
+!define FONTAWESOME https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/font-awesome-5
+
+!include FONTAWESOME/users.puml
+!include FONTAWESOME/house_user.puml
+
+'Persons
+Person(admin,"Admin","User who oversee the activity within the web application")
+Person(owner,"Owner","User who wants to their own rent property",$sprite="house_user")
+Person(customer,"Customer","User who wants to rent property",$sprite="users")
+
+'System
+System(webApp,"Huister Web Application","Allow owners to rent their properties and customers to rent property")
+
+'External system
+System_Ext(email,"E-mail","E-mail exchange system")
+
+'Relations from person to system
+Rel(admin,webApp,"Read reports,property data, and owner data","http")
+Rel(owner,webApp,"Create property, read property data, update property data, delete property, accept or reject property orders, and read reports","http")
+Rel(customer,webApp,"Read property data, create property order, and cancel property order","http")
+
+'Relation from system to external system
+Rel(webApp,email,"Send e-mail using","smtp")
+
+'Relation from external system to person
+Rel(email,owner,"Send e-mail to")
+Rel(email,customer,"Send e-mail to")
+
+@enduml
