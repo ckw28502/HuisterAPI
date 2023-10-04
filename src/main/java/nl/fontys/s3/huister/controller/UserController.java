@@ -4,10 +4,13 @@ import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import nl.fontys.s3.huister.business.interfaces.user.CreateUserUseCase;
 import nl.fontys.s3.huister.business.interfaces.user.GetUserByIdUseCase;
+import nl.fontys.s3.huister.business.interfaces.user.LoginUseCase;
 import nl.fontys.s3.huister.business.interfaces.user.UpdateUserUseCase;
 import nl.fontys.s3.huister.business.request.user.CreateUserRequest;
+import nl.fontys.s3.huister.business.request.user.LoginRequest;
 import nl.fontys.s3.huister.business.request.user.UpdateUserRequest;
 import nl.fontys.s3.huister.business.response.user.GetUserByIdResponse;
+import nl.fontys.s3.huister.business.response.user.LoginResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +22,7 @@ public class UserController {
     private final GetUserByIdUseCase getUserByIdUseCase;
     private final CreateUserUseCase createUserUseCase;
     private final UpdateUserUseCase updateUserUseCase;
+    private final LoginUseCase loginUseCase;
     @GetMapping("{id}")
     public ResponseEntity<GetUserByIdResponse>getUserById(@PathVariable(value = "id")final int id){
         return ResponseEntity.ok(getUserByIdUseCase.getUserById(id));
@@ -28,6 +32,12 @@ public class UserController {
         createUserUseCase.createUser(request);
        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
+
+    @PostMapping("/login")
+    public ResponseEntity<LoginResponse>Login(@RequestBody@Valid LoginRequest request){
+        return ResponseEntity.ok(loginUseCase.Login(request));
+    }
+
     @PutMapping("{id}")
     public ResponseEntity<Void>updateUser(
             @PathVariable(value = "id")final int id,

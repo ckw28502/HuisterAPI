@@ -25,6 +25,11 @@ public class FakeUserRepositoryImpl implements UserRepository {
     }
 
     @Override
+    public Optional<UserEntity> getUserByUsername(String username) {
+        return this.users.stream().filter((user)->user.getUsername().equalsIgnoreCase(username)).findFirst();
+    }
+
+    @Override
     public boolean usernameExist(String username) {
         return users.stream().anyMatch(user -> username.equalsIgnoreCase(user.getUsername()));
     }
