@@ -8,6 +8,7 @@ import java.util.Optional;
 
 public interface UserRepository {
     Optional<UserEntity> getUserById(final int id);
+    Optional<UserEntity> getUserByUsername(final String username);
     boolean usernameExist(String username);
     void createUser(CreateUserRequest request);
     void updateUser(UpdateUserRequest request);
