@@ -1,0 +1,48 @@
+@startuml Container
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+!define DEVICONS https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/devicons
+!define DEVICONS2 https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/devicons2
+!define FONTAWESOME https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/font-awesome-5
+
+!include DEVICONS/react.puml
+!include DEVICONS/mysql.puml
+!include DEVICONS2/spring.puml
+
+!include FONTAWESOME/users.puml
+!include FONTAWESOME/house_user.puml
+
+
+'Persons
+Person(admin,"Admin","User who oversee the activity within the web application")
+Person(owner,"Owner","User who wants to their own rent property",$sprite="house_user")
+Person(customer,"Customer","User who wants to rent property",$sprite="users")
+
+'Containers
+System_Boundary(c1,"Container diagram for Huister Web Application"){
+    Container(spa,"Single Page Application","React",$sprite="react","Provides facilities for users")
+    Container(api,"API` Application","Spring",$sprite="spring","Provides properties renting functionality via JSON/HTTP API")
+    ContainerDb(db,"Database","MySQL",$sprite="mysql","Stores users data, properties data, orders data")
+
+}
+
+'External system
+System_Ext(email,"E-mail","E-mail exchange system")
+
+'Relations from person to container
+Rel(admin,spa,"Read reports,property data, and owner data","http")
+Rel(owner,spa,"Create property, read property data, update property data, delete property, accept or reject property orders, and read reports","http")
+Rel(customer,spa,"Read property data, create property order, and cancel property order","http")
+
+'Relations from container to container
+Rel(spa,api,"Make API call","JSON/HTTP")
+Rel(api,db,"Reads from or writes to","JDBC")
+
+'Relation from container to external system
+Rel(api,email,"Send e-mail using","smtp")
+
+'Relation from external system to person
+Rel(email,owner,"Send e-mail to")
+Rel(email,customer,"Send e-mail to")
+
+@enduml
