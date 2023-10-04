@@ -17,6 +17,15 @@ import java.util.Optional;
 public class LoginUseCaseImpl implements LoginUseCase {
     private final UserRepository userRepository;
 
+    /**
+     *
+     * @param request contains username and password for login
+     * @return user id and name
+     *
+     * @should throw UserNotFoundException when failed to find user with username equals to request's username
+     * @should throw InvalidPasswordException when request's password and found user's password are different
+     * @should return response filled with user id and name if user is found and request's password is correct
+     */
     @Override
     public LoginResponse Login(LoginRequest request) {
         Optional<UserEntity>optionalUser=userRepository.getUserByUsername(request.getUsername());

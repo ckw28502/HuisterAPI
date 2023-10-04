@@ -2,9 +2,9 @@ package nl.fontys.s3.huister.business.response.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 
-@Getter
+@Data
 @Builder
 @AllArgsConstructor
 public class LoginResponse {
