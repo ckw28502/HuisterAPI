@@ -1,6 +1,7 @@
 package nl.fontys.s3.huister.business.impl.user;
 
 import lombok.AllArgsConstructor;
+import nl.fontys.s3.huister.business.exception.user.AccountHasNotBeenActivatedException;
 import nl.fontys.s3.huister.business.exception.user.InvalidPasswordException;
 import nl.fontys.s3.huister.business.exception.user.UserNotFoundException;
 import nl.fontys.s3.huister.business.interfaces.user.LoginUseCase;
@@ -24,6 +25,7 @@ public class LoginUseCaseImpl implements LoginUseCase {
      *
      * @should throw UserNotFoundException when failed to find user with username equals to request's username
      * @should throw InvalidPasswordException when request's password and found user's password are different
+     * @should throw AccountHasNotBeenActivatedException when credentials are correct but the account has not been activated
      * @should return response filled with user id and name if user is found and request's password is correct
      */
     @Override
@@ -32,10 +34,16 @@ public class LoginUseCaseImpl implements LoginUseCase {
         if (optionalUser.isEmpty()){
             throw new UserNotFoundException();
         }
+
         UserEntity user=optionalUser.get();
         if (!user.getPassword().equals(request.getPassword())){
             throw new InvalidPasswordException();
         }
+
+        if(!user.isActivated()){
+            throw new AccountHasNotBeenActivatedException();
+        }
+
         return LoginResponse.builder()
                 .id(user.getId())
                 .name(user.getName())

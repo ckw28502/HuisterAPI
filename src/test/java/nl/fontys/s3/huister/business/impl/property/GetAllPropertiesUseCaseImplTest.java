@@ -63,6 +63,7 @@ public class GetAllPropertiesUseCaseImplTest {
                 .password("user1")
                 .name("user1")
                 .phoneNumber("0123456789")
+                .activated(true)
                 .build();
 
         when(userRepositoryMock.getUserById(user.getId())).thenReturn(Optional.of(user));
@@ -100,6 +101,7 @@ public class GetAllPropertiesUseCaseImplTest {
                 .password("user1")
                 .name("user1")
                 .phoneNumber("0123456789")
+                .activated(true)
                 .build();
 
         when(userRepositoryMock.getUserById(user.getId())).thenReturn(Optional.of(user));
@@ -152,6 +154,7 @@ public class GetAllPropertiesUseCaseImplTest {
                 .password("user1")
                 .name("user1")
                 .phoneNumber("0123456789")
+                .activated(true)
                 .build();
 
         UserEntity user2= UserEntity.builder()
@@ -162,6 +165,7 @@ public class GetAllPropertiesUseCaseImplTest {
                 .password("user2")
                 .name("user2")
                 .phoneNumber("9876543210")
+                .activated(true)
                 .build();
 
         CityEntity city1= CityEntity.builder()

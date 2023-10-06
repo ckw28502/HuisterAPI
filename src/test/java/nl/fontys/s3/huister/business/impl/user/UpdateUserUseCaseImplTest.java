@@ -62,6 +62,7 @@ public class UpdateUserUseCaseImplTest {
                 .password("user1")
                 .role(UserRole.OWNER)
                 .username("user1")
+                .activated(true)
                 .build();
 
         when(userRepositoryMock.getUserById(1)).thenReturn(Optional.of(user));

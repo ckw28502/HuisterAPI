@@ -14,4 +14,5 @@ public class UserEntity {
     private int id;
     private UserRole role;
     private String username,password,name,phoneNumber,profilePictureUrl;
+    private boolean activated;
 }

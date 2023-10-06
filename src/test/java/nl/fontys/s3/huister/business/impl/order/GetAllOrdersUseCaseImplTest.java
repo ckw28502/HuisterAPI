@@ -56,6 +56,7 @@ public class GetAllOrdersUseCaseImplTest {
                 .password("user1")
                 .name("user1")
                 .phoneNumber("0123456789")
+                .activated(true)
                 .build();
 
         OrderEntity order= OrderEntity.builder()

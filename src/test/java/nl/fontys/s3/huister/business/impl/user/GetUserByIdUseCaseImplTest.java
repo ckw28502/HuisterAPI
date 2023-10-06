@@ -54,6 +54,7 @@ public class GetUserByIdUseCaseImplTest {
                 .password("user1")
                 .name("user1")
                 .phoneNumber("0123456789")
+                .activated(true)
                 .build();
 
         GetUserByIdResponse expectedResponse=GetUserByIdResponse.builder()

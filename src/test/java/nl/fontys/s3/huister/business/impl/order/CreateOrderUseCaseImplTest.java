@@ -59,6 +59,7 @@ public class CreateOrderUseCaseImplTest {
                 .password("user1")
                 .name("user1")
                 .phoneNumber("0123456789")
+                .activated(true)
                 .build();
 
         if (role.equalsIgnoreCase("OWNER")){
@@ -94,6 +95,7 @@ public class CreateOrderUseCaseImplTest {
                 .password("user1")
                 .name("user1")
                 .phoneNumber("0123456789")
+                .activated(true)
                 .build();
 
         UserEntity user2= UserEntity.builder()
@@ -104,6 +106,7 @@ public class CreateOrderUseCaseImplTest {
                 .password("user2")
                 .name("user2")
                 .phoneNumber("9876543210")
+                .activated(true)
                 .build();
 
         when(userRepositoryMock.getUserById(request.getOwnerId())).thenReturn(Optional.of(user1));
@@ -137,6 +140,7 @@ public class CreateOrderUseCaseImplTest {
                 .password("user1")
                 .name("user1")
                 .phoneNumber("0123456789")
+                .activated(true)
                 .build();
 
         UserEntity user2= UserEntity.builder()
@@ -147,6 +151,7 @@ public class CreateOrderUseCaseImplTest {
                 .password("user2")
                 .name("user2")
                 .phoneNumber("9876543210")
+                .activated(true)
                 .build();
 
         PropertyEntity property1= PropertyEntity.builder()
@@ -193,6 +198,7 @@ public class CreateOrderUseCaseImplTest {
                 .password("user1")
                 .name("user1")
                 .phoneNumber("0123456789")
+                .activated(true)
                 .build();
 
         UserEntity user2= UserEntity.builder()
@@ -203,6 +209,7 @@ public class CreateOrderUseCaseImplTest {
                 .password("user2")
                 .name("user2")
                 .phoneNumber("9876543210")
+                .activated(true)
                 .build();
 
         PropertyEntity property1= PropertyEntity.builder()

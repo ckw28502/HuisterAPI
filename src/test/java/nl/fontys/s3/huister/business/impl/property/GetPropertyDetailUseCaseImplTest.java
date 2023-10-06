@@ -74,6 +74,7 @@ public class GetPropertyDetailUseCaseImplTest {
                 .password("user1")
                 .name("user1")
                 .phoneNumber("0123456789")
+                .activated(true)
                 .build();
 
         CityEntity city1= CityEntity.builder()

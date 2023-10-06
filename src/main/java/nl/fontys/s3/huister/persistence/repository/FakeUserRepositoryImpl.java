@@ -44,6 +44,7 @@ public class FakeUserRepositoryImpl implements UserRepository {
                 .profilePictureUrl(request.getProfilePictureUrl())
                 .password(request.getPassword())
                 .username(request.getUsername())
+                .activated(false)
                 .build());
         NEXT_ID+=1;
         System.out.println(NEXT_ID);
