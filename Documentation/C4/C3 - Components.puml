@@ -56,7 +56,4 @@ Rel(propertyRepository,db,"Reads from and writes to","jdbc")
 Rel(cityRepository,db,"Reads from and writes to","jdbc")
 Rel(orderRepository,db,"Reads from and writes to","jdbc")
 
-
-
-
 @enduml
