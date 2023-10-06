@@ -31,18 +31,18 @@ System_Ext(email,"E-mail","E-mail exchange system")
 
 'Relations from person to container
 Rel(admin,spa,"Read reports,property data, and owner data","http")
-Rel(owner,spa,"Create property, read property data, update property data, delete property, accept or reject property orders, and read reports","http")
+Rel(owner,spa,"CRUD property data, accept or reject property orders, and read reports","http")
 Rel(customer,spa,"Read property data, create property order, and cancel property order","http")
 
 'Relations from container to container
-Rel(spa,api,"Make API call","JSON/HTTP")
+Rel(spa,api,"Make API call","REST API")
 Rel(api,db,"Reads from or writes to","JDBC")
 
 'Relation from container to external system
 Rel(api,email,"Send e-mail using","smtp")
 
 'Relation from external system to person
-Rel(email,owner,"Send e-mail to")
-Rel(email,customer,"Send e-mail to")
+Rel(email,owner,"Send e-mail to","smtp")
+Rel(email,customer,"Send e-mail to","smtp")
 
 @enduml
