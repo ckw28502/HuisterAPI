@@ -10,6 +10,7 @@ public interface UserRepository {
     Optional<UserEntity> getUserById(final int id);
     Optional<UserEntity> getUserByUsername(final String username);
     boolean usernameExist(String username);
+    void changePassword(int id, String newPassword);
     void createUser(CreateUserRequest request);
     void updateUser(UpdateUserRequest request);
 }

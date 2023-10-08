@@ -2,10 +2,8 @@ package nl.fontys.s3.huister.controller;
 
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import nl.fontys.s3.huister.business.interfaces.user.CreateUserUseCase;
-import nl.fontys.s3.huister.business.interfaces.user.GetUserByIdUseCase;
-import nl.fontys.s3.huister.business.interfaces.user.LoginUseCase;
-import nl.fontys.s3.huister.business.interfaces.user.UpdateUserUseCase;
+import nl.fontys.s3.huister.business.interfaces.user.*;
+import nl.fontys.s3.huister.business.request.user.ChangePasswordRequest;
 import nl.fontys.s3.huister.business.request.user.CreateUserRequest;
 import nl.fontys.s3.huister.business.request.user.LoginRequest;
 import nl.fontys.s3.huister.business.request.user.UpdateUserRequest;
@@ -23,6 +21,7 @@ public class UserController {
     private final CreateUserUseCase createUserUseCase;
     private final UpdateUserUseCase updateUserUseCase;
     private final LoginUseCase loginUseCase;
+    private final ChangePasswordUseCase changePasswordUseCase;
     @GetMapping("{id}")
     public ResponseEntity<GetUserByIdResponse>getUserById(@PathVariable(value = "id")final int id){
         return ResponseEntity.ok(getUserByIdUseCase.getUserById(id));
@@ -46,5 +45,11 @@ public class UserController {
         request.setId(id);
         updateUserUseCase.updateUser(request);
         return ResponseEntity.noContent().build();
+    }
+    @PutMapping("/changePassword/{id}")
+    public ResponseEntity<Void>changePassword(@PathVariable(value = "id")int id, @RequestBody@Valid ChangePasswordRequest request){
+        request.setId(id);
+        changePasswordUseCase.changePassword(request);
+        return ResponseEntity.ok().build();
     }
 }

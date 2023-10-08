@@ -35,6 +35,17 @@ public class FakeUserRepositoryImpl implements UserRepository {
     }
 
     @Override
+    public void changePassword(int id,String newPassword) {
+        Optional<UserEntity>optionalUser=users.stream().filter(user->user.getId()==id).findFirst();
+        if (optionalUser.isPresent()){
+            UserEntity user=optionalUser.get();
+            int index=users.indexOf(user);
+            user.setPassword(newPassword);
+            users.set(index,user);
+        }
+    }
+
+    @Override
     public void createUser(CreateUserRequest request) {
         users.add(UserEntity.builder()
                 .id(NEXT_ID)
