@@ -17,4 +17,5 @@ public interface PropertyRepository {
     void createProperty(CreatePropertyRequest request);
     void updateProperty(UpdatePropertyRequest request);
     void deleteProperty(final int id);
+    int getPropertiesCount(int ownerId);
 }

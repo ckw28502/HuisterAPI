@@ -59,6 +59,7 @@ public class CreateOrderUseCaseImplTest {
                 .password("user1")
                 .name("user1")
                 .phoneNumber("0123456789")
+                .email("user1@gmail.com")
                 .activated(true)
                 .build();
 
@@ -95,6 +96,7 @@ public class CreateOrderUseCaseImplTest {
                 .password("user1")
                 .name("user1")
                 .phoneNumber("0123456789")
+                .email("user1@gmail.com")
                 .activated(true)
                 .build();
 
@@ -106,6 +108,7 @@ public class CreateOrderUseCaseImplTest {
                 .password("user2")
                 .name("user2")
                 .phoneNumber("9876543210")
+                .email("user2@gmail.com")
                 .activated(true)
                 .build();
 
@@ -140,6 +143,7 @@ public class CreateOrderUseCaseImplTest {
                 .password("user1")
                 .name("user1")
                 .phoneNumber("0123456789")
+                .email("user1@gmail.com")
                 .activated(true)
                 .build();
 
@@ -150,6 +154,7 @@ public class CreateOrderUseCaseImplTest {
                 .profilePictureUrl("Image.png")
                 .password("user2")
                 .name("user2")
+                .email("user2@gmail.com")
                 .phoneNumber("9876543210")
                 .activated(true)
                 .build();
@@ -198,6 +203,7 @@ public class CreateOrderUseCaseImplTest {
                 .password("user1")
                 .name("user1")
                 .phoneNumber("0123456789")
+                .email("user1@gmail.com")
                 .activated(true)
                 .build();
 
@@ -208,6 +214,7 @@ public class CreateOrderUseCaseImplTest {
                 .profilePictureUrl("Image.png")
                 .password("user2")
                 .name("user2")
+                .email("user2@gmail.com")
                 .phoneNumber("9876543210")
                 .activated(true)
                 .build();

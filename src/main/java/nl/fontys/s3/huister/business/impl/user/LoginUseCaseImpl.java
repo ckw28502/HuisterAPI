@@ -10,7 +10,6 @@ import nl.fontys.s3.huister.business.response.user.LoginResponse;
 import nl.fontys.s3.huister.domain.entities.UserEntity;
 import nl.fontys.s3.huister.persistence.UserRepository;
 import org.springframework.stereotype.Service;
-
 import java.util.Optional;
 
 @Service
@@ -47,6 +46,8 @@ public class LoginUseCaseImpl implements LoginUseCase {
         return LoginResponse.builder()
                 .id(user.getId())
                 .name(user.getName())
+                .role(user.getRole())
+                .profilePictureUrl(user.getProfilePictureUrl())
                 .build();
     }
 }

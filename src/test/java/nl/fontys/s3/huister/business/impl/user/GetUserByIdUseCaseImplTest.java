@@ -53,6 +53,7 @@ public class GetUserByIdUseCaseImplTest {
                 .profilePictureUrl("Image.png")
                 .password("user1")
                 .name("user1")
+                .email("user1@gmail.com")
                 .phoneNumber("0123456789")
                 .activated(true)
                 .build();
@@ -63,6 +64,7 @@ public class GetUserByIdUseCaseImplTest {
                 .role(user.getRole())
                 .profilePictureUrl(user.getProfilePictureUrl())
                 .name(user.getName())
+                .email(user.getEmail())
                 .phoneNumber(user.getPhoneNumber())
                 .build();
 

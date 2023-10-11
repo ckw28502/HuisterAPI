@@ -13,6 +13,6 @@ import nl.fontys.s3.huister.domain.entities.enumerator.UserRole;
 public class UserEntity {
     private int id;
     private UserRole role;
-    private String username,password,name,phoneNumber,profilePictureUrl;
+    private String username,password,name,email,phoneNumber,profilePictureUrl;
     private boolean activated;
 }

@@ -49,6 +49,11 @@ public class FakeOrderRepositoryImpl implements OrderRepository {
     }
 
     @Override
+    public List<OrderEntity> getAllAcceptedOrdersForOwner(int userId) {
+        return this.orders.stream().filter(order->userId==order.getOwnerId()&&order.getStatus().equals(OrderStatus.ACCEPTED)).toList();
+    }
+
+    @Override
     public boolean doesOrderExists(int id) {
         return orders.stream().anyMatch(order -> order.getId()==id);
     }

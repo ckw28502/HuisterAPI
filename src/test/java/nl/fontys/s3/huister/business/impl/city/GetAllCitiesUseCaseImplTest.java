@@ -88,6 +88,7 @@ public class GetAllCitiesUseCaseImplTest {
                 .password("user1")
                 .name("user1")
                 .phoneNumber("0123456789")
+                .email("user1@gmail.com")
                 .activated(true)
                 .build();
 

@@ -2,6 +2,7 @@ package nl.fontys.s3.huister.persistence.repository;
 
 import nl.fontys.s3.huister.business.request.user.CreateUserRequest;
 import nl.fontys.s3.huister.business.request.user.UpdateUserRequest;
+import nl.fontys.s3.huister.domain.entities.enumerator.UserRole;
 import nl.fontys.s3.huister.persistence.UserRepository;
 import nl.fontys.s3.huister.domain.entities.UserEntity;
 import org.springframework.stereotype.Repository;
@@ -55,6 +56,7 @@ public class FakeUserRepositoryImpl implements UserRepository {
                 .profilePictureUrl(request.getProfilePictureUrl())
                 .password(request.getPassword())
                 .username(request.getUsername())
+                .email(request.getEmail())
                 .activated(false)
                 .build());
         NEXT_ID+=1;
@@ -69,5 +71,21 @@ public class FakeUserRepositoryImpl implements UserRepository {
         user.setPhoneNumber(request.getPhoneNumber());
         user.setProfilePictureUrl(request.getProfilePictureUrl());
         users.set(index,user);
+    }
+
+    @Override
+    public void activateAccount(int id) {
+        Optional<UserEntity>optionalUser=this.users.stream().filter(user->user.getId()==id).findFirst();
+        if (optionalUser.isPresent()){
+            UserEntity currentUser=optionalUser.get();
+            int index=this.users.indexOf(currentUser);
+            currentUser.setActivated(true);
+            this.users.set(index,currentUser);
+        }
+    }
+
+    @Override
+    public List<UserEntity> getAllOwners() {
+        return this.users.stream().filter(user->user.getRole().equals(UserRole.OWNER)).toList();
     }
 }

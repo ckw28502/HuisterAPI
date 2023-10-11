@@ -83,4 +83,9 @@ public class FakePropertyRepositoryImpl implements PropertyRepository {
     public void deleteProperty(int id) {
         properties.removeIf(property -> property.getId()==id);
     }
+
+    @Override
+    public int getPropertiesCount(int ownerId) {
+        return (int) this.properties.stream().filter(property -> property.getOwnerId() == ownerId).count();
+    }
 }
