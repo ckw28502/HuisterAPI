@@ -35,10 +35,11 @@ public class FakeOrderRepositoryImpl implements OrderRepository {
     }
 
     @Override
-    public void     updateOrder(UpdateOrderRequest request) {
+    public OrderEntity updateOrder(UpdateOrderRequest request) {
         OrderEntity updatedOrder=orders.stream().filter(order -> order.getId()==request.getId()).findFirst().get();
         updatedOrder.setStatus(request.getStatus());
         Collections.fill(orders,updatedOrder);
+        return updatedOrder;
     }
 
     @Override
@@ -46,6 +47,11 @@ public class FakeOrderRepositoryImpl implements OrderRepository {
         return orders.stream().filter(order ->
                 userId== order.getOwnerId()||userId== order.getCustomerId())
                 .toList();
+    }
+
+    @Override
+    public List<OrderEntity> getAllAcceptedOrdersForOwner(int userId) {
+        return this.orders.stream().filter(order->userId==order.getOwnerId()&&order.getStatus().equals(OrderStatus.ACCEPTED)).toList();
     }
 
     @Override

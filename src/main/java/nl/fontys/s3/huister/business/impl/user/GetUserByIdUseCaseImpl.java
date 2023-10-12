@@ -36,6 +36,7 @@ public class GetUserByIdUseCaseImpl implements GetUserByIdUseCase {
                 .username(user.getUsername())
                 .phoneNumber(user.getPhoneNumber())
                 .role(user.getRole())
+                .email(user.getEmail())
                 .profilePictureUrl(user.getProfilePictureUrl())
                 .build();
     }

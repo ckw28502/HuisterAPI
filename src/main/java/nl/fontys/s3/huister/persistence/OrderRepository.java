@@ -8,7 +8,8 @@ import java.util.List;
 
 public interface OrderRepository {
     void createOrder(CreateOrderRequest request);
-    void updateOrder(UpdateOrderRequest request);
+    OrderEntity updateOrder(UpdateOrderRequest request);
     List<OrderEntity> getAllOrder(int userId);
+    List<OrderEntity>getAllAcceptedOrdersForOwner(int userId);
     boolean doesOrderExists(int id);
 }

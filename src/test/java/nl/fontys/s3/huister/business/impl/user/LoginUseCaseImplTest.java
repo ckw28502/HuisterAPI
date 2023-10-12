@@ -1,5 +1,6 @@
 package nl.fontys.s3.huister.business.impl.user;
 
+import nl.fontys.s3.huister.business.exception.user.AccountHasNotBeenActivatedException;
 import nl.fontys.s3.huister.business.exception.user.InvalidPasswordException;
 import nl.fontys.s3.huister.business.exception.user.UserNotFoundException;
 import nl.fontys.s3.huister.business.request.user.LoginRequest;
@@ -58,7 +59,9 @@ public class LoginUseCaseImplTest {
                 .profilePictureUrl("Image.png")
                 .password("user1")
                 .name("user1")
+                .email("user1@gmail.com")
                 .phoneNumber("0123456789")
+                .activated(true)
                 .build();
 
         LoginRequest request=LoginRequest.builder()
@@ -84,8 +87,10 @@ public class LoginUseCaseImplTest {
                 .role(UserRole.OWNER)
                 .profilePictureUrl("Image.png")
                 .password("user1")
+                .email("user1@gmail.com")
                 .name("user1")
                 .phoneNumber("0123456789")
+                .activated(true)
                 .build();
 
         LoginRequest request=LoginRequest.builder()
@@ -96,6 +101,8 @@ public class LoginUseCaseImplTest {
         LoginResponse expectedResponse=LoginResponse.builder()
                 .id(user.getId())
                 .name(user.getName())
+                .role(user.getRole())
+                .profilePictureUrl(user.getProfilePictureUrl())
                 .build();
 
         when(userRepositoryMock.getUserByUsername(request.getUsername())).thenReturn(Optional.of(user));
@@ -103,5 +110,33 @@ public class LoginUseCaseImplTest {
         LoginResponse actualResponse=loginUseCase.Login(request);
         //Assert
         assertEquals(expectedResponse,actualResponse);
+    }
+
+    /**
+     * @verifies throw AccountHasNotBeenActivatedException when credentials are correct but the account has not been activated
+     * @see LoginUseCaseImpl#Login(LoginRequest)
+     */
+    @Test
+    public void Login_shouldThrowAccountHasNotBeenActivatedExceptionWhenCredentialsAreCorrectButTheAccountHasNotBeenActivated() {
+        //Arrange
+        UserEntity user= UserEntity.builder()
+                .id(1)
+                .username("user1")
+                .role(UserRole.OWNER)
+                .profilePictureUrl("Image.png")
+                .password("user1")
+                .name("user1")
+                .email("user1@gmail.com")
+                .phoneNumber("0123456789")
+                .activated(false)
+                .build();
+
+        LoginRequest request=LoginRequest.builder()
+                .username("user1")
+                .password("user1")
+                .build();
+        when(userRepositoryMock.getUserByUsername(user.getUsername())).thenReturn(Optional.of(user));
+        //Act + Assert
+        assertThrows(AccountHasNotBeenActivatedException.class,()->loginUseCase.Login(request));
     }
 }

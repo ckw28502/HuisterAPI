@@ -11,17 +11,19 @@ Container(spa,"Single Page Application","React",$sprite="react","Provides facili
 ContainerDb(db,"Database","MySQL",$sprite="mysql","Stores users data, properties data, orders data")
 
 'Components
-System_Boundary(c1,"Huister API Application"){
+Container_Boundary(c1,"Huister API Application"){
 
     'Controllers
     Component(userController,"User Controller","Spring Boot Controller","Allows user to create user and get user data")
     Component(propertyController,"Property Controller","Spring Boot Controller", "Allows user to create property, get property data, update property data, delete property, and create an order on a property")
+    Component(cityController,"City Controller","Spring Boot Controller", "Allows user to read all cities data")
     Component(orderController,"Order Controller","Spring Boot Controller", "Allows user to create order, cancel order, accept order, reject order, or get order data")
 
     'Services
-    Component(userService,"User Service","Spring Boot Service","Provides functionality related to the business logic related to users")
-    Component(propertyService,"Property Service","Spring Boot Service","Provides functionality related to the business logic related to properties")
-    Component(orderService,"Order Service","Spring Boot Service","Provides functionality related to the business logic related to orders")
+    Component(userService,"User Use Cases Collection","Spring Boot Service","Provides functionality related to the business logic related to users")
+    Component(propertyService,"Property Use Cases Collection","Spring Boot Service","Provides functionality related to the business logic related to properties")
+    Component(cityService,"City Use Case","Spring Boot Service","Provides functionality related to the business logic related to cities")
+    Component(orderService,"Order Use Cases Collection","Spring Boot Service","Provides functionality related to the business logic related to orders")
 
     'Repositories
     Component(userRepository,"User Repository","Spring Boot Repository","Provides functionality to read and writes to user table in the database")
@@ -32,13 +34,15 @@ System_Boundary(c1,"Huister API Application"){
 }
 
 'Relations from Single Page Application to controller
-Rel(spa,userController,"Make API calls to","http")
-Rel(spa,propertyController,"Make API calls to","http")
-Rel(spa,orderController,"Make API calls to","http")
+Rel(spa,userController,"Make API calls to","GET,POST,PUT")
+Rel(spa,propertyController,"Make API calls to","GET,POST,PUT,DELETE")
+Rel(spa,cityController,"Make API calls to","GET")
+Rel(spa,orderController,"Make API calls to","GET,POST,PUT")
 
 'Relations from controller to service
 Rel(userController,userService,"Uses")
 Rel(propertyController,propertyService,"Uses")
+Rel(cityController,cityService,"Uses")
 Rel(orderController,orderService,"Uses")
 
 'Relations from service to repository
@@ -46,14 +50,15 @@ Rel(userService,userRepository,"Uses")
 Rel(propertyService,userRepository,"Uses")
 Rel(propertyService,propertyRepository,"Uses")
 Rel(propertyService,cityRepository,"Uses")
+Rel(cityService,cityRepository,"Uses")
 Rel(orderService,userRepository,"Uses")
 Rel(orderService,propertyRepository,"Uses")
 Rel(orderService,orderRepository,"Uses")
 
 'Relations from repository to database
-Rel(userRepository,db,"Reads from and writes to","jdbc")
-Rel(propertyRepository,db,"Reads from and writes to","jdbc")
-Rel(cityRepository,db,"Reads from and writes to","jdbc")
-Rel(orderRepository,db,"Reads from and writes to","jdbc")
+Rel(userRepository,db,"Reads from and writes to")
+Rel(propertyRepository,db,"Reads from and writes to")
+Rel(cityRepository,db,"Reads from and writes to")
+Rel(orderRepository,db,"Reads from and writes to")
 
 @enduml

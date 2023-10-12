@@ -4,19 +4,16 @@ import lombok.AllArgsConstructor;
 import nl.fontys.s3.huister.business.interfaces.city.GetAllCitiesUseCase;
 import nl.fontys.s3.huister.business.response.city.GetAllCitiesResponse;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-@AllArgsConstructor
 @RequestMapping("/cities")
+@AllArgsConstructor
 public class CityController {
-    private final GetAllCitiesUseCase getAllCitiesUseCase;
-    @GetMapping("{userId}")
-    public ResponseEntity<GetAllCitiesResponse>getAllCities(
-            @PathVariable(value = "userId")final int userId){
+    private GetAllCitiesUseCase getAllCitiesUseCase;
+
+    @GetMapping("{id}")
+    ResponseEntity<GetAllCitiesResponse>getAllCities(@PathVariable(value = "id")int userId){
         return ResponseEntity.ok(getAllCitiesUseCase.getAllCities(userId));
     }
 }

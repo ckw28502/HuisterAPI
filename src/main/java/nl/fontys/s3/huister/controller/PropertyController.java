@@ -16,6 +16,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/properties")
 @AllArgsConstructor
+@CrossOrigin(origins = {"http://localhost:5173","http://localhost:4173"})
 public class PropertyController {
     private final GetAllPropertiesUseCase getAllPropertiesUseCase;
     private final GetPropertyDetailUseCase getPropertyDetailUseCase;
@@ -34,9 +35,8 @@ public class PropertyController {
         return ResponseEntity.ok(getPropertyDetailUseCase.getPropertyDetail(id));
     }
     @PostMapping
-    public ResponseEntity<Void>createProperty(@RequestBody @Valid CreatePropertyRequest request){
-        createPropertyUseCase.createProperty(request);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+    public ResponseEntity<Integer>createProperty(@RequestBody @Valid CreatePropertyRequest request){
+        return ResponseEntity.status(HttpStatus.CREATED).body(createPropertyUseCase.createProperty(request));
     }
     @PutMapping("{id}")
     public ResponseEntity<Void>updateProperty(

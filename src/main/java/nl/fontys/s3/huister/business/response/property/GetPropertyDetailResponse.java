@@ -15,5 +15,5 @@ public class GetPropertyDetailResponse {
     private int id,ownerId;
     private String streetName,postCode,description,ownerName,cityName;
     private List<String> imageUrls;
-    private long area,price;
+    private double area,price;
 }

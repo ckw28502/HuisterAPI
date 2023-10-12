@@ -1,5 +1,6 @@
 package nl.fontys.s3.huister.persistence;
 
+import nl.fontys.s3.huister.domain.entities.OrderEntity;
 import nl.fontys.s3.huister.domain.entities.PropertyEntity;
 import nl.fontys.s3.huister.business.request.property.CreatePropertyRequest;
 import nl.fontys.s3.huister.business.request.property.UpdatePropertyRequest;
@@ -14,7 +15,10 @@ public interface PropertyRepository {
     List<PropertyEntity> getAllProperties();
     List<PropertyEntity>getPropertiesByOwner(int id);
     boolean isCityHasNoProperty(int id);
-    void createProperty(CreatePropertyRequest request);
+    int createProperty(CreatePropertyRequest request);
     void updateProperty(UpdatePropertyRequest request);
     void deleteProperty(final int id);
+    int getPropertiesCount(int ownerId);
+
+    void rentProperty(OrderEntity order);
 }

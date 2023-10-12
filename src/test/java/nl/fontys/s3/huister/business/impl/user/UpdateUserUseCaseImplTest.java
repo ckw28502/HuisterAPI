@@ -60,8 +60,10 @@ public class UpdateUserUseCaseImplTest {
                 .profilePictureUrl("image.jpg")
                 .name("user1")
                 .password("user1")
+                .email("user1@gmail.com")
                 .role(UserRole.OWNER)
                 .username("user1")
+                .activated(true)
                 .build();
 
         when(userRepositoryMock.getUserById(1)).thenReturn(Optional.of(user));

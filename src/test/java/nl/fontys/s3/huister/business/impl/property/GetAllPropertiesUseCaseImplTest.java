@@ -62,7 +62,9 @@ public class GetAllPropertiesUseCaseImplTest {
                 .profilePictureUrl("imageUser1.png")
                 .password("user1")
                 .name("user1")
+                .email("user1@gmail.com")
                 .phoneNumber("0123456789")
+                .activated(true)
                 .build();
 
         when(userRepositoryMock.getUserById(user.getId())).thenReturn(Optional.of(user));
@@ -98,8 +100,10 @@ public class GetAllPropertiesUseCaseImplTest {
                 .role(UserRole.OWNER)
                 .profilePictureUrl("imageUser1.png")
                 .password("user1")
+                .email("user1@gmail.com")
                 .name("user1")
                 .phoneNumber("0123456789")
+                .activated(true)
                 .build();
 
         when(userRepositoryMock.getUserById(user.getId())).thenReturn(Optional.of(user));
@@ -150,8 +154,10 @@ public class GetAllPropertiesUseCaseImplTest {
                 .role(UserRole.valueOf(String.valueOf(role)))
                 .profilePictureUrl("Image5.png")
                 .password("user1")
+                .email("user1@gmail.com")
                 .name("user1")
                 .phoneNumber("0123456789")
+                .activated(true)
                 .build();
 
         UserEntity user2= UserEntity.builder()
@@ -160,8 +166,10 @@ public class GetAllPropertiesUseCaseImplTest {
                 .role(UserRole.valueOf(String.valueOf(role)))
                 .profilePictureUrl("Image6.png")
                 .password("user2")
+                .email("user2@gmail.com")
                 .name("user2")
                 .phoneNumber("9876543210")
+                .activated(true)
                 .build();
 
         CityEntity city1= CityEntity.builder()

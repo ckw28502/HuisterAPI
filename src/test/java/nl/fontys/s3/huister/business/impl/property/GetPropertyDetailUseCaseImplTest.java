@@ -72,8 +72,10 @@ public class GetPropertyDetailUseCaseImplTest {
                 .role(UserRole.ADMIN)
                 .profilePictureUrl("Image5.png")
                 .password("user1")
+                .email("user1@gmail.com")
                 .name("user1")
                 .phoneNumber("0123456789")
+                .activated(true)
                 .build();
 
         CityEntity city1= CityEntity.builder()

@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Data
@@ -15,6 +16,7 @@ public class PropertyEntity {
     private int id,ownerId,cityId;
     private String streetName,postCode,description;
     private List<String>imageUrls;
-    private long area,price;
+    private double area,price;
     private boolean isRented;
+    private LocalDate endRent;
 }
