@@ -18,6 +18,12 @@ public class GetAllOwnersUseCaseImpl implements GetAllOwnersUseCase {
     private final PropertyRepository propertyRepository;
     private final OrderRepository orderRepository;
 
+    /**
+     *
+     * @return list of owners
+     *
+     * @should return list of owners
+     */
     @Override
     public List<GetAllOwnersResponse> getAllOwners() {
         List<UserEntity>owners=userRepository.getAllOwners();
@@ -26,6 +32,7 @@ public class GetAllOwnersUseCaseImpl implements GetAllOwnersUseCase {
                 .id(owner.getId())
                 .name(owner.getName())
                 .email(owner.getEmail())
+                .profilePictureUrl(owner.getProfilePictureUrl())
                 .propertyOwned(propertyRepository.getPropertiesCount(owner.getId()))
                 .propertyRented(orderRepository.getAllAcceptedOrdersForOwner(owner.getId()).size())
                 .build()).toList();

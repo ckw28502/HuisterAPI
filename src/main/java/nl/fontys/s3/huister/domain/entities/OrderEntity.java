@@ -12,6 +12,6 @@ import nl.fontys.s3.huister.domain.entities.enumerator.OrderStatus;
 @Builder
 public class OrderEntity {
     private int id,ownerId,customerId,propertyId,duration;
-    private long price;
+    private double price;
     private OrderStatus status;
 }

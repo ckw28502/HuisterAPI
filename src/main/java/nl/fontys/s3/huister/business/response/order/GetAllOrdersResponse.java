@@ -4,14 +4,15 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import nl.fontys.s3.huister.domain.entities.OrderEntity;
+import nl.fontys.s3.huister.domain.entities.enumerator.OrderStatus;
 
-import java.util.List;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 public class GetAllOrdersResponse {
-    private List<OrderEntity>orders;
+    private String streetName,cityName,imageUrl,endRent;
+    private double price;
+    private OrderStatus status;
 }

@@ -21,7 +21,7 @@ public class CreatePropertyUseCaseImpl implements CreatePropertyUseCase {
      * @should add the existing cityId to request before creating new Property
      */
     @Override
-    public void createProperty(CreatePropertyRequest request) {
+    public int createProperty(CreatePropertyRequest request) {
         int cityId;
         String cityName=request.getCityName();
 
@@ -33,6 +33,6 @@ public class CreatePropertyUseCaseImpl implements CreatePropertyUseCase {
         }
 
         request.setCityId(cityId);
-        propertyRepository.createProperty(request);
+        return propertyRepository.createProperty(request);
     }
 }

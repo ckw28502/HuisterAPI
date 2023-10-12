@@ -101,6 +101,8 @@ public class LoginUseCaseImplTest {
         LoginResponse expectedResponse=LoginResponse.builder()
                 .id(user.getId())
                 .name(user.getName())
+                .role(user.getRole())
+                .profilePictureUrl(user.getProfilePictureUrl())
                 .build();
 
         when(userRepositoryMock.getUserByUsername(request.getUsername())).thenReturn(Optional.of(user));

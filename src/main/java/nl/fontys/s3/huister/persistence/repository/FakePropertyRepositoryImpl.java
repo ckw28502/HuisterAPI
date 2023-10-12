@@ -2,10 +2,12 @@ package nl.fontys.s3.huister.persistence.repository;
 
 import nl.fontys.s3.huister.business.request.property.CreatePropertyRequest;
 import nl.fontys.s3.huister.business.request.property.UpdatePropertyRequest;
+import nl.fontys.s3.huister.domain.entities.OrderEntity;
 import nl.fontys.s3.huister.persistence.PropertyRepository;
 import nl.fontys.s3.huister.domain.entities.PropertyEntity;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -54,7 +56,7 @@ public class FakePropertyRepositoryImpl implements PropertyRepository {
     }
 
     @Override
-    public void createProperty(CreatePropertyRequest request) {
+    public int createProperty(CreatePropertyRequest request) {
         properties.add(PropertyEntity.builder()
                 .area(request.getArea())
                 .description(request.getDescription())
@@ -68,6 +70,7 @@ public class FakePropertyRepositoryImpl implements PropertyRepository {
                 .ownerId(request.getOwnerId())
                 .build());
         NEXT_ID++;
+        return NEXT_ID-1;
     }
 
     @Override
@@ -87,5 +90,17 @@ public class FakePropertyRepositoryImpl implements PropertyRepository {
     @Override
     public int getPropertiesCount(int ownerId) {
         return (int) this.properties.stream().filter(property -> property.getOwnerId() == ownerId).count();
+    }
+
+    @Override
+    public void rentProperty(OrderEntity order) {
+        Optional<PropertyEntity>optionalProperty=this.getPropertyById(order.getPropertyId());
+        if (optionalProperty.isPresent()){
+            PropertyEntity property=optionalProperty.get();
+            int index=this.properties.indexOf(property);
+            property.setEndRent(LocalDate.now().plusMonths(order.getDuration()));
+            property.setRented(true);
+            this.properties.set(index,property);
+        }
     }
 }

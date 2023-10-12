@@ -1,15 +1,14 @@
 package nl.fontys.s3.huister.business.response.user;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Builder
 @Getter
+@EqualsAndHashCode
 @AllArgsConstructor
 @NoArgsConstructor
+
 public class GetAllOwnersResponse {
     private int id,propertyOwned,propertyRented;
-    private String name,email;
+    private String name,email,profilePictureUrl;
 }

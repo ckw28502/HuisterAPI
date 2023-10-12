@@ -11,5 +11,5 @@ import lombok.NoArgsConstructor;
 @Builder
 public class CreateOrderRequest {
     private int ownerId,customerId,propertyId,duration;
-    private long price;
+    private double price;
 }

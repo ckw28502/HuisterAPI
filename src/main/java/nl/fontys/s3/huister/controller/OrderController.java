@@ -12,16 +12,19 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @AllArgsConstructor
 @RequestMapping("/orders")
+@CrossOrigin(origins = {"http://localhost:5173","http://localhost:4173"})
 public class OrderController {
     private final GetAllOrdersUseCase getAllOrdersUseCase;
     private final CreateOrderUseCase createOrderUseCase;
     private final UpdateOrderUseCase updateOrderUseCase;
 
     @GetMapping("{userId}")
-    public ResponseEntity<GetAllOrdersResponse>getAllOrders(
+    public ResponseEntity<List<GetAllOrdersResponse>>getAllOrders(
             @PathVariable(value = "userId")int userId
     ){
         return ResponseEntity.ok(getAllOrdersUseCase.getAllOrders(userId));

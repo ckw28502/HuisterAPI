@@ -15,5 +15,5 @@ public class CreatePropertyRequest {
     private int ownerId,cityId;
     private String streetName,postCode,description,cityName;
     private List<String> imageUrls;
-    private long area,price;
+    private double area,price;
 }
