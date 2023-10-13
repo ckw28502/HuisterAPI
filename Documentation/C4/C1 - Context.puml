@@ -17,6 +17,8 @@ System(webApp,"Huister Web Application","Allow owners to rent their properties a
 
 'External system
 System_Ext(email,"E-mail","E-mail exchange system")
+System_Ext(firebase,"Firebase","Firebase cloud service for storing user profile picture and property images")
+
 
 'Relations from person to system
 Rel(admin,webApp,"Read reports,property data, and owner data")
@@ -25,6 +27,7 @@ Rel(customer,webApp,"Read property data, create property order, and cancel prope
 
 'Relation from system to external system
 Rel(webApp,email,"Send e-mail using")
+Rel(webApp,firebase,"store images in the cloud")
 
 'Relation from external system to person
 Rel(email,owner,"Send e-mail to")

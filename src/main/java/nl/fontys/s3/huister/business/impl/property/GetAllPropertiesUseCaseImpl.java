@@ -79,6 +79,7 @@ public class GetAllPropertiesUseCaseImpl implements GetAllPropertiesUseCase {
                     .postCode(property.getPostCode())
                     .ownerName(ownerName)
                     .cityName(cityName)
+                    .cityId(city.get().getId())
                     .imageUrl(property.getImageUrls().get(0))
                     .build();
 
