@@ -186,6 +186,7 @@ public class GetAllPropertiesUseCaseImplTest {
                 .postCode(property1.getPostCode())
                 .ownerName(user1.getName())
                 .cityName(city1.getName())
+                .cityId(city1.getId())
                 .imageUrl(property1.getImageUrls().get(0))
                 .build();
 
@@ -198,6 +199,7 @@ public class GetAllPropertiesUseCaseImplTest {
                 .postCode(property2.getPostCode())
                 .ownerName(user2.getName())
                 .cityName(city1.getName())
+                .cityId(city1.getId())
                 .imageUrl(property2.getImageUrls().get(0))
                 .build();
 

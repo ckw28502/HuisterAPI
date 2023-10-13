@@ -93,6 +93,19 @@ public class DatabaseInitializer {
                         ,"https://firebasestorage.googleapis.com/v0/b/huister-83675.appspot.com/o/images%2Fproperty%2F1%2FLiving%20Room.jpg?alt=media&token=04da8323-8d61-4b4f-a29b-5e2b84523c87&_gl=1*3he3kd*_ga*Mzc3NjQ5ODU0LjE2OTcwMTExMDA.*_ga_CW55HF8NVT*MTY5NzA5OTM3OC41LjEuMTY5NzEwMDU0NC40NS4wLjA."))
                 .build());
 
+        propertyRepository.createProperty(CreatePropertyRequest.builder()
+                .cityId(2)
+                .area(15.25)
+                .price(594.75)
+                .description("Good Place")
+                .ownerId(2)
+                .postCode("5612JN")
+                .cityName("Eindhoven")
+                .streetName("'S Gravesandestraat")
+                .imageUrls(List.of("https://firebasestorage.googleapis.com/v0/b/huister-83675.appspot.com/o/images%2Fproperty%2F2%2FBuilding.jpg?alt=media&token=b0694e88-e73c-45cd-8ba1-29cc985454a9&_gl=1*prrwp1*_ga*Mzc3NjQ5ODU0LjE2OTcwMTExMDA.*_ga_CW55HF8NVT*MTY5NzIwOTc4Mi44LjEuMTY5NzIwOTk4Ny41NC4wLjA."
+                        ,"https://firebasestorage.googleapis.com/v0/b/huister-83675.appspot.com/o/images%2Fproperty%2F2%2FInterior.jpg?alt=media&token=d9655e69-3ed5-4848-8326-235907f81807&_gl=1*1mj4933*_ga*Mzc3NjQ5ODU0LjE2OTcwMTExMDA.*_ga_CW55HF8NVT*MTY5NzIwOTc4Mi44LjEuMTY5NzIxMDAzMi45LjAuMA.."))
+                .build());
+
         //Order
 
         orderRepository.createOrder(CreateOrderRequest.builder()

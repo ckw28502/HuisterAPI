@@ -7,6 +7,7 @@ import nl.fontys.s3.huister.business.request.property.CreatePropertyRequest;
 import nl.fontys.s3.huister.business.request.property.UpdatePropertyRequest;
 import nl.fontys.s3.huister.business.response.property.GetAllPropertiesResponse;
 import nl.fontys.s3.huister.business.response.property.GetPropertyDetailResponse;
+import nl.fontys.s3.huister.business.response.property.GetRentedNotRentedPropertyRatioResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +24,7 @@ public class PropertyController {
     private final CreatePropertyUseCase createPropertyUseCase;
     private final UpdatePropertyUseCase updatePropertyUseCase;
     private final DeletePropertyUseCase deletePropertyUseCase;
+    private final GetRentedNotRentedPropertyRatioUseCase getRentedNotRentedPropertyRatioUseCase;
 
     @GetMapping("{userId}")
     public ResponseEntity<List<GetAllPropertiesResponse>>getAllPropertiesForCustomer(
@@ -33,6 +35,13 @@ public class PropertyController {
     public ResponseEntity<GetPropertyDetailResponse>getPropertyDetail(
             @PathVariable(value = "id")final int id){
         return ResponseEntity.ok(getPropertyDetailUseCase.getPropertyDetail(id));
+    }
+
+    @GetMapping("dashboard/rentedRatio/{userId}")
+    public ResponseEntity<GetRentedNotRentedPropertyRatioResponse>getRentedNotRentedPropertyRatio(
+            @PathVariable(value = "userId")int userId
+    ){
+        return ResponseEntity.ok(getRentedNotRentedPropertyRatioUseCase.getRentedNotRentedPropertyRatio(userId));
     }
     @PostMapping
     public ResponseEntity<Integer>createProperty(@RequestBody @Valid CreatePropertyRequest request){
