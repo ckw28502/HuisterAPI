@@ -22,6 +22,7 @@ public class ChangePasswordUseCaseImplTest {
     private UserRepository userRepositoryMock;
     @InjectMocks
     private ChangePasswordUseCaseImpl changePasswordUseCase;
+
     /**
      * @verifies throw new UserNotFoundException when user cannot be found
      * @see ChangePasswordUseCaseImpl#changePassword(nl.fontys.s3.huister.business.request.user.ChangePasswordRequest)
