@@ -29,7 +29,9 @@ System_Boundary(c1,"Container diagram for Huister Web Application"){
 
 'External system
 System_Ext(email,"E-mail","E-mail exchange system")
-System_Ext(firebase,"Firebase","Firebase cloud service for storing user profile picture and property images",$sprite="firebase")
+
+'External database
+SystemDb_Ext(firebase,"Firebase","Firebase cloud service for storing user profile picture and property images",$sprite="firebase")
 
 
 'Relations from person to container
@@ -42,8 +44,11 @@ Rel(spa,api,"Make API call","REST API")
 Rel(api,db,"Reads from or writes to","JDBC")
 
 'Relation from container to external system
-Rel(spa,firebase,"Upload image to firebase","HTTPS")
 Rel(api,email,"Send e-mail using","smtp")
+
+'Relation from container to external database
+Rel(spa,firebase,"Upload image to firebase","HTTPS")
+
 
 'Relation from external system to person
 Rel(email,owner,"Send e-mail to","smtp")

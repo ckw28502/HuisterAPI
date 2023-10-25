@@ -1,7 +1,10 @@
-@startuml
+x@startuml
 !include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
 
 !define DEVICONS https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/devicons
+
+!include DEVICONS/firebase.puml
+
 
 !include DEVICONS/react.puml
 !include DEVICONS/mysql.puml
@@ -9,7 +12,7 @@
 'Containers
 Container(spa,"Single Page Application","React",$sprite="react","Provides facilities for users")
 ContainerDb(db,"Database","MySQL",$sprite="mysql","Stores users data, properties data, orders data")
-
+ContainerDb_Ext(firebase,"Firebase",$sprite="firebase","Firebase cloud service for storing user profile picture and property images")
 'Components
 Container_Boundary(c1,"Huister API Application"){
 
@@ -22,7 +25,7 @@ Container_Boundary(c1,"Huister API Application"){
     'Services
     Component(userService,"User Use Cases Collection","Spring Boot Service","Provides functionality related to the business logic related to users")
     Component(propertyService,"Property Use Cases Collection","Spring Boot Service","Provides functionality related to the business logic related to properties")
-    Component(cityService,"City Use Case","Spring Boot Service","Provides functionality related to the business logic related to cities")
+    Component(cityService,"City Use Cases Collection","Spring Boot Service","Provides functionality related to the business logic related to cities")
     Component(orderService,"Order Use Cases Collection","Spring Boot Service","Provides functionality related to the business logic related to orders")
 
     'Repositories
@@ -32,6 +35,9 @@ Container_Boundary(c1,"Huister API Application"){
     Component(orderRepository,"Order Repository","Spring Boot Repository","Provides functionality to read and writes to order table in the database")
 
 }
+
+'Relations from Single Page Application to external database
+Rel(spa,firebase,"Store images","POST")
 
 'Relations from Single Page Application to controller
 Rel(spa,userController,"Make API calls to","GET,POST,PUT")
