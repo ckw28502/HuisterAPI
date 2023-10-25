@@ -10,11 +10,12 @@ import org.springframework.stereotype.Repository;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class FakeOrderRepositoryImpl implements OrderRepository {
     private final List<OrderEntity>orders;
-    private static int NEXT_ID=1;
+    private int NEXT_ID=1;
 
     public FakeOrderRepositoryImpl() {
         this.orders=new ArrayList<>();
@@ -36,10 +37,14 @@ public class FakeOrderRepositoryImpl implements OrderRepository {
 
     @Override
     public OrderEntity updateOrder(UpdateOrderRequest request) {
-        OrderEntity updatedOrder=orders.stream().filter(order -> order.getId()==request.getId()).findFirst().get();
-        updatedOrder.setStatus(request.getStatus());
-        Collections.fill(orders,updatedOrder);
-        return updatedOrder;
+        Optional<OrderEntity> optionalOrder=orders.stream().filter(order -> order.getId()==request.getId()).findFirst();
+        if (optionalOrder.isPresent()){
+            OrderEntity updatedOrder=optionalOrder.get();
+            updatedOrder.setStatus(request.getStatus());
+            Collections.fill(orders,updatedOrder);
+            return updatedOrder;
+        }
+        return null;
     }
 
     @Override

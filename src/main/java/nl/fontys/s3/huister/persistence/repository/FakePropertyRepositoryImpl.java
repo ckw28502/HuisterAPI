@@ -16,7 +16,7 @@ import java.util.Optional;
 @Repository
 public class FakePropertyRepositoryImpl implements PropertyRepository {
     private final List<PropertyEntity>properties;
-    private static int NEXT_ID=1;
+    private int NEXT_ID=1;
 
     public FakePropertyRepositoryImpl() {
         this.properties = new ArrayList<>();
@@ -75,11 +75,14 @@ public class FakePropertyRepositoryImpl implements PropertyRepository {
 
     @Override
     public void updateProperty(UpdatePropertyRequest request) {
-        PropertyEntity updatedProperty=properties.stream().findFirst().get();
-        updatedProperty.setDescription(request.getDescription());
-        updatedProperty.setPrice(request.getPrice());
-        updatedProperty.getImageUrls().addAll(request.getImageUrls());
-        Collections.fill(properties, updatedProperty);
+        Optional<PropertyEntity> optionalProperty=properties.stream().findFirst();
+        if (optionalProperty.isPresent()){
+            PropertyEntity updatedProperty=optionalProperty.get();
+            updatedProperty.setDescription(request.getDescription());
+            updatedProperty.setPrice(request.getPrice());
+            updatedProperty.getImageUrls().addAll(request.getImageUrls());
+            Collections.fill(properties, updatedProperty);
+        }
     }
 
     @Override

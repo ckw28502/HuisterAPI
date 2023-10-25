@@ -13,7 +13,7 @@ import java.util.Optional;
 @Repository
 @AllArgsConstructor
 public class FakeCityRepositoryImpl implements CityRepository {
-    private static int NEXT_ID=1;
+    private int NEXT_ID=1;
     private final List<CityEntity>cities;
 
     public FakeCityRepositoryImpl() {

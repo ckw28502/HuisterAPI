@@ -13,7 +13,7 @@ import java.util.Optional;
 
 @Repository
 public class FakeUserRepositoryImpl implements UserRepository {
-    private static int NEXT_ID=1;
+    private  int NEXT_ID=1;
     private final List<UserEntity>users;
 
     public FakeUserRepositoryImpl() {
