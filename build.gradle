@@ -2,7 +2,7 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.1.3'
 	id 'io.spring.dependency-management' version '1.1.3'
-	id 'jacoco'
+	id "org.sonarqube" version "4.2.1.3168"
 }
 
 group = 'nl.fontys.s3'
@@ -15,6 +15,25 @@ java {
 repositories {
 	mavenCentral()
 }
+//local sonarQube
+//sonar {
+//	properties {
+//		property("sonar.projectKey", "HuisterAPI")
+//		property("sonar.organization", "HuisterAPI")
+//		property("sonar.host.url", "http://localhost:9000")
+//	}
+//}
+
+//GitLab sonarQube
+sonar {
+	properties {
+		property "sonar.projectKey", "I528859_huister-api_AYtnX0TenKgaHVOZXldz"
+		property "sonar.projectName", "Huister API"
+		property "sonar.qualitygate.wait", true
+	}
+}
+
+
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter'
@@ -29,24 +48,10 @@ dependencies {
 	runtimeOnly 'com.h2database:h2'
 }
 
-tasks.named('test') {
+test {
 	useJUnitPlatform()
-	finalizedBy jacocoTestReport
+}
 
-}
-jacocoTestReport {
-	dependsOn test
-	reports {
-		xml.required = true
-	}
-	afterEvaluate {
-		classDirectories.setFrom(files(classDirectories.files.collect {
-			fileTree(dir: it, exclude: [
-					"**/configuration/*"
-			])
-		}))
-	}
-}
 
 configurations {
 	compileOnly {

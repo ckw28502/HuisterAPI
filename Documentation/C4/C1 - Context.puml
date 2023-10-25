@@ -4,6 +4,8 @@
 !define DEVICONS https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/devicons
 !define FONTAWESOME https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/font-awesome-5
 
+!include DEVICONS/firebase.puml
+
 !include FONTAWESOME/users.puml
 !include FONTAWESOME/house_user.puml
 
@@ -17,7 +19,8 @@ System(webApp,"Huister Web Application","Allow owners to rent their properties a
 
 'External system
 System_Ext(email,"E-mail","E-mail exchange system")
-System_Ext(firebase,"Firebase","Firebase cloud service for storing user profile picture and property images")
+'External database
+SystemDb_Ext(firebase,"Firebase",$sprite="firebase","Firebase cloud service for storing user profile picture and property images")
 
 
 'Relations from person to system
@@ -27,6 +30,8 @@ Rel(customer,webApp,"Read property data, create property order, and cancel prope
 
 'Relation from system to external system
 Rel(webApp,email,"Send e-mail using")
+
+'Relation from system to external database
 Rel(webApp,firebase,"store images in the cloud")
 
 'Relation from external system to person

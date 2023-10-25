@@ -1,1 +1,2 @@
 https://git.fhict.nl/I528859/huister.git
+https://git.fhict.nl/I528859/huister-react.git
