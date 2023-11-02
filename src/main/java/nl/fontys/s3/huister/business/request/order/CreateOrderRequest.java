@@ -10,6 +10,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class CreateOrderRequest {
-    private int ownerId,customerId,propertyId,duration;
+    private long ownerId;
+    private long customerId;
+    private long propertyId;
+    private int duration;
+
     private double price;
 }

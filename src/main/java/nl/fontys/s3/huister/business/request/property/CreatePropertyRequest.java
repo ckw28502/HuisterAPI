@@ -4,16 +4,20 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.List;
-
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class CreatePropertyRequest {
-    private int ownerId,cityId;
-    private String streetName,postCode,description,cityName;
-    private List<String> imageUrls;
+    private long ownerId;
+    private long cityId;
+
+    private String streetName;
+    private String postCode;
+    private String description;
+    private String cityName;
+
+    private String imageUrl;
+
     private double area,price;
 }

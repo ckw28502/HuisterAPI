@@ -21,82 +21,107 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class LoginUseCaseImplTest {
-
+class LoginUseCaseImplTest {
     @Mock
     private UserRepository userRepositoryMock;
+
     @InjectMocks
     private LoginUseCaseImpl loginUseCase;
 
     /**
-     * @verifies throw UserNotFoundException when failed to find user with username equals to request's username
-     * @see LoginUseCaseImpl#Login(nl.fontys.s3.huister.business.request.user.LoginRequest)
+     * @verifies throw UserNotFoundException when username is invalid
+     * @see LoginUseCaseImpl#login(nl.fontys.s3.huister.business.request.user.LoginRequest)
      */
     @Test
-    public void Login_shouldThrowUserNotFoundExceptionWhenFailedToFindUserWithUsernameEqualsToRequestsUsername(){
+    void login_shouldThrowUserNotFoundExceptionWhenUsernameIsInvalid() {
         //Arrange
         LoginRequest request=LoginRequest.builder()
-                .username("user1")
-                .password("user1")
+                .username("user")
+                .password("user")
                 .build();
 
-        when(userRepositoryMock.getUserByUsername(request.getUsername())).thenReturn(Optional.empty());
+        when(userRepositoryMock.findByUsername(request.getUsername())).thenReturn(Optional.empty());
+
         //Act + Assert
-        assertThrows(UserNotFoundException.class,()->loginUseCase.Login(request));
+        assertThrows(UserNotFoundException.class,()->loginUseCase.login(request));
     }
 
     /**
-     * @verifies throw InvalidPasswordException when request's password and found user's password are different
-     * @see LoginUseCaseImpl#Login(nl.fontys.s3.huister.business.request.user.LoginRequest)
+     * @verifies throw InvalidPasswordException when password is wrong
+     * @see LoginUseCaseImpl#login(nl.fontys.s3.huister.business.request.user.LoginRequest)
      */
     @Test
-    public void Login_shouldThrowInvalidPasswordExceptionWhenRequestsPasswordAndFoundUsersPasswordAreDifferent(){
+    void login_shouldThrowInvalidPasswordExceptionWhenPasswordIsWrong() {
         //Arrange
-        UserEntity user= UserEntity.builder()
-                .id(1)
-                .username("user1")
-                .role(UserRole.OWNER)
-                .profilePictureUrl("Image.png")
-                .password("user1")
-                .name("user1")
-                .email("user1@gmail.com")
-                .phoneNumber("0123456789")
-                .activated(true)
-                .build();
-
         LoginRequest request=LoginRequest.builder()
-                .username("user1")
-                .password("user2")
+                .username("user")
+                .password("user")
                 .build();
 
-        when(userRepositoryMock.getUserByUsername(request.getUsername())).thenReturn(Optional.of(user));
+        UserEntity user=UserEntity.builder()
+                .id(1L)
+                .profilePictureUrl("user.jpg")
+                .role(UserRole.OWNER)
+                .password("resu")
+                .activated(false)
+                .name("user")
+                .build();
+
+        when(userRepositoryMock.findByUsername(request.getUsername())).thenReturn(Optional.of(user));
+
         //Act + Assert
-        assertThrows(InvalidPasswordException.class,()->loginUseCase.Login(request));
+        assertThrows(InvalidPasswordException.class,()->loginUseCase.login(request));
     }
 
     /**
-     * @verifies return response filled with user id and name if user is found and request's password is correct
-     * @see LoginUseCaseImpl#Login(nl.fontys.s3.huister.business.request.user.LoginRequest)
+     * @verifies throw AccountHasNotBeenActivatedException when account is not activated
+     * @see LoginUseCaseImpl#login(nl.fontys.s3.huister.business.request.user.LoginRequest)
      */
     @Test
-    public void Login_shouldReturnResponseFilledWithUserIdAndNameIfUserIsFoundAndRequestsPasswordIsCorrect(){
+    void login_shouldThrowAccountHasNotBeenActivatedExceptionWhenAccountIsNotActivated() {
         //Arrange
-        UserEntity user= UserEntity.builder()
-                .id(1)
-                .username("user1")
-                .role(UserRole.OWNER)
-                .profilePictureUrl("Image.png")
-                .password("user1")
-                .email("user1@gmail.com")
-                .name("user1")
-                .phoneNumber("0123456789")
-                .activated(true)
+        LoginRequest request=LoginRequest.builder()
+                .username("user")
+                .password("user")
                 .build();
 
-        LoginRequest request=LoginRequest.builder()
-                .username("user1")
-                .password("user1")
+        UserEntity user=UserEntity.builder()
+                .id(1L)
+                .profilePictureUrl("user.jpg")
+                .role(UserRole.OWNER)
+                .password("user")
+                .activated(false)
+                .name("user")
                 .build();
+
+        when(userRepositoryMock.findByUsername(request.getUsername())).thenReturn(Optional.of(user));
+
+        //Act + Assert
+        assertThrows(AccountHasNotBeenActivatedException.class,()->loginUseCase.login(request));
+    }
+
+    /**
+     * @verifies return response when credentials are valid
+     * @see LoginUseCaseImpl#login(nl.fontys.s3.huister.business.request.user.LoginRequest)
+     */
+    @Test
+    void login_shouldReturnResponseWhenCredentialsAreValid() {
+        //Arrange
+        LoginRequest request=LoginRequest.builder()
+                .username("user")
+                .password("user")
+                .build();
+
+        UserEntity user=UserEntity.builder()
+                .id(1L)
+                .profilePictureUrl("user.jpg")
+                .role(UserRole.OWNER)
+                .password("user")
+                .activated(true)
+                .name("user")
+                .build();
+
+        when(userRepositoryMock.findByUsername(request.getUsername())).thenReturn(Optional.of(user));
 
         LoginResponse expectedResponse=LoginResponse.builder()
                 .id(user.getId())
@@ -105,38 +130,11 @@ public class LoginUseCaseImplTest {
                 .profilePictureUrl(user.getProfilePictureUrl())
                 .build();
 
-        when(userRepositoryMock.getUserByUsername(request.getUsername())).thenReturn(Optional.of(user));
         //Act
-        LoginResponse actualResponse=loginUseCase.Login(request);
+        LoginResponse actualResponse=loginUseCase.login(request);
+
         //Assert
         assertEquals(expectedResponse,actualResponse);
-    }
 
-    /**
-     * @verifies throw AccountHasNotBeenActivatedException when credentials are correct but the account has not been activated
-     * @see LoginUseCaseImpl#Login(LoginRequest)
-     */
-    @Test
-    public void Login_shouldThrowAccountHasNotBeenActivatedExceptionWhenCredentialsAreCorrectButTheAccountHasNotBeenActivated() {
-        //Arrange
-        UserEntity user= UserEntity.builder()
-                .id(1)
-                .username("user1")
-                .role(UserRole.OWNER)
-                .profilePictureUrl("Image.png")
-                .password("user1")
-                .name("user1")
-                .email("user1@gmail.com")
-                .phoneNumber("0123456789")
-                .activated(false)
-                .build();
-
-        LoginRequest request=LoginRequest.builder()
-                .username("user1")
-                .password("user1")
-                .build();
-        when(userRepositoryMock.getUserByUsername(user.getUsername())).thenReturn(Optional.of(user));
-        //Act + Assert
-        assertThrows(AccountHasNotBeenActivatedException.class,()->loginUseCase.Login(request));
     }
 }

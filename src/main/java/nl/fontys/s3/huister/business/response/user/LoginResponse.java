@@ -9,7 +9,7 @@ import nl.fontys.s3.huister.domain.entities.enumerator.UserRole;
 @Builder
 @AllArgsConstructor
 public class LoginResponse {
-    private int id;
+    private long id;
     private String name;
     private UserRole role;
     private String profilePictureUrl;

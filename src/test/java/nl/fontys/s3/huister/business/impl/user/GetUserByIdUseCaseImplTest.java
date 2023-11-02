@@ -18,60 +18,61 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class GetUserByIdUseCaseImplTest {
+class GetUserByIdUseCaseImplTest {
     @Mock
     private UserRepository userRepositoryMock;
+
     @InjectMocks
     private GetUserByIdUseCaseImpl getUserByIdUseCase;
 
     /**
      * @verifies throw UserNotFoundException when user not found
-     * @see GetUserByIdUseCaseImpl#getUserById(int)
+     * @see GetUserByIdUseCaseImpl#getUserById(long)
      */
     @Test
-    public void getUserById_shouldThrowUserNotFoundExceptionWhenUserNotFound(){
+    void getUserById_shouldThrowUserNotFoundExceptionWhenUserNotFound() {
         //Arrange
-        int id=1;
-        when(userRepositoryMock.getUserById(id)).thenReturn(Optional.empty());
+        when(userRepositoryMock.findById(1L)).thenReturn(Optional.empty());
+
         //Act + Assert
-        assertThrows(UserNotFoundException.class,()->
-            getUserByIdUseCase.getUserById(id)
-        );
+        assertThrows(UserNotFoundException.class,()->getUserByIdUseCase.getUserById(1L));
+
     }
 
     /**
-     * @verifies return GetUserByIdResponse containing found user
-     * @see GetUserByIdUseCaseImpl#getUserById(int)
+     * @verifies return user when user is found
+     * @see GetUserByIdUseCaseImpl#getUserById(long)
      */
     @Test
-    public void getUserById_shouldReturnGetUserByIdResponseContainingFoundUser(){
+    void getUserById_shouldReturnUserWhenUserIsFound() {
         //Arrange
-        UserEntity user= UserEntity.builder()
-                .id(1)
-                .username("user1")
-                .role(UserRole.OWNER)
-                .profilePictureUrl("Image.png")
-                .password("user1")
-                .name("user1")
-                .email("user1@gmail.com")
+        UserEntity user=UserEntity.builder()
+                .id(1L)
+                .name("user")
+                .email("user.email.com")
                 .phoneNumber("0123456789")
-                .activated(true)
+                .username("user")
+                .role(UserRole.OWNER)
+                .profilePictureUrl("user.jpg")
                 .build();
+
+        when(userRepositoryMock.findById(user.getId())).thenReturn(Optional.of(user));
 
         GetUserByIdResponse expectedResponse=GetUserByIdResponse.builder()
-                .id(1)
-                .username(user.getUsername())
-                .role(user.getRole())
-                .profilePictureUrl(user.getProfilePictureUrl())
+                .id(user.getId())
                 .name(user.getName())
-                .email(user.getEmail())
+                .username(user.getUsername())
                 .phoneNumber(user.getPhoneNumber())
+                .role(user.getRole())
+                .email(user.getEmail())
+                .profilePictureUrl(user.getProfilePictureUrl())
                 .build();
 
-        when(userRepositoryMock.getUserById(user.getId())).thenReturn(Optional.of(user));
         //Act
         GetUserByIdResponse actualResponse=getUserByIdUseCase.getUserById(user.getId());
+
         //Assert
         assertEquals(expectedResponse,actualResponse);
+
     }
 }

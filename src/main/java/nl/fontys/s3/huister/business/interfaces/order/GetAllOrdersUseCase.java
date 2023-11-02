@@ -5,5 +5,5 @@ import nl.fontys.s3.huister.business.response.order.GetAllOrdersResponse;
 import java.util.List;
 
 public interface GetAllOrdersUseCase {
-    List<GetAllOrdersResponse> getAllOrders(int userId);
+    List<GetAllOrdersResponse> getAllOrders(long userId);
 }

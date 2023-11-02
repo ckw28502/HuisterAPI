@@ -1,22 +1,53 @@
 package nl.fontys.s3.huister.domain.entities;
 
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.util.List;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@Entity
+@Table(name = "PROPERTY_TABLE")
 public class PropertyEntity {
-    private int id,ownerId,cityId;
-    private String streetName,postCode,description;
-    private List<String>imageUrls;
-    private double area,price;
-    private boolean isRented;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+    @ManyToOne
+    @JoinColumn(name = "owner_id")
+    private UserEntity owner;
+    @ManyToOne
+    @JoinColumn(name = "city_id")
+    private CityEntity city;
+
+    @Column(name = "street_name")
+    @NotBlank
+    private String streetName;
+    @Column(name = "post_code")
+    @NotBlank
+    private String postCode;
+    @Column(name = "description")
+    @NotBlank
+    private String description;
+
+    @Column(name = "image_url",columnDefinition = "TEXT")
+    @NotBlank
+    private String imageUrl;
+
+    @Column(name = "area")
+    @NotNull
+    private double area;
+    @Column(name = "price")
+    @NotNull
+    private double price;
+
+    @Column(name = "end_rent")
     private LocalDate endRent;
 }

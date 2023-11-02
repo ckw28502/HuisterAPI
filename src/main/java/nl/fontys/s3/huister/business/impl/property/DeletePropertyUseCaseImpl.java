@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import nl.fontys.s3.huister.domain.entities.PropertyEntity;
 import nl.fontys.s3.huister.business.exception.property.PropertyNotFoundException;
 import nl.fontys.s3.huister.business.interfaces.property.DeletePropertyUseCase;
-import nl.fontys.s3.huister.persistence.CityRepository;
 import nl.fontys.s3.huister.persistence.PropertyRepository;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +13,6 @@ import java.util.Optional;
 @AllArgsConstructor
 public class DeletePropertyUseCaseImpl implements DeletePropertyUseCase {
     private final PropertyRepository propertyRepository;
-    private final CityRepository cityRepository;
 
     /**
      *
@@ -25,16 +23,11 @@ public class DeletePropertyUseCaseImpl implements DeletePropertyUseCase {
      * @should delete city object if there are no property in the city
      */
     @Override
-    public void deleteProperty(int id) {
-        Optional<PropertyEntity> propertyOptional=propertyRepository.getPropertyById(id);
+    public void deleteProperty(long id) {
+        Optional<PropertyEntity> propertyOptional=propertyRepository.findById(id);
         if (propertyOptional.isEmpty()){
             throw new PropertyNotFoundException();
         }
-        PropertyEntity property=propertyOptional.get();
-        int cityId=property.getCityId();
         propertyRepository.deleteProperty(id);
-        if (propertyRepository.isCityHasNoProperty(cityId)){
-            cityRepository.deleteCity(cityId);
-        }
     }
 }

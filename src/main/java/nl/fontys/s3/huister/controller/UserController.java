@@ -27,27 +27,64 @@ public class UserController {
     private final LoginUseCase loginUseCase;
     private final ChangePasswordUseCase changePasswordUseCase;
     private final GetAllOwnersUseCase getAllOwnersUseCase;
+
+
+    /**
+     *
+     * @param id user id
+     * @return user
+     *
+     * @should return user
+     */
     @GetMapping("{id}")
-    public ResponseEntity<GetUserByIdResponse>getUserById(@PathVariable(value = "id")final int id){
+    public ResponseEntity<GetUserByIdResponse>getUserById(@PathVariable(value = "id")final long id){
         return ResponseEntity.ok(getUserByIdUseCase.getUserById(id));
     }
 
+    /**
+     *
+     * @return list of owner
+     *
+     * @should return list of owner
+     */
     @GetMapping("/owners")
     public ResponseEntity<List<GetAllOwnersResponse>>getAllOwners(){
         return ResponseEntity.ok(getAllOwnersUseCase.getAllOwners());
     }
 
+    /**
+     *
+     * @param request create user request
+     * @return http with created status
+     *
+     * @should create user
+     */
     @PostMapping()
     public ResponseEntity<Void>createUser(@RequestBody CreateUserRequest request){
         createUserUseCase.createUser(request);
        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
+    /**
+     *
+     * @param request login request
+     * @return login token
+     *
+     * @should return token
+     */
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse>Login(@RequestBody@Valid LoginRequest request){
-        return ResponseEntity.ok(loginUseCase.Login(request));
+    public ResponseEntity<LoginResponse>login(@RequestBody@Valid LoginRequest request){
+        return ResponseEntity.ok(loginUseCase.login(request));
     }
 
+    /**
+     *
+     * @param id user id
+     * @param request update user request
+     * @return http response with no content status
+     *
+     * @should update user
+     */
     @PutMapping("{id}")
     public ResponseEntity<Void>updateUser(
             @PathVariable(value = "id")final int id,
@@ -57,10 +94,19 @@ public class UserController {
         updateUserUseCase.updateUser(request);
         return ResponseEntity.noContent().build();
     }
+
+    /**
+     *
+     * @param id user id
+     * @param request new password request
+     * @return http response with no content status
+     *
+     * @should update password
+     */
     @PutMapping("/changePassword/{id}")
-    public ResponseEntity<Void>changePassword(@PathVariable(value = "id")int id, @RequestBody@Valid ChangePasswordRequest request){
+    public ResponseEntity<Void>changePassword(@PathVariable(value = "id")long id, @RequestBody@Valid ChangePasswordRequest request){
         request.setId(id);
         changePasswordUseCase.changePassword(request);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 }

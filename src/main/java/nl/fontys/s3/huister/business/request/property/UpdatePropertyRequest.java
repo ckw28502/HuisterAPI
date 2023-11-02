@@ -5,15 +5,13 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class UpdatePropertyRequest {
-    private int id;
+    private long id;
     private String description;
-    private List<String> imageUrls;
-    private long price;
+    private String imageUrl;
+    private double price;
 }

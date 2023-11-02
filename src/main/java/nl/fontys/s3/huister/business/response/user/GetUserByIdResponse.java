@@ -11,7 +11,13 @@ import nl.fontys.s3.huister.domain.entities.enumerator.UserRole;
 @AllArgsConstructor
 @NoArgsConstructor
 public class GetUserByIdResponse {
-    private int id;
+    private long id;
+
     private UserRole role;
-    private String name,phoneNumber,username,email,profilePictureUrl;
+
+    private String name;
+    private String phoneNumber;
+    private String username;
+    private String email;
+    private String profilePictureUrl;
 }

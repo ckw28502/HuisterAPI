@@ -11,6 +11,6 @@ import nl.fontys.s3.huister.domain.entities.enumerator.OrderStatus;
 @NoArgsConstructor
 @Builder
 public class UpdateOrderRequest {
-    private int id;
+    private long id;
     private OrderStatus status;
 }
