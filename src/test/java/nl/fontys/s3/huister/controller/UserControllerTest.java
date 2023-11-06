@@ -2,10 +2,7 @@ package nl.fontys.s3.huister.controller;
 
 import com.google.gson.Gson;
 import nl.fontys.s3.huister.business.interfaces.user.*;
-import nl.fontys.s3.huister.business.request.user.ChangePasswordRequest;
-import nl.fontys.s3.huister.business.request.user.CreateUserRequest;
-import nl.fontys.s3.huister.business.request.user.LoginRequest;
-import nl.fontys.s3.huister.business.request.user.UpdateUserRequest;
+import nl.fontys.s3.huister.business.request.user.*;
 import nl.fontys.s3.huister.business.response.user.GetAllOwnersResponse;
 import nl.fontys.s3.huister.business.response.user.GetUserByIdResponse;
 import nl.fontys.s3.huister.business.response.user.LoginResponse;
@@ -50,6 +47,9 @@ public class UserControllerTest {
     private ChangePasswordUseCase changePasswordUseCaseMock;
     @MockBean
     private GetAllOwnersUseCase getAllOwnersUseCaseMock;
+    @MockBean
+    private SetProfilePictureUrlUseCase setProfilePictureUrlUseCase;
+
     /**
      * @verifies return user
      * @see UserController#getUserById(long)
@@ -194,6 +194,26 @@ public class UserControllerTest {
                 .andExpect(status().isNoContent());
 
         verify(changePasswordUseCaseMock).changePassword(request);
+
+    }
+
+    /**
+     * @verifies set profile picture url
+     * @see UserController#setProfilePictureUrl(nl.fontys.s3.huister.business.request.user.SetProfilePictureUrlRequest)
+     */
+    @Test
+    void setProfilePictureUrl_shouldSetProfilePictureUrl() throws Exception {
+        //Arrange
+        SetProfilePictureUrlRequest request=SetProfilePictureUrlRequest.builder().build();
+
+        //Act + Assert
+        mockMvc.perform(put("/users/image")
+                .contentType(APPLICATION_JSON_VALUE)
+                .content(gson.toJson(request)))
+                .andDo(print())
+                .andExpect(status().isNoContent());
+
+        verify(setProfilePictureUrlUseCase).setProfilePictureUrl(request);
 
     }
 }

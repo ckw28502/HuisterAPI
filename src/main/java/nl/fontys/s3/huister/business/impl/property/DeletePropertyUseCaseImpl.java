@@ -19,8 +19,7 @@ public class DeletePropertyUseCaseImpl implements DeletePropertyUseCase {
      * @param id id of the property which will be deleted
      *
      * @should throw PropertyNotFoundException if id is invalid
-     * @should delete property if id is valid
-     * @should delete city object if there are no property in the city
+     * @should delete property
      */
     @Override
     public void deleteProperty(long id) {

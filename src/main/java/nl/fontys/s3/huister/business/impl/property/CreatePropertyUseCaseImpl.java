@@ -19,10 +19,10 @@ public class CreatePropertyUseCaseImpl implements CreatePropertyUseCase {
 
     /**
      *
-     * @param request new Property request from client
+     * @param request new Property request
      *
-     * @should create new City object when cityName doesn't exist in CityRepository then create the property
-     * @should add the existing cityId to request before creating new Property
+     * @should throw UserNotFoundException when user is not found
+     * @should create property
      */
     @Override
     public void createProperty(CreatePropertyRequest request) {

@@ -6,7 +6,6 @@ import lombok.*;
 @Getter
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor
 public class GetRentedNotRentedPropertyRatioResponse {
         private int rented;
         private int notRented;

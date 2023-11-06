@@ -6,7 +6,6 @@ import lombok.*;
 @Getter
 @EqualsAndHashCode
 @AllArgsConstructor
-@NoArgsConstructor
 public class GetAllOwnersResponse {
     private long id;
     private int propertyOwned;

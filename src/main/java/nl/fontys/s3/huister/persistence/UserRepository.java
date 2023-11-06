@@ -15,6 +15,11 @@ public interface UserRepository extends JpaRepository<UserEntity,Long> {
     Optional<UserEntity> findByUsername(final String username);
 
     boolean existsByUsername(String username);
+
+    @Modifying
+    @Query("UPDATE UserEntity SET profilePictureUrl=:profilePictureUrl WHERE username=:username")
+    void setProfilePictureUrl(@Param("username") String username,@Param("profilePictureUrl") String newPassword);
+
     @Modifying
     @Query("UPDATE UserEntity SET password=:newPassword WHERE id=:id")
     void setPassword(@Param("id") long id,@Param("newPassword") String newPassword);

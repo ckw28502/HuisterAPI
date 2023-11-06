@@ -3,10 +3,7 @@ package nl.fontys.s3.huister.controller;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import nl.fontys.s3.huister.business.interfaces.user.*;
-import nl.fontys.s3.huister.business.request.user.ChangePasswordRequest;
-import nl.fontys.s3.huister.business.request.user.CreateUserRequest;
-import nl.fontys.s3.huister.business.request.user.LoginRequest;
-import nl.fontys.s3.huister.business.request.user.UpdateUserRequest;
+import nl.fontys.s3.huister.business.request.user.*;
 import nl.fontys.s3.huister.business.response.user.GetAllOwnersResponse;
 import nl.fontys.s3.huister.business.response.user.GetUserByIdResponse;
 import nl.fontys.s3.huister.business.response.user.LoginResponse;
@@ -27,6 +24,7 @@ public class UserController {
     private final LoginUseCase loginUseCase;
     private final ChangePasswordUseCase changePasswordUseCase;
     private final GetAllOwnersUseCase getAllOwnersUseCase;
+    private final SetProfilePictureUrlUseCase setProfilePictureUrlUseCase;
 
 
     /**
@@ -75,6 +73,21 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<LoginResponse>login(@RequestBody@Valid LoginRequest request){
         return ResponseEntity.ok(loginUseCase.login(request));
+    }
+
+
+    /**
+     *
+     * @param request set profile picture url request
+     * @return http response with no content status
+     *
+     * @should set profile picture url
+     *
+     */
+    @PutMapping("/image")
+    public ResponseEntity<Void>setProfilePictureUrl(SetProfilePictureUrlRequest request){
+        setProfilePictureUrlUseCase.setProfilePictureUrl(request);
+        return ResponseEntity.noContent().build();
     }
 
     /**
