@@ -2,7 +2,7 @@ package nl.fontys.s3.huister.business.response.property;
 
 import lombok.*;
 
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = false)
 @Getter
 @Builder
 @AllArgsConstructor

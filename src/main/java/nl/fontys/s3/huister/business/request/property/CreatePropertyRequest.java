@@ -1,13 +1,12 @@
 package nl.fontys.s3.huister.business.request.property;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-@Data
+import lombok.*;
+
+@Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode(callSuper = false)
 public class CreatePropertyRequest {
     private long ownerId;
     private long cityId;

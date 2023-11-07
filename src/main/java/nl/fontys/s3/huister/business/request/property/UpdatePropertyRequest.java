@@ -1,15 +1,14 @@
 package nl.fontys.s3.huister.business.request.property;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@Data
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@EqualsAndHashCode(callSuper = false)
 public class UpdatePropertyRequest {
+    @Setter
     private long id;
     private String description;
     private String imageUrl;

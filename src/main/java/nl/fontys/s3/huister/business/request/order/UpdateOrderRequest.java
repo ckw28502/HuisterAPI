@@ -1,16 +1,15 @@
 package nl.fontys.s3.huister.business.request.order;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import nl.fontys.s3.huister.domain.entities.enumerator.OrderStatus;
 
-@Data
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@EqualsAndHashCode(callSuper = false)
 public class UpdateOrderRequest {
+    @Setter
     private long id;
     private OrderStatus status;
 }

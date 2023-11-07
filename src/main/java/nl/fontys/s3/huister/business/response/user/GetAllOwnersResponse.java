@@ -4,7 +4,7 @@ import lombok.*;
 
 @Builder
 @Getter
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = false)
 @AllArgsConstructor
 public class GetAllOwnersResponse {
     private long id;
