@@ -1,17 +1,22 @@
 package nl.fontys.s3.huister.business.response.property;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @AllArgsConstructor
 @Builder
-@Data
-@NoArgsConstructor
+@Getter
+@EqualsAndHashCode(callSuper = false)
 public class GetAllPropertiesResponse {
-    private int id,cityId;
-    private String streetName,postCode,description,ownerName,cityName,imageUrl;
+    private long id;
+    private long cityId;
+
+    private String streetName;
+    private String postCode;
+    private String description;
+    private String ownerName;
+    private String cityName;
+    private String imageUrl;
+
     private double area,price;
 }

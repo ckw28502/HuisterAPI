@@ -1,103 +1,75 @@
 package nl.fontys.s3.huister.business.impl.property;
 
+import nl.fontys.s3.huister.business.exception.user.UserNotFoundException;
 import nl.fontys.s3.huister.business.request.property.CreatePropertyRequest;
-import nl.fontys.s3.huister.domain.entities.CityEntity;
-import nl.fontys.s3.huister.persistence.CityRepository;
+import nl.fontys.s3.huister.domain.entities.UserEntity;
 import nl.fontys.s3.huister.persistence.PropertyRepository;
+import nl.fontys.s3.huister.persistence.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class CreatePropertyUseCaseImplTest {
+class CreatePropertyUseCaseImplTest {
+    @Mock
+    private UserRepository userRepositoryMock;
     @Mock
     private PropertyRepository propertyRepositoryMock;
-    @Mock
-    private CityRepository cityRepositoryMock;
+
     @InjectMocks
     private CreatePropertyUseCaseImpl createPropertyUseCase;
+
     /**
-     * @verifies create new City object when cityName doesn't exist in CityRepository then create the property
-     * @see CreatePropertyUseCaseImpl#createProperty(CreatePropertyRequest)
+     * @verifies throw UserNotFoundException when user is not found
+     * @see CreatePropertyUseCaseImpl#createProperty(nl.fontys.s3.huister.business.request.property.CreatePropertyRequest)
      */
     @Test
-    public void createProperty_shouldCreateNewCityObjectWhenCityNameDoesntExistInCityRepositoryThenCreateTheProperty() {
+    void createProperty_shouldThrowUserNotFoundExceptionWhenUserIsNotFound() {
         //Arrange
-        CreatePropertyRequest request=CreatePropertyRequest.builder()
-                .ownerId(1)
-                .cityName("city1")
-                .price(600)
-                .postCode("1111AA")
-                .streetName("Street")
-                .area(10)
-                .description("Good Place")
-                .imageUrls(List.of("image1.jpg","image2.png"))
-                .build();
+        CreatePropertyRequest request = CreatePropertyRequest.builder().build();
 
-        CityEntity city1= CityEntity.builder()
-                .id(1)
-                .name("city1")
-                .build();
+        when(userRepositoryMock.findById(request.getOwnerId())).thenReturn(Optional.empty());
 
-        request.setCityId(city1.getId());
+        //Act + Assert
+        assertThrows(UserNotFoundException.class,()->createPropertyUseCase.createProperty(request));
 
-
-        when(cityRepositoryMock.cityNameExists(request.getCityName())).thenReturn(false);
-        when(cityRepositoryMock.createCity(request.getCityName())).thenReturn(city1.getId());
-
-        doAnswer((invocation) -> {
-            assertEquals(request,invocation.getArgument(0,CreatePropertyRequest.class));
-            return null;
-        }).when(propertyRepositoryMock).createProperty(request);
-        //Act
-        createPropertyUseCase.createProperty(request);
-        //Assert
-        verify(propertyRepositoryMock).createProperty(request);
     }
 
     /**
-     * @verifies add the existing cityId to request before creating new Property
-     * @see CreatePropertyUseCaseImpl#createProperty(CreatePropertyRequest)
+     * @verifies create property
+     * @see CreatePropertyUseCaseImpl#createProperty(nl.fontys.s3.huister.business.request.property.CreatePropertyRequest)
      */
     @Test
-    public void createProperty_shouldAddTheExistingCityIdToRequestBeforeCreatingNewProperty() {
+    void createProperty_shouldCreateProperty() {
         //Arrange
-        CreatePropertyRequest request=CreatePropertyRequest.builder()
-                .ownerId(1)
-                .cityName("city1")
-                .price(600)
-                .postCode("1111AA")
-                .streetName("Street")
-                .area(10)
-                .description("Good Place")
-                .imageUrls(List.of("image1.jpg","image2.png"))
-                .build();
+        CreatePropertyRequest request = CreatePropertyRequest.builder().build();
 
-        CityEntity city1= CityEntity.builder()
-                .id(1)
-                .name("city1")
-                .build();
+        UserEntity owner=UserEntity.builder().build();
 
-        request.setCityId(city1.getId());
+        when(userRepositoryMock.findById(request.getOwnerId())).thenReturn(Optional.of(owner));
 
-        when(cityRepositoryMock.cityNameExists(request.getCityName())).thenReturn(true);
-        when(cityRepositoryMock.getCityByName(request.getCityName())).thenReturn(Optional.of(city1));
-
-        doAnswer((invocation) -> {
-            assertEquals(request,invocation.getArgument(0,CreatePropertyRequest.class));
-            return null;
-        }).when(propertyRepositoryMock).createProperty(request);
         //Act
         createPropertyUseCase.createProperty(request);
+
         //Assert
-        verify(propertyRepositoryMock).createProperty(request);
+        verify(propertyRepositoryMock).saveProperty(
+                request.getOwnerId(),
+                request.getCityName(),
+                request.getStreetName(),
+                request.getPostCode(),
+                request.getDescription(),
+                request.getImageUrl(),
+                request.getArea(),
+                request.getPrice()
+        );
+
     }
 }

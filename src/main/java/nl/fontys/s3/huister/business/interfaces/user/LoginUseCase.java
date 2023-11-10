@@ -4,5 +4,5 @@ import nl.fontys.s3.huister.business.request.user.LoginRequest;
 import nl.fontys.s3.huister.business.response.user.LoginResponse;
 
 public interface LoginUseCase {
-    LoginResponse Login(LoginRequest request);
+    LoginResponse login(LoginRequest request);
 }

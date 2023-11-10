@@ -2,11 +2,11 @@ package nl.fontys.s3.huister.business.response.property;
 
 import lombok.*;
 
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = false)
 @Getter
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor
 public class GetRentedNotRentedPropertyRatioResponse {
-        public long rented,notRented;
+        private int rented;
+        private int notRented;
 }

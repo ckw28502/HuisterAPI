@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import nl.fontys.s3.huister.business.exception.user.UsernameExistException;
 import nl.fontys.s3.huister.business.interfaces.user.CreateUserUseCase;
 import nl.fontys.s3.huister.business.request.user.CreateUserRequest;
+import nl.fontys.s3.huister.domain.entities.UserEntity;
 import nl.fontys.s3.huister.persistence.UserRepository;
 import org.springframework.stereotype.Service;
 
@@ -16,14 +17,24 @@ public class CreateUserUseCaseImpl implements CreateUserUseCase {
      *
      * @param request contains new user data
      *
-     * @should throw exception when username not unique
-     * @should add new repository when username is unique
+     * @should throw UsernameExistException when username exists
+     * @should create user when username is unique
      */
     @Override
     public void createUser(CreateUserRequest request) {
-        if (userRepository.usernameExist(request.getUsername())){
+        if (userRepository.existsByUsername(request.getUsername())){
             throw new UsernameExistException();
         }
-        userRepository.createUser(request);
+        UserEntity newUser=UserEntity.builder()
+                .name(request.getName())
+                .phoneNumber(request.getPhoneNumber())
+                .role(request.getRole())
+                .profilePictureUrl(request.getProfilePictureUrl())
+                .password(request.getPassword())
+                .username(request.getUsername())
+                .email(request.getEmail())
+                .activated(false)
+                .build();
+        userRepository.save(newUser);
     }
 }

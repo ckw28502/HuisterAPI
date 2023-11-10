@@ -3,7 +3,6 @@ package nl.fontys.s3.huister.business.impl.user;
 import nl.fontys.s3.huister.business.exception.user.UserNotFoundException;
 import nl.fontys.s3.huister.business.request.user.ChangePasswordRequest;
 import nl.fontys.s3.huister.domain.entities.UserEntity;
-import nl.fontys.s3.huister.domain.entities.enumerator.UserRole;
 import nl.fontys.s3.huister.persistence.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -17,24 +16,24 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class ChangePasswordUseCaseImplTest {
+class ChangePasswordUseCaseImplTest {
     @Mock
     private UserRepository userRepositoryMock;
+
     @InjectMocks
     private ChangePasswordUseCaseImpl changePasswordUseCase;
 
     /**
-     * @verifies throw new UserNotFoundException when user cannot be found
+     * @verifies throw new UserNotFoundException when user is not found
      * @see ChangePasswordUseCaseImpl#changePassword(nl.fontys.s3.huister.business.request.user.ChangePasswordRequest)
      */
     @Test
-    public void changePassword_shouldThrowNewUserNotFoundExceptionWhenUserCannotBeFound() {
+    void changePassword_shouldThrowNewUserNotFoundExceptionWhenUserIsNotFound() {
         //Arrange
-        ChangePasswordRequest request=ChangePasswordRequest.builder()
-                .id(1)
-                .newPassword("user1")
-                .build();
-        when(userRepositoryMock.getUserById(request.getId())).thenReturn(Optional.empty());
+        ChangePasswordRequest request= ChangePasswordRequest.builder()
+                .id(1L)
+                .newPassword("password").build();
+        when(userRepositoryMock.findById(request.getId())).thenReturn(Optional.empty());
 
         //Act + Assert
         assertThrows(UserNotFoundException.class,()->changePasswordUseCase.changePassword(request));
@@ -45,60 +44,44 @@ public class ChangePasswordUseCaseImplTest {
      * @see ChangePasswordUseCaseImpl#changePassword(nl.fontys.s3.huister.business.request.user.ChangePasswordRequest)
      */
     @Test
-    public void changePassword_shouldNotReplaceTheOldPasswordIfTheNewPasswordMatchesTheOldPassword() {
+    void changePassword_shouldNotReplaceTheOldPasswordIfTheNewPasswordMatchesTheOldPassword() {
         //Arrange
-        ChangePasswordRequest request=ChangePasswordRequest.builder()
-                .id(1)
-                .newPassword("user1")
-                .build();
+        ChangePasswordRequest request= ChangePasswordRequest.builder()
+                .id(1L)
+                .newPassword("password").build();
 
         UserEntity user= UserEntity.builder()
-                .id(1)
-                .username("user1")
-                .role(UserRole.OWNER)
-                .profilePictureUrl("Image.png")
-                .password("user1")
-                .email("user1@gmail.com")
-                .name("user1")
-                .phoneNumber("0123456789")
-                .activated(true)
+                .password("password")
                 .build();
+        when(userRepositoryMock.findById(request.getId())).thenReturn(Optional.of(user));
 
-        when(userRepositoryMock.getUserById(request.getId())).thenReturn(Optional.of(user));
         //Act
         changePasswordUseCase.changePassword(request);
+
         //Assert
-        verify(userRepositoryMock,never()).changePassword(request.getId(),request.getNewPassword());
+        verify(userRepositoryMock,never()).setPassword(request.getId(),request.getNewPassword());
     }
 
     /**
-     * @verifies replace the old password with the new password if both passwords isn't a match
+     * @verifies replace the old password if the new password does not match the old password
      * @see ChangePasswordUseCaseImpl#changePassword(nl.fontys.s3.huister.business.request.user.ChangePasswordRequest)
      */
     @Test
-    public void changePassword_shouldReplaceTheOldPasswordWithTheNewPasswordIfBothPasswordsIsntAMatch() {
+    void changePassword_shouldReplaceTheOldPasswordIfTheNewPasswordDoesNotMatchTheOldPassword() {
         //Arrange
-        ChangePasswordRequest request=ChangePasswordRequest.builder()
-                .id(1)
-                .newPassword("user2")
-                .build();
+        ChangePasswordRequest request= ChangePasswordRequest.builder()
+                .id(1L)
+                .newPassword("new password").build();
 
         UserEntity user= UserEntity.builder()
-                .id(1)
-                .username("user1")
-                .role(UserRole.OWNER)
-                .profilePictureUrl("Image.png")
-                .password("user1")
-                .email("user1@gmail.com")
-                .name("user1")
-                .phoneNumber("0123456789")
-                .activated(true)
+                .password("old password")
                 .build();
+        when(userRepositoryMock.findById(request.getId())).thenReturn(Optional.of(user));
 
-        when(userRepositoryMock.getUserById(request.getId())).thenReturn(Optional.of(user));
         //Act
         changePasswordUseCase.changePassword(request);
+
         //Assert
-        verify(userRepositoryMock).changePassword(request.getId(),request.getNewPassword());
+        verify(userRepositoryMock).setPassword(request.getId(),request.getNewPassword());
     }
 }

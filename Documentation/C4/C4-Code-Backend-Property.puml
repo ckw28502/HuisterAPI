@@ -1,0 +1,110 @@
+C4-Code-Backend-City.puml@startuml
+
+'Controller Layer
+
+Class PropertyController{
+    'properties
+    PropertyUseCasesCollection propertyUseCasesCollection
+
+    'Methods
+    ResponseEntity<List<GetAllPropertiesResponse>> getAllProperties(long id)
+    ResponseEntity<GetPropertyDetailResponse> getAllPropertiesResponse(long id)
+    ResponseEntity<Void> createProperty(CreatePropertyRequest request)
+    ResponseEntity<Void> updateProperty(long id, UpdatePropertyRequest request)
+    ResponseEntity<Void> deleteProperty(long id)
+    ResponseEntity<GetRentedNotRentedPropertyRatioResponse> getRentedNotRentedPropertyRatio(long userId)
+
+}
+
+PropertyUseCasesCollection <-- PropertyController
+
+'Business Layer
+
+Interface PropertyUseCasesCollection{
+    List<GetAllPropertiesResponse> getAllProperties(long id)
+    GetPropertyDetailResponse GetPropertyDetail(long id)
+    Void createProperty(CreatePropertyRequest request)
+    Void updateProperty(UpdatePropertyRequest request)
+    Void deleteProperty(long id)
+    GetRentedNotRentedPropertyRatioResponse getRentedNotRentedPropertyRatio(long id)}
+}
+Class PropertyUseCasesCollectionImpl{
+    'Property
+    UserRepository userRepository
+    CityRepository cityRepository
+    PropertyRepository propertyRepository
+
+    'Method
+    List<GetAllPropertiesResponse> getAllProperties(long id)
+    GetPropertyDetailResponse GetPropertyDetail(long id)
+    Void createProperty(CreatePropertyRequest request)
+    Void updateProperty(UpdatePropertyRequest request)
+    Void deleteProperty(long id)
+    GetRentedNotRentedPropertyRatioResponse getRentedNotRentedPropertyRatio(long id)
+
+}
+
+PropertyUseCasesCollection <|.. PropertyUseCasesCollectionImpl
+
+UserRepository <-- PropertyUseCasesCollectionImpl
+PropertyRepository <-- PropertyUseCasesCollectionImpl
+
+
+UserEntity <-- PropertyUseCasesCollectionImpl
+CityEntity <-- PropertyUseCasesCollectionImpl
+PropertyEntity <-- PropertyUseCasesCollectionImpl
+
+'Repository
+Interface UserRepository
+Interface CityRepository
+Interface PropertyRepository
+
+'Entities
+
+Enum UserRole{
+    ADMIN
+    OWNER
+    CUSTOMER
+}
+
+UserRole *-- UserEntity
+
+Class UserEntity{
+    long id
+    String username
+    String password
+    String name
+    String email
+    String phoneNumber
+    String profilePictureUrl
+    UserRole role
+    boolean isActivated
+}
+
+Class CityEntity{
+    long id
+    String name
+}
+
+Class PropertyEntity{
+    long id
+    String streetName
+    String postCode
+    double area
+    double price
+    UserEntity owner
+    Date endRent
+    CityEntity city
+}
+
+PropertyEntity --> UserEntity
+PropertyEntity --> CityEntity
+
+OrderEntity --> UserEntity
+OrderEntity --> PropertyEntity
+
+UserEntity<-- UserRepository
+CityEntity<-- CityRepository
+PropertyEntity<-- PropertyRepository
+
+@enduml

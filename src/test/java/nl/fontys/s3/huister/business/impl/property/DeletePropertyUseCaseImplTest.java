@@ -2,7 +2,6 @@ package nl.fontys.s3.huister.business.impl.property;
 
 import nl.fontys.s3.huister.business.exception.property.PropertyNotFoundException;
 import nl.fontys.s3.huister.domain.entities.PropertyEntity;
-import nl.fontys.s3.huister.persistence.CityRepository;
 import nl.fontys.s3.huister.persistence.PropertyRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -10,7 +9,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -18,83 +16,43 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class DeletePropertyUseCaseImplTest {
+class DeletePropertyUseCaseImplTest {
     @Mock
     private PropertyRepository propertyRepositoryMock;
-    @Mock
-    private CityRepository cityRepositoryMock;
+
     @InjectMocks
     private DeletePropertyUseCaseImpl deletePropertyUseCase;
+
     /**
      * @verifies throw PropertyNotFoundException if id is invalid
-     * @see DeletePropertyUseCaseImpl#deleteProperty(int)
+     * @see DeletePropertyUseCaseImpl#deleteProperty(long)
      */
     @Test
-    public void deleteProperty_shouldThrowPropertyNotFoundExceptionIfIdIsInvalid() {
+    void deleteProperty_shouldThrowPropertyNotFoundExceptionIfIdIsInvalid() {
         //Arrange
-        int id=1;
+        when(propertyRepositoryMock.findById(1L)).thenReturn(Optional.empty());
 
-        when(propertyRepositoryMock.getPropertyById(id)).thenReturn(Optional.empty());
         //Act + Assert
-        assertThrows(PropertyNotFoundException.class,()->deletePropertyUseCase.deleteProperty(id));
+        assertThrows(PropertyNotFoundException.class,()->deletePropertyUseCase.deleteProperty(1L));
+
     }
 
     /**
-     * @verifies delete property if id is valid
-     * @see DeletePropertyUseCaseImpl#deleteProperty(int)
+     * @verifies delete property
+     * @see DeletePropertyUseCaseImpl#deleteProperty(long)
      */
     @Test
-    public void deleteProperty_shouldDeletePropertyIfIdIsValid() {
+    void deleteProperty_shouldDeleteProperty() {
         //Arrange
-        PropertyEntity property1= PropertyEntity.builder()
-                .id(1)
-                .ownerId(1)
-                .cityId(1)
-                .streetName("street")
-                .description("Good Place")
-                .postCode("1111AA")
-                .price(600)
-                .imageUrls(List.of("image1.png","image2.png"))
-                .isRented(true)
-                .area(10)
-                .build();
-        int id=1;
+        PropertyEntity property=PropertyEntity.builder().build();
 
-        when(propertyRepositoryMock.getPropertyById(id)).thenReturn(Optional.of(property1));
-        when(propertyRepositoryMock.isCityHasNoProperty(property1.getCityId())).thenReturn(false);
+        when(propertyRepositoryMock.findById(property.getId())).thenReturn(Optional.of(property));
+
         //Act
-        deletePropertyUseCase.deleteProperty(id);
-        //Assert
-        verify(propertyRepositoryMock).deleteProperty(id);
-    }
+        deletePropertyUseCase.deleteProperty(property.getId());
 
-    /**
-     * @verifies delete city object if there are no property in the city
-     * @see DeletePropertyUseCaseImpl#deleteProperty(int)
-     */
-    @Test
-    public void deleteProperty_shouldDeleteCityObjectIfThereAreNoPropertyInTheCity() {
-        //Arrange
-        PropertyEntity property1= PropertyEntity.builder()
-                .id(1)
-                .ownerId(1)
-                .cityId(1)
-                .streetName("street")
-                .description("Good Place")
-                .postCode("1111AA")
-                .price(600)
-                .imageUrls(List.of("image1.png","image2.png"))
-                .isRented(true)
-                .area(10)
-                .build();
-        int id=1;
-
-        when(propertyRepositoryMock.getPropertyById(id)).thenReturn(Optional.of(property1));
-        when(propertyRepositoryMock.isCityHasNoProperty(property1.getCityId())).thenReturn(true);
-        //Act
-        deletePropertyUseCase.deleteProperty(id);
         //Assert
-        verify(propertyRepositoryMock).deleteProperty(id);
-        verify(cityRepositoryMock).deleteCity(id);
+        verify(propertyRepositoryMock).deleteProperty(property.getId());
+
     }
 }

@@ -11,6 +11,12 @@ import nl.fontys.s3.huister.domain.entities.enumerator.UserRole;
 @NoArgsConstructor
 @Builder
 public class CreateUserRequest {
-    private String username,email,password,name,phoneNumber,profilePictureUrl;
+    private String username;
+    private String email;
+    private String password;
+    private String name;
+    private String phoneNumber;
+    private String profilePictureUrl;
+
     private UserRole role;
 }

@@ -1,19 +1,16 @@
 package nl.fontys.s3.huister.business.request.property;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-import java.util.List;
-
-@Data
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@EqualsAndHashCode(callSuper = false)
 public class UpdatePropertyRequest {
-    private int id;
+    @Setter
+    private long id;
     private String description;
-    private List<String> imageUrls;
-    private long price;
+    private String imageUrl;
+    private double price;
 }

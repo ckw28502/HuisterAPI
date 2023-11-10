@@ -23,12 +23,28 @@ public class OrderController {
     private final CreateOrderUseCase createOrderUseCase;
     private final UpdateOrderUseCase updateOrderUseCase;
 
+    /**
+     *
+     * @param userId user id
+     * @return HTTP response with list of order content
+     *
+     * @should return an empty list when no order is found
+     * @should return a list of orders when orders are found
+     */
     @GetMapping("{userId}")
     public ResponseEntity<List<GetAllOrdersResponse>>getAllOrders(
-            @PathVariable(value = "userId")int userId
+            @PathVariable(value = "userId")long userId
     ){
         return ResponseEntity.ok(getAllOrdersUseCase.getAllOrders(userId));
     }
+
+    /**
+     *
+     * @param request request for creating new order
+     * @return HTTP response with created status
+     *
+     * @should return a response with created status
+     */
 
     @PostMapping
     public ResponseEntity<Void>createOrder(
@@ -36,9 +52,18 @@ public class OrderController {
         createOrderUseCase.createOrder(request);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
+
+    /**
+     *
+     * @param id order id
+     * @param request new order value
+     * @return HTTP response with no content status
+     *
+     * @should return a no content response
+     */
     @PutMapping("{id}")
     public ResponseEntity<Void>updateOrder(
-            @PathVariable(value = "id")final int id,
+            @PathVariable(value = "id")final long id,
             @RequestBody@Valid UpdateOrderRequest request
             ){
         request.setId(id);

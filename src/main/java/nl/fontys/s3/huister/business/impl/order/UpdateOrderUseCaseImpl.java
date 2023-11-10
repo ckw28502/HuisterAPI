@@ -4,10 +4,7 @@ import lombok.AllArgsConstructor;
 import nl.fontys.s3.huister.business.exception.order.OrderNotFoundException;
 import nl.fontys.s3.huister.business.interfaces.order.UpdateOrderUseCase;
 import nl.fontys.s3.huister.business.request.order.UpdateOrderRequest;
-import nl.fontys.s3.huister.domain.entities.OrderEntity;
-import nl.fontys.s3.huister.domain.entities.enumerator.OrderStatus;
 import nl.fontys.s3.huister.persistence.OrderRepository;
-import nl.fontys.s3.huister.persistence.PropertyRepository;
 import org.springframework.stereotype.Service;
 
 
@@ -15,7 +12,6 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class UpdateOrderUseCaseImpl implements UpdateOrderUseCase {
     private final OrderRepository orderRepository;
-    private final PropertyRepository propertyRepository;
 
     /**
      *
@@ -23,17 +19,13 @@ public class UpdateOrderUseCaseImpl implements UpdateOrderUseCase {
      *
      * @should throw an OrderNotFoundException when order is not found
      * @should update the order when order is found
-     * @should change property status to rented if the new order status is accepted
      */
     @Override
     public void updateOrder(UpdateOrderRequest request) {
-        if (!orderRepository.doesOrderExists(request.getId())){
+        if (!orderRepository.existsById(request.getId())){
             throw new OrderNotFoundException();
         }
-        OrderEntity order =orderRepository.updateOrder(request);
+        orderRepository.updateOrder(request.getId(),request.getStatus());
 
-        if (request.getStatus()== OrderStatus.ACCEPTED){
-            propertyRepository.rentProperty(order);
-        }
     }
 }

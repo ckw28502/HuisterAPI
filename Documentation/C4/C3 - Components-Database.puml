@@ -1,0 +1,58 @@
+x@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+!define DEVICONS https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/devicons
+!define DEVICONS2 https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/devicons2
+
+!include DEVICONS/firebase.puml
+
+
+!include DEVICONS/react.puml
+!include DEVICONS2/spring.puml
+
+'Containers
+Container(spa,"Single Page Application","React",$sprite="react","Provides facilities for users")
+Container(api,"API Application","Spring boot",$sprite="spring","Provides properties renting functionality via JSON/HTTP API")
+ContainerDb_Ext(firebase,"Firebase",$sprite="firebase","Firebase cloud service for storing user profile picture and property images")
+'Components
+Container_Boundary(c1,"Huister API Application"){
+
+   'Table
+   Container(user,"User Table","Table","Table filled with user data")
+   Container(city,"City Table","Table","Table filled with city data")
+   Container(property,"Property Table","Table","Table filled with property data")
+   Container(order,"Order Table","Table","Table filled with order data")
+
+   'Stored Procedure
+   Container(insertProperty,"Insert Property Stored Procedure","Stored Procedure","Provide insert into property table")
+
+}
+
+'Relation from Single Page Application to external database
+Rel(spa,firebase,"Store images","POST")
+
+'Relation from Single Page Application to Api Application
+Rel(spa,api,"Make API calls to","GET,POST,PUT,DELETE")
+
+'Relation from Api Application to Table
+Rel(api,user,"CRUD Queries")
+Rel(api,city,"CRUD Queries")
+Rel(api,property,"CRUD Queries")
+Rel(api,order,"CRUD Queries")
+
+'Relation from Api Application to Stored Procedure
+Rel(api,insertProperty,"Create Queries")
+
+'Relations from Stored Procedure to Table
+Rel(insertProperty,city,"CRUD Queries")
+Rel(insertProperty,property,"CRUD Queries")
+
+'Relations from Table to Table
+Rel(user,property,"user_id")
+Rel(city,property,"city_id")
+
+Rel(user,order,"owner_id,customer_id")
+Rel(property,order,"property_id")
+
+
+@enduml

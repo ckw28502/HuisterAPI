@@ -5,13 +5,11 @@ import nl.fontys.s3.huister.business.exception.user.InvalidRoleException;
 import nl.fontys.s3.huister.business.exception.user.UserNotFoundException;
 import nl.fontys.s3.huister.business.interfaces.property.GetRentedNotRentedPropertyRatioUseCase;
 import nl.fontys.s3.huister.business.response.property.GetRentedNotRentedPropertyRatioResponse;
-import nl.fontys.s3.huister.domain.entities.PropertyEntity;
 import nl.fontys.s3.huister.domain.entities.UserEntity;
 import nl.fontys.s3.huister.persistence.PropertyRepository;
 import nl.fontys.s3.huister.persistence.UserRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -30,23 +28,30 @@ public class GetRentedNotRentedPropertyRatioUseCaseImpl implements GetRentedNotR
      * @should return the correct response when user role is either admin or owner
      */
     @Override
-    public GetRentedNotRentedPropertyRatioResponse getRentedNotRentedPropertyRatio(int userId) {
-        Optional<UserEntity>optionalUser=userRepository.getUserById(userId);
+    public GetRentedNotRentedPropertyRatioResponse getRentedNotRentedPropertyRatio(long userId) {
+        Optional<UserEntity>optionalUser=userRepository.findById(userId);
         if (optionalUser.isEmpty()) {
             throw new UserNotFoundException();
         }
         UserEntity user=optionalUser.get();
 
-        List<PropertyEntity>properties=switch (user.getRole()){
-            case ADMIN -> propertyRepository.getAllProperties();
-            case OWNER -> propertyRepository.getPropertiesByOwner(userId);
+        int rentedCount=0;
+        int notRentedCount=0;
+
+        switch (user.getRole()){
+            case ADMIN -> {
+                rentedCount=propertyRepository.countByEndRentIsNotNull();
+                notRentedCount=propertyRepository.countByEndRentIsNull();
+            }
+            case OWNER -> {
+                rentedCount=propertyRepository.countByEndRentIsNotNullAndOwner(user);
+                notRentedCount=propertyRepository.countByEndRentIsNullAndOwner(user);
+            }
             case CUSTOMER ->throw new InvalidRoleException();
-        };
-        long rentedPropertiesCount=properties.stream().filter(PropertyEntity::isRented).count();
-        long notRentedPropertiesCount=properties.stream().filter(property->!property.isRented()).count();
+        }
         return GetRentedNotRentedPropertyRatioResponse.builder()
-                .rented(rentedPropertiesCount)
-                .notRented(notRentedPropertiesCount)
+                .rented(rentedCount)
+                .notRented(notRentedCount)
                 .build();
     }
 }

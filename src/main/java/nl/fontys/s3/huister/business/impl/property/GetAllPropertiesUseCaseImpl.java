@@ -1,13 +1,9 @@
 package nl.fontys.s3.huister.business.impl.property;
 
 import lombok.AllArgsConstructor;
-import nl.fontys.s3.huister.domain.entities.CityEntity;
 import nl.fontys.s3.huister.business.interfaces.property.GetAllPropertiesUseCase;
-import nl.fontys.s3.huister.business.exception.city.CityNotFoundException;
 import nl.fontys.s3.huister.business.exception.user.UserNotFoundException;
-import nl.fontys.s3.huister.business.response.property.GetAllPropertiesResponse;
-import nl.fontys.s3.huister.persistence.CityRepository;
-import nl.fontys.s3.huister.persistence.PropertyRepository;
+import nl.fontys.s3.huister.business.response.property.GetAllPropertiesResponse;import nl.fontys.s3.huister.persistence.PropertyRepository;
 import nl.fontys.s3.huister.persistence.UserRepository;
 import nl.fontys.s3.huister.domain.entities.PropertyEntity;
 import nl.fontys.s3.huister.domain.entities.UserEntity;
@@ -22,31 +18,34 @@ import java.util.Optional;
 public class GetAllPropertiesUseCaseImpl implements GetAllPropertiesUseCase {
     private final PropertyRepository propertyRepository;
     private final UserRepository userRepository;
-    private final CityRepository cityRepository;
 
     /**
      *
      * @param userId logged in user id
      * @return List of properties data
      *
-     * @should throw UserNotFoundException when cannot get user data from userId parameter
-     * @should throw CityNotFoundException when cannot get city data from cityId parameter
+     * @should throw UserNotFoundException when user is not found
+     * @should return an empty list when there is no appropriate property
      * @should return List of responses when all data are valid
      */
     @Override
-    public List<GetAllPropertiesResponse> getAllProperties(int userId) {
+    public List<GetAllPropertiesResponse> getAllProperties(long userId) {
 
         //get current logged in user
-        UserEntity user=userRepository.getUserById(userId).get();
+        Optional<UserEntity> optionalUser=userRepository.findById(userId);
+        if (optionalUser.isEmpty()){
+            throw new UserNotFoundException();
+        }
+        UserEntity user=optionalUser.get();
 
         //get retrieved data based on user role
         List<PropertyEntity>properties=switch (user.getRole()){
             case ADMIN:
-                yield propertyRepository.getAllProperties();
+                yield propertyRepository.findAll();
             case OWNER:
-                yield propertyRepository.getPropertiesByOwner(userId);
+                yield propertyRepository.findAllByOwnerId(userId);
             case CUSTOMER:
-                yield propertyRepository.getAllNotRentedProperties();
+                yield propertyRepository.findAllByEndRentIsNull();
         };
 
         //Define list of response
@@ -54,20 +53,6 @@ public class GetAllPropertiesUseCaseImpl implements GetAllPropertiesUseCase {
 
         //iterate the property list
         for (PropertyEntity property:properties){
-
-            //Get owner name
-            Optional<UserEntity> owner=userRepository.getUserById(property.getOwnerId());
-            if (owner.isEmpty()){
-                throw new UserNotFoundException();
-            }
-            String ownerName=owner.get().getName();
-
-            //Get city name
-            Optional<CityEntity> city=cityRepository.getCityById(property.getCityId());
-            if (city.isEmpty()){
-                throw new CityNotFoundException();
-            }
-            String cityName=city.get().getName();
 
             //add all current property's data to the response
             GetAllPropertiesResponse response= GetAllPropertiesResponse.builder()
@@ -77,10 +62,10 @@ public class GetAllPropertiesUseCaseImpl implements GetAllPropertiesUseCase {
                     .price(property.getPrice())
                     .streetName(property.getStreetName())
                     .postCode(property.getPostCode())
-                    .ownerName(ownerName)
-                    .cityName(cityName)
-                    .cityId(city.get().getId())
-                    .imageUrl(property.getImageUrls().get(0))
+                    .ownerName(property.getOwner().getName())
+                    .cityName(property.getCity().getName())
+                    .cityId(property.getCity().getId())
+                    .imageUrl(property.getImageUrl())
                     .build();
 
             //add the response above to the responses list

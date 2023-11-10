@@ -7,6 +7,7 @@ import nl.fontys.s3.huister.business.interfaces.user.UpdateUserUseCase;
 import nl.fontys.s3.huister.business.request.user.UpdateUserRequest;
 import nl.fontys.s3.huister.persistence.UserRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -23,11 +24,12 @@ public class UpdateUserUseCaseImpl implements UpdateUserUseCase {
      * @should update user when user is found
      */
     @Override
+    @Transactional
     public void updateUser(UpdateUserRequest request) {
-        Optional<UserEntity>user=userRepository.getUserById(request.getId());
+        Optional<UserEntity>user=userRepository.findById(request.getId());
         if (user.isEmpty()){
             throw new UserNotFoundException();
         }
-        userRepository.updateUser(request);
+        userRepository.updateUser(request.getName(),request.getPhoneNumber(),request.getId());
     }
 }
