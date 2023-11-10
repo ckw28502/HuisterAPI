@@ -1,0 +1,121 @@
+@startuml
+
+'Controller Layer
+
+Class OrderController{
+    'properties
+    OrderUseCasesCollection orderUseCasesCollection
+
+    'Methods
+    ResponseEntity<List<GetAllOrdersResponse>> getAllOrdersResponse(long userId)
+    ResponseEntity<Void> createOrder(CreateOrderRequest request)
+    ResponseEntity<Void> updateOrder(long id, UpdateOrderRequest request)
+
+}
+
+OrderUseCasesCollection <-- OrderController
+
+
+'Business Layer
+
+Interface OrderUseCasesCollection{
+    List<GetAllOrdersResponse> getAllOrders(long id)
+    Void createOrder(CreateOrderRequest request)
+    Void updateOrder(UpdateOrderRequest request)
+
+}
+
+Class OrderUseCasesCollectionImpl{
+    'Property
+    UserRepository userRepository
+    PropertyRepository propertyRepository
+    OrderRepository orderRepository
+
+    'Method
+    List<GetAllOrdersResponse> getAllOrders(long id)
+    Void createOrder(CreateOrderRequest request)
+    Void updateOrder(UpdateOrderRequest request)
+}
+
+OrderUseCasesCollection <|.. OrderUseCasesCollectionImpl
+
+UserRepository <-- OrderUseCasesCollectionImpl
+PropertyRepository <-- OrderUseCasesCollectionImpl
+OrderRepository <-- OrderUseCasesCollectionImpl
+
+UserEntity <-- OrderUseCasesCollectionImpl
+PropertyEntity <-- OrderUseCasesCollectionImpl
+OrderEntity <-- OrderUseCasesCollectionImpl
+
+'Repository
+Interface UserRepository
+Interface PropertyRepository
+Interface OrderRepository
+
+'Entities
+
+Enum UserRole{
+    ADMIN
+    OWNER
+    CUSTOMER
+}
+
+UserRole *-- UserEntity
+
+Enum OrderStatus{
+    CREATED
+    CANCELLED
+    REJECTED
+    ACCEPTED
+}
+
+OrderStatus *-- OrderEntity
+
+Class UserEntity{
+    long id
+    String username
+    String password
+    String name
+    String email
+    String phoneNumber
+    String profilePictureUrl
+    UserRole role
+    boolean isActivated
+}
+
+Class CityEntity{
+    long id
+    String name
+}
+
+Class PropertyEntity{
+    long id
+    String streetName
+    String postCode
+    double area
+    double price
+    UserEntity owner
+    Date endRent
+    CityEntity city
+}
+
+Class OrderEntity{
+    long id
+    int duration
+    UserEntity owner
+    UserEntity customer
+    PropertyEntity property
+    OrderStatus status
+}
+PropertyEntity --> UserEntity
+
+OrderEntity --> UserEntity
+OrderEntity --> PropertyEntity
+
+PropertyEntity --> CityEntity
+
+UserEntity<-- UserRepository
+PropertyEntity<-- PropertyRepository
+OrderEntity<-- OrderRepository
+
+@enduml
