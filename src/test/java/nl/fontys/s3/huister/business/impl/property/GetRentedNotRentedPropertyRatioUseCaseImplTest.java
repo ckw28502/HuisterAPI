@@ -3,10 +3,12 @@ package nl.fontys.s3.huister.business.impl.property;
 import nl.fontys.s3.huister.business.exception.user.InvalidRoleException;
 import nl.fontys.s3.huister.business.exception.user.UserNotFoundException;
 import nl.fontys.s3.huister.business.response.property.GetRentedNotRentedPropertyRatioResponse;
+import nl.fontys.s3.huister.domain.entities.PropertyEntity;
 import nl.fontys.s3.huister.domain.entities.UserEntity;
 import nl.fontys.s3.huister.domain.entities.enumerator.UserRole;
 import nl.fontys.s3.huister.persistence.PropertyRepository;
 import nl.fontys.s3.huister.persistence.UserRepository;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -15,95 +17,120 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class GetRentedNotRentedPropertyRatioUseCaseImplTest {
-    @Mock
-    private PropertyRepository propertyRepositoryMock;
+public class GetRentedNotRentedPropertyRatioUseCaseImplTest {
     @Mock
     private UserRepository userRepositoryMock;
-
+    @Mock
+    private PropertyRepository propertyRepositoryMock;
     @InjectMocks
     private GetRentedNotRentedPropertyRatioUseCaseImpl getRentedNotRentedPropertyRatioUseCase;
-
     /**
      * @verifies throw UserNotFoundException when user is not found
-     * @see GetRentedNotRentedPropertyRatioUseCaseImpl#getRentedNotRentedPropertyRatio(long)
+     * @see GetRentedNotRentedPropertyRatioUseCaseImpl#getRentedNotRentedPropertyRatio(int)
      */
     @Test
-    void getRentedNotRentedPropertyRatio_shouldThrowUserNotFoundExceptionWhenUserIsNotFound() {
+    public void getRentedNotRentedPropertyRatio_shouldThrowUserNotFoundExceptionWhenUserIsNotFound() {
         //Arrange
-        when(userRepositoryMock.findById(1L)).thenReturn(Optional.empty());
-
+        when(userRepositoryMock.getUserById(1)).thenReturn(Optional.empty());
         //Act + Assert
-        assertThrows(UserNotFoundException.class,()->
-                getRentedNotRentedPropertyRatioUseCase.getRentedNotRentedPropertyRatio(1L));
-
+        Assertions.assertThrows(UserNotFoundException.class,()->getRentedNotRentedPropertyRatioUseCase.getRentedNotRentedPropertyRatio(1));
     }
 
     /**
      * @verifies throw InvalidRoleException when user role is customer
-     * @see GetRentedNotRentedPropertyRatioUseCaseImpl#getRentedNotRentedPropertyRatio(long)
+     * @see GetRentedNotRentedPropertyRatioUseCaseImpl#getRentedNotRentedPropertyRatio(int)
      */
     @Test
-    void getRentedNotRentedPropertyRatio_shouldThrowInvalidRoleExceptionWhenUserRoleIsCustomer() {
+    public void getRentedNotRentedPropertyRatio_shouldThrowInvalidRoleExceptionWhenUserRoleIsCustomer() {
         //Arrange
-        UserEntity user=UserEntity.builder()
+        UserEntity user= UserEntity.builder()
+                .id(1)
+                .username("user1")
                 .role(UserRole.CUSTOMER)
-                .id(1L)
+                .profilePictureUrl("imageUser1.png")
+                .password("user1")
+                .name("user1")
+                .email("user1@gmail.com")
+                .phoneNumber("0123456789")
+                .activated(true)
                 .build();
 
-        when(userRepositoryMock.findById(user.getId())).thenReturn(Optional.of(user));
-
+        when(userRepositoryMock.getUserById(user.getId())).thenReturn(Optional.of(user));
         //Act + Assert
-        assertThrows(InvalidRoleException.class,
-                ()->getRentedNotRentedPropertyRatioUseCase.getRentedNotRentedPropertyRatio(1L));
+        Assertions.assertThrows(InvalidRoleException.class,()->getRentedNotRentedPropertyRatioUseCase.getRentedNotRentedPropertyRatio(1));
 
     }
 
     /**
      * @verifies return the correct response when user role is either admin or owner
-     * @see GetRentedNotRentedPropertyRatioUseCaseImpl#getRentedNotRentedPropertyRatio(long)
+     * @see GetRentedNotRentedPropertyRatioUseCaseImpl#getRentedNotRentedPropertyRatio(int)
      */
     @ParameterizedTest
     @ValueSource(strings = {"ADMIN","OWNER"})
-    void getRentedNotRentedPropertyRatio_shouldReturnTheCorrectResponseWhenUserRoleIsEitherAdminOrOwner(UserRole role) {
+    public void getRentedNotRentedPropertyRatio_shouldReturnTheCorrectResponseWhenUserRoleIsEitherAdminOrOwner(UserRole role) {
         //Arrange
-        UserEntity user=UserEntity.builder()
+        UserEntity user= UserEntity.builder()
+                .id(2)
+                .username("user1")
                 .role(role)
-                .id(1L)
+                .profilePictureUrl("imageUser1.png")
+                .password("user1")
+                .name("user1")
+                .email("user1@gmail.com")
+                .phoneNumber("0123456789")
+                .activated(true)
                 .build();
 
-        when(userRepositoryMock.findById(user.getId())).thenReturn(Optional.of(user));
-        int rentedProperty=1;
-        int notRentedProperty=1;
-        switch (role){
-            case ADMIN -> {
-                when(propertyRepositoryMock.countByEndRentIsNull()).thenReturn(notRentedProperty);
-                when(propertyRepositoryMock.countByEndRentIsNotNull()).thenReturn(rentedProperty);
-            }
-            case OWNER -> {
-                when(propertyRepositoryMock.countByEndRentIsNotNullAndOwner(user)).thenReturn(rentedProperty);
-                when(propertyRepositoryMock.countByEndRentIsNullAndOwner(user)).thenReturn(notRentedProperty);
-            }
+        PropertyEntity property1= PropertyEntity.builder()
+                .id(1)
+                .ownerId(2)
+                .cityId(1)
+                .streetName("street")
+                .description("Good Place")
+                .postCode("1111AA")
+                .price(600)
+                .imageUrls(List.of("imageProperty1.png"))
+                .isRented(false)
+                .area(10)
+                .build();
+
+        PropertyEntity property2= PropertyEntity.builder()
+                .id(1)
+                .ownerId(3)
+                .cityId(1)
+                .streetName("street")
+                .description("Good Place")
+                .postCode("1111AA")
+                .price(600)
+                .imageUrls(List.of("imageProperty1.png"))
+                .isRented(true)
+                .area(10)
+                .build();
+
+        when(userRepositoryMock.getUserById(user.getId())).thenReturn(Optional.of(user));
+        GetRentedNotRentedPropertyRatioResponse expectedResponse;
+        if (role==UserRole.ADMIN){
+            when(propertyRepositoryMock.getAllProperties()).thenReturn(List.of(property1,property2));
+            expectedResponse=GetRentedNotRentedPropertyRatioResponse.builder()
+                    .rented(1)
+                    .notRented(1)
+                    .build();
+        }else{
+            when(propertyRepositoryMock.getPropertiesByOwner(user.getId())).thenReturn(List.of(property1));
+            expectedResponse=GetRentedNotRentedPropertyRatioResponse.builder()
+                    .rented(0)
+                    .notRented(1)
+                    .build();
         }
-
-        GetRentedNotRentedPropertyRatioResponse expectedResponse=GetRentedNotRentedPropertyRatioResponse.builder()
-                .rented(rentedProperty)
-                .notRented(notRentedProperty)
-                .build();
-
         //Act
-        GetRentedNotRentedPropertyRatioResponse actualResponse=getRentedNotRentedPropertyRatioUseCase
-                .getRentedNotRentedPropertyRatio(user.getId());
-
+        GetRentedNotRentedPropertyRatioResponse actualResponse=getRentedNotRentedPropertyRatioUseCase.getRentedNotRentedPropertyRatio(user.getId());
         //Assert
-        assertEquals(expectedResponse,actualResponse);
-
+        Assertions.assertEquals(expectedResponse,actualResponse);
     }
 }

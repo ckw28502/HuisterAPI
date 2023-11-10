@@ -14,19 +14,16 @@ public class UpdatePropertyUseCaseImpl implements UpdatePropertyUseCase {
 
     /**
      *
-     * @param request property request
+     * @param request new property data from client
      *
-     * @should throw new PropertyNotFoundException if property is not found
+     * @should throw new PropertyNotFoundException if property is not found in repository
      * @should update the chosen property
      */
     @Override
     public void updateProperty(UpdatePropertyRequest request) {
-        if (!propertyRepository.existsById(request.getId())){
+        if (propertyRepository.getPropertyById(request.getId()).isEmpty()){
             throw new PropertyNotFoundException();
         }
-        propertyRepository.updateProperty(request.getId(),
-                request.getImageUrl(),
-                request.getDescription(),
-                request.getPrice());
+        propertyRepository.updateProperty(request);
     }
 }

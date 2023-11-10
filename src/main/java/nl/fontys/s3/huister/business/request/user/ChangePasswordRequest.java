@@ -6,9 +6,8 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@EqualsAndHashCode
 public class ChangePasswordRequest {
     @Setter
-    private long id;
+    private int id;
     private String newPassword;
 }

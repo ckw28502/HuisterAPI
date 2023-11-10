@@ -6,16 +6,10 @@ import nl.fontys.s3.huister.business.exception.property.PropertyNotFoundExceptio
 import nl.fontys.s3.huister.business.exception.user.UserNotFoundException;
 import nl.fontys.s3.huister.business.interfaces.order.CreateOrderUseCase;
 import nl.fontys.s3.huister.business.request.order.CreateOrderRequest;
-import nl.fontys.s3.huister.domain.entities.OrderEntity;
-import nl.fontys.s3.huister.domain.entities.PropertyEntity;
-import nl.fontys.s3.huister.domain.entities.UserEntity;
-import nl.fontys.s3.huister.domain.entities.enumerator.OrderStatus;
 import nl.fontys.s3.huister.persistence.OrderRepository;
 import nl.fontys.s3.huister.persistence.PropertyRepository;
 import nl.fontys.s3.huister.persistence.UserRepository;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -31,15 +25,14 @@ public class CreateOrderUseCaseImpl implements CreateOrderUseCase {
      * @should throw UserNotFoundException when owner or customer is not in the repository
      * @should throw PropertyNotFoundException when property is not found in the repository
      * @should throw PriceMustBeMoreThanZeroException when price is equals or below zero
-     * @should create new order when request is valid
+     * @should create new Order object when request data are valid
      */
     @Override
     public void createOrder(CreateOrderRequest request) {
-        UserEntity owner=getUser(request.getOwnerId());
-        UserEntity customer=getUser(request.getCustomerId());
+        checkUserExist(request.getOwnerId());
+        checkUserExist(request.getCustomerId());
 
-        Optional<PropertyEntity>optionalProperty=propertyRepository.findById(request.getPropertyId());
-        if (optionalProperty.isEmpty()) {
+        if (propertyRepository.getPropertyById(request.getPropertyId()).isEmpty()){
             throw new PropertyNotFoundException();
         }
 
@@ -47,24 +40,12 @@ public class CreateOrderUseCaseImpl implements CreateOrderUseCase {
             throw new PriceMustBeMoreThanZeroException();
         }
 
-
-        OrderEntity order=OrderEntity.builder()
-                .property(optionalProperty.get())
-                .owner(owner)
-                .status(OrderStatus.CREATED)
-                .duration(request.getDuration())
-                .customer(customer)
-                .price(request.getPrice())
-                .build();
-
-        orderRepository.save(order);
+        orderRepository.createOrder(request);
     }
 
-    private UserEntity getUser(long userId) {
-        Optional<UserEntity>user=userRepository.findById(userId);
-        if (user.isEmpty()){
+    private void checkUserExist(int userId) {
+        if (userRepository.getUserById(userId).isEmpty()){
             throw new UserNotFoundException();
         }
-        return user.get();
     }
 }

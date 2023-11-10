@@ -3,9 +3,11 @@ package nl.fontys.s3.huister.business.impl.city;
 import nl.fontys.s3.huister.business.exception.user.UserNotFoundException;
 import nl.fontys.s3.huister.business.response.city.GetAllCitiesResponse;
 import nl.fontys.s3.huister.domain.entities.CityEntity;
+import nl.fontys.s3.huister.domain.entities.PropertyEntity;
 import nl.fontys.s3.huister.domain.entities.UserEntity;
 import nl.fontys.s3.huister.domain.entities.enumerator.UserRole;
 import nl.fontys.s3.huister.persistence.CityRepository;
+import nl.fontys.s3.huister.persistence.PropertyRepository;
 import nl.fontys.s3.huister.persistence.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,7 +17,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,103 +25,116 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class GetAllCitiesUseCaseImplTest {
+public class GetAllCitiesUseCaseImplTest {
     @Mock
     private UserRepository userRepositoryMock;
+    @Mock
+    private PropertyRepository propertyRepositoryMock;
     @Mock
     private CityRepository cityRepositoryMock;
     @InjectMocks
     private GetAllCitiesUseCaseImpl getAllCitiesUseCase;
-
     /**
      * @verifies throw UserNotFoundException when user is not found
-     * @see GetAllCitiesUseCaseImpl#getAllCities(long)
+     * @see GetAllCitiesUseCaseImpl#getAllCities(int)
      */
     @Test
-    void getAllCities_shouldThrowUserNotFoundExceptionWhenUserIsNotFound() {
+    public void getAllCities_shouldThrowUserNotFoundExceptionWhenUserIsNotFound(){
         //Arrange
-        when(userRepositoryMock.findById(1L)).thenReturn(Optional.empty());
-
+        when(userRepositoryMock.getUserById(1)).thenReturn(Optional.empty());
         //Act + Assert
-        assertThrows(UserNotFoundException.class,()->getAllCitiesUseCase.getAllCities(1L));
+        assertThrows(UserNotFoundException.class,()->getAllCitiesUseCase.getAllCities(1));
     }
 
     /**
-     * @verifies return an empty list when there is no city
-     * @see GetAllCitiesUseCaseImpl#getAllCities(long)
-     */
-    @Test
-    void getAllCities_shouldReturnAnEmptyListWhenThereIsNoCity() {
-        //Arrange
-        UserEntity user=UserEntity.builder()
-                .id(1L)
-                .role(UserRole.ADMIN)
-                .build();
-
-        when(userRepositoryMock.findById(1L)).thenReturn(Optional.of(user));
-
-        when(cityRepositoryMock.findAll()).thenReturn(List.of());
-
-        GetAllCitiesResponse expectedResponses=GetAllCitiesResponse.builder()
-                .cities(List.of())
-                .build();
-
-        //Act
-        GetAllCitiesResponse actualResponse=getAllCitiesUseCase.getAllCities(user.getId());
-
-        //Assert
-        assertEquals(expectedResponses,actualResponse);
-    }
-
-    /**
-     * @verifies return list of cities when cities found according to user's role
-     * @see GetAllCitiesUseCaseImpl#getAllCities(long)
+     * @verifies return list of cities according to logged in user's role
+     * @see GetAllCitiesUseCaseImpl#getAllCities(int)
      */
     @ParameterizedTest
-    @ValueSource(strings = {"ADMIN","OWNER","CUSTOMER"})
-    void getAllCities_shouldReturnListOfCitiesWhenCitiesFoundAccordingToUsersRole(UserRole role) {
+    @ValueSource(strings={"ADMIN","OWNER","CUSTOMER"})
+    public void getAllCities_shouldReturnListOfCitiesAccordingToLoggedInUsersRole(UserRole role) {
         //Arrange
-        UserEntity user=UserEntity.builder()
-                .id(1L)
-                .role(role)
+        PropertyEntity property1= PropertyEntity.builder()
+                .id(1)
+                .ownerId(1)
+                .cityId(1)
+                .streetName("street")
+                .description("Good Place")
+                .postCode("1111AA")
+                .price(600)
+                .imageUrls(List.of("image1.png","image2.png"))
+                .isRented(true)
+                .area(10)
                 .build();
 
-        CityEntity city1=CityEntity.builder()
-                .id(1L)
+        PropertyEntity property2= PropertyEntity.builder()
+                .id(2)
+                .ownerId(2)
+                .cityId(2)
+                .streetName("straat")
+                .description("Bad Place")
+                .postCode("2222BB")
+                .price(500)
+                .imageUrls(List.of("image3.png","image4.png"))
+                .isRented(false)
+                .area(12)
+                .build();
+
+        UserEntity user1= UserEntity.builder()
+                .id(1)
+                .username("user1")
+                .role(UserRole.valueOf(String.valueOf(role)))
+                .profilePictureUrl("Image5.png")
+                .password("user1")
+                .name("user1")
+                .phoneNumber("0123456789")
+                .email("user1@gmail.com")
+                .activated(true)
+                .build();
+
+        CityEntity city1= CityEntity.builder()
+                .id(1)
                 .name("city1")
                 .build();
 
-        CityEntity city2=CityEntity.builder()
-                .id(2L)
+        CityEntity city2= CityEntity.builder()
+                .id(1)
                 .name("city2")
                 .build();
 
-        when(userRepositoryMock.findById(1L)).thenReturn(Optional.of(user));
-
-        List<CityEntity>cities=new ArrayList<>();
-        switch (role){
-            case ADMIN -> {
-                cities.addAll(List.of(city1,city2));
-                when(cityRepositoryMock.findAll()).thenReturn(cities);
-            }
-            case OWNER -> {
-                cities.add(city1);
-                when(cityRepositoryMock.findByOwnerId(user.getId())).thenReturn(cities);
-            }
-            case CUSTOMER -> {
-                cities.add(city2);
-                when(cityRepositoryMock.findCityByEndRentIsNull()).thenReturn(cities);
-            }
-        }
-
-        GetAllCitiesResponse expectedResponses=GetAllCitiesResponse.builder()
-                .cities(cities)
+        GetAllCitiesResponse responseAdmin=GetAllCitiesResponse.builder()
+                .cities(List.of(city1,city2))
                 .build();
 
-        //Act
-        GetAllCitiesResponse actualResponse=getAllCitiesUseCase.getAllCities(user.getId());
+        GetAllCitiesResponse responseOwner=GetAllCitiesResponse.builder()
+                .cities(List.of(city1))
+                .build();
 
+        GetAllCitiesResponse responseCustomer=GetAllCitiesResponse.builder()
+                .cities(List.of(city2))
+                .build();
+
+        when(userRepositoryMock.getUserById(user1.getId())).thenReturn(Optional.of(user1));
+
+        GetAllCitiesResponse expectedResponse=switch (user1.getRole()){
+            case ADMIN -> {
+                when(cityRepositoryMock.getAllCities()).thenReturn(List.of(city1,city2));
+                yield responseAdmin;
+            }
+            case OWNER -> {
+                when(propertyRepositoryMock.getPropertiesByOwner(user1.getId())).thenReturn(List.of(property1));
+                when(cityRepositoryMock.getAllCities(List.of(1))).thenReturn(List.of(city1));
+                yield responseOwner;
+            }
+            case CUSTOMER -> {
+                when(propertyRepositoryMock.getAllNotRentedProperties()).thenReturn(List.of(property2));
+                when(cityRepositoryMock.getAllCities(List.of(2))).thenReturn(List.of(city2));
+                yield responseCustomer;
+            }
+        };
+        //Act
+        GetAllCitiesResponse actualResponse=getAllCitiesUseCase.getAllCities(user1.getId());
         //Assert
-        assertEquals(expectedResponses,actualResponse);
+        assertEquals(expectedResponse,actualResponse);
     }
 }

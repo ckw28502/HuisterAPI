@@ -4,8 +4,6 @@ import lombok.AllArgsConstructor;
 import nl.fontys.s3.huister.business.interfaces.user.GetAllOwnersUseCase;
 import nl.fontys.s3.huister.business.response.user.GetAllOwnersResponse;
 import nl.fontys.s3.huister.domain.entities.UserEntity;
-import nl.fontys.s3.huister.domain.entities.enumerator.OrderStatus;
-import nl.fontys.s3.huister.domain.entities.enumerator.UserRole;
 import nl.fontys.s3.huister.persistence.OrderRepository;
 import nl.fontys.s3.huister.persistence.PropertyRepository;
 import nl.fontys.s3.huister.persistence.UserRepository;
@@ -24,20 +22,19 @@ public class GetAllOwnersUseCaseImpl implements GetAllOwnersUseCase {
      *
      * @return list of owners
      *
-     * @should return an empty list if there is no owner
-     * @should return list of owners if there are owners
+     * @should return list of owners
      */
     @Override
     public List<GetAllOwnersResponse> getAllOwners() {
-        List<UserEntity>owners=userRepository.findAllByRole(UserRole.OWNER);
+        List<UserEntity>owners=userRepository.getAllOwners();
 
         return owners.stream().map(owner->GetAllOwnersResponse.builder()
                 .id(owner.getId())
                 .name(owner.getName())
                 .email(owner.getEmail())
                 .profilePictureUrl(owner.getProfilePictureUrl())
-                .propertyOwned(propertyRepository.countByOwner(owner))
-                .propertyRented(orderRepository.countByOwnerAndStatus(owner, OrderStatus.ACCEPTED))
+                .propertyOwned(propertyRepository.getPropertiesCount(owner.getId()))
+                .propertyRented(orderRepository.getAllAcceptedOrdersForOwner(owner.getId()).size())
                 .build()).toList();
     }
 }

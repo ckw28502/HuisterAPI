@@ -1,14 +1,15 @@
 package nl.fontys.s3.huister.business.response.user;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
 import nl.fontys.s3.huister.domain.entities.enumerator.UserRole;
 
-@Getter
-@EqualsAndHashCode
+@Data
 @Builder
 @AllArgsConstructor
 public class LoginResponse {
-    private long id;
+    private int id;
     private String name;
     private UserRole role;
     private String profilePictureUrl;

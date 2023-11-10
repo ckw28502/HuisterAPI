@@ -26,89 +26,37 @@ public class PropertyController {
     private final DeletePropertyUseCase deletePropertyUseCase;
     private final GetRentedNotRentedPropertyRatioUseCase getRentedNotRentedPropertyRatioUseCase;
 
-    /**
-     *
-     * @param userId user id
-     * @return list of properties
-     *
-     * @should return an empty list content if no properties found
-     * @should return list of properties content if properties are found
-     */
     @GetMapping("{userId}")
-    public ResponseEntity<List<GetAllPropertiesResponse>>getAllProperties(
-            @PathVariable(value = "userId")long userId){
+    public ResponseEntity<List<GetAllPropertiesResponse>>getAllPropertiesForCustomer(
+            @PathVariable(value = "userId")int userId){
         return ResponseEntity.ok(getAllPropertiesUseCase.getAllProperties(userId));
     }
-
-    /**
-     *
-     * @param id property id
-     * @return property
-     *
-     * @should return property content
-     */
     @GetMapping("detail/{id}")
     public ResponseEntity<GetPropertyDetailResponse>getPropertyDetail(
-            @PathVariable(value = "id")final long id){
+            @PathVariable(value = "id")final int id){
         return ResponseEntity.ok(getPropertyDetailUseCase.getPropertyDetail(id));
     }
 
-    /**
-     *
-     * @param userId user id
-     * @return rented property and not rented property count
-     *
-     * @should return a valid response
-     */
     @GetMapping("dashboard/rentedRatio/{userId}")
     public ResponseEntity<GetRentedNotRentedPropertyRatioResponse>getRentedNotRentedPropertyRatio(
-            @PathVariable(value = "userId")long userId
+            @PathVariable(value = "userId")int userId
     ){
         return ResponseEntity.ok(getRentedNotRentedPropertyRatioUseCase.getRentedNotRentedPropertyRatio(userId));
     }
-
-    /**
-     *
-     * @param request create property request
-     * @return http created response
-     *
-     * @should create property
-     *
-     */
     @PostMapping
     public ResponseEntity<Integer>createProperty(@RequestBody @Valid CreatePropertyRequest request){
-        createPropertyUseCase.createProperty(request);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        return ResponseEntity.status(HttpStatus.CREATED).body(createPropertyUseCase.createProperty(request));
     }
-
-    /**
-     *
-     * @param request update property request
-     * @param id property id
-     * @return http response with no content status
-     *
-     * @should update property
-     *
-     */
     @PutMapping("{id}")
     public ResponseEntity<Void>updateProperty(
             @RequestBody@Valid UpdatePropertyRequest request,
-            @PathVariable(value = "id")final long id){
+            @PathVariable(value = "id")final int id){
         request.setId(id);
         updatePropertyUseCase.updateProperty(request);
         return ResponseEntity.noContent().build();
     }
-
-
-    /**
-     *
-     * @param id property id
-     * @return http response with no content status
-     *
-     * @should delete property
-     */
     @DeleteMapping("{id}")
-    public ResponseEntity<Void>deleteProperty(@PathVariable(value = "id")final long id){
+    public ResponseEntity<Void>deleteProperty(@PathVariable(value = "id")final int id){
         deletePropertyUseCase.deleteProperty(id);
         return ResponseEntity.noContent().build();
     }

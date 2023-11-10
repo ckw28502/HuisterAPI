@@ -13,16 +13,8 @@ import org.springframework.web.bind.annotation.*;
 public class CityController {
     private GetAllCitiesUseCase getAllCitiesUseCase;
 
-    /**
-     *
-     * @param userId user id
-     * @return list of cities response
-     *
-     * @should return an empty list if there are no city
-     * @should return a list of cities when there are cities
-     */
     @GetMapping("{id}")
-    ResponseEntity<GetAllCitiesResponse>getAllCities(@PathVariable(value = "id")long userId){
+    ResponseEntity<GetAllCitiesResponse>getAllCities(@PathVariable(value = "id")int userId){
         return ResponseEntity.ok(getAllCitiesUseCase.getAllCities(userId));
     }
 }

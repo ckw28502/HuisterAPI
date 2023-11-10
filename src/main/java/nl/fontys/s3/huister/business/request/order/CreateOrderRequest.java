@@ -1,17 +1,15 @@
 package nl.fontys.s3.huister.business.request.order;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Getter
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@EqualsAndHashCode(callSuper = false)
 public class CreateOrderRequest {
-    private long ownerId;
-    private long customerId;
-    private long propertyId;
-    private int duration;
-
+    private int ownerId,customerId,propertyId,duration;
     private double price;
 }

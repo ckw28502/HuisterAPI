@@ -21,11 +21,11 @@ public class GetUserByIdUseCaseImpl implements GetUserByIdUseCase {
      * @return user
      *
      * @should throw UserNotFoundException when user not found
-     * @should return user when user is found
+     * @should return GetUserByIdResponse containing found user
      */
     @Override
-    public GetUserByIdResponse getUserById(long id) {
-        Optional<UserEntity>userOptional=userRepository.findById(id);
+    public GetUserByIdResponse getUserById(int id) {
+        Optional<UserEntity>userOptional=userRepository.getUserById(id);
         if (userOptional.isEmpty()){
             throw new UserNotFoundException();
         }

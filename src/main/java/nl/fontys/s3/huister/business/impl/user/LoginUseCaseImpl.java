@@ -19,17 +19,17 @@ public class LoginUseCaseImpl implements LoginUseCase {
 
     /**
      *
-     * @param request login request
-     * @return login response
+     * @param request contains username and password for login
+     * @return user id and name
      *
-     * @should throw UserNotFoundException when username is invalid
-     * @should throw InvalidPasswordException when password is wrong
-     * @should throw AccountHasNotBeenActivatedException when account is not activated
-     * @should return response when credentials are valid
+     * @should throw UserNotFoundException when failed to find user with username equals to request's username
+     * @should throw InvalidPasswordException when request's password and found user's password are different
+     * @should throw AccountHasNotBeenActivatedException when credentials are correct but the account has not been activated
+     * @should return response filled with user id and name if user is found and request's password is correct
      */
     @Override
-    public LoginResponse login(LoginRequest request) {
-        Optional<UserEntity>optionalUser=userRepository.findByUsername(request.getUsername());
+    public LoginResponse Login(LoginRequest request) {
+        Optional<UserEntity>optionalUser=userRepository.getUserByUsername(request.getUsername());
         if (optionalUser.isEmpty()){
             throw new UserNotFoundException();
         }

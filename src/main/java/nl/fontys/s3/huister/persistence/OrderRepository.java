@@ -1,21 +1,15 @@
 package nl.fontys.s3.huister.persistence;
 
+import nl.fontys.s3.huister.business.request.order.CreateOrderRequest;
+import nl.fontys.s3.huister.business.request.order.UpdateOrderRequest;
 import nl.fontys.s3.huister.domain.entities.OrderEntity;
-import nl.fontys.s3.huister.domain.entities.UserEntity;
-import nl.fontys.s3.huister.domain.entities.enumerator.OrderStatus;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 
 import java.util.List;
-public interface OrderRepository extends JpaRepository<OrderEntity,Long> {
 
-    @Modifying
-    @Query("UPDATE OrderEntity SET status=:status WHERE id=:id")
-    void updateOrder(@Param("id")long id, @Param("status")OrderStatus status);
-
-    List<OrderEntity> findAllByOwnerOrCustomer(UserEntity owner,UserEntity customer);
-    int countByOwnerAndStatus(UserEntity owner,OrderStatus status);
-    boolean existsById(long id);
+public interface OrderRepository {
+    void createOrder(CreateOrderRequest request);
+    OrderEntity updateOrder(UpdateOrderRequest request);
+    List<OrderEntity> getAllOrder(int userId);
+    List<OrderEntity>getAllAcceptedOrdersForOwner(int userId);
+    boolean doesOrderExists(int id);
 }

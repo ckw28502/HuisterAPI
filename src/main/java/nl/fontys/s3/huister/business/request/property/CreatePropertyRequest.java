@@ -1,22 +1,19 @@
 package nl.fontys.s3.huister.business.request.property;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Getter
+import java.util.List;
+
+@Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = false)
 public class CreatePropertyRequest {
-    private long ownerId;
-    private long cityId;
-
-    private String streetName;
-    private String postCode;
-    private String description;
-    private String cityName;
-
-    private String imageUrl;
-
+    private int ownerId,cityId;
+    private String streetName,postCode,description,cityName;
+    private List<String> imageUrls;
     private double area,price;
 }

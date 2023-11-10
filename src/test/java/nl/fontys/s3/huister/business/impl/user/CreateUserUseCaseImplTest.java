@@ -2,7 +2,6 @@ package nl.fontys.s3.huister.business.impl.user;
 
 import nl.fontys.s3.huister.business.exception.user.UsernameExistException;
 import nl.fontys.s3.huister.business.request.user.CreateUserRequest;
-import nl.fontys.s3.huister.domain.entities.UserEntity;
 import nl.fontys.s3.huister.domain.entities.enumerator.UserRole;
 import nl.fontys.s3.huister.persistence.UserRepository;
 import org.junit.jupiter.api.Test;
@@ -12,76 +11,53 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class CreateUserUseCaseImplTest {
+public class CreateUserUseCaseImplTest {
     @Mock
     private UserRepository userRepositoryMock;
-
     @InjectMocks
     private CreateUserUseCaseImpl createUserUseCase;
 
     /**
-     * @verifies throw UsernameExistException when username exists
-     * @see CreateUserUseCaseImpl#createUser(nl.fontys.s3.huister.business.request.user.CreateUserRequest)
+     * @verifies throw exception when username not unique
+     * @see CreateUserUseCaseImpl#createUser(CreateUserRequest)
      */
     @Test
-    void createUser_shouldThrowUsernameExistExceptionWhenUsernameExists() {
+    public void createUser_shouldThrowExceptionWhenUsernameNotUnique() {
         //Arrange
         CreateUserRequest request=CreateUserRequest.builder()
-                .username("user")
-                .profilePictureUrl("user.jpg")
-                .email("user@email.com")
-                .name("user")
-                .password("user")
-                .phoneNumber("0123456789")
+                .username("user1")
                 .role(UserRole.OWNER)
+                .profilePictureUrl("Image.png")
+                .password("user1")
+                .name("user1")
+                .phoneNumber("0123456789")
                 .build();
-
-        when(userRepositoryMock.existsByUsername(request.getUsername())).thenReturn(true);
-
+        when(userRepositoryMock.usernameExist(request.getUsername())).thenReturn(true);
         //Act + Assert
         assertThrows(UsernameExistException.class,()->createUserUseCase.createUser(request));
-
     }
 
     /**
-     * @verifies create user when username is unique
-     * @see CreateUserUseCaseImpl#createUser(nl.fontys.s3.huister.business.request.user.CreateUserRequest)
+     * @verifies add new repository when username is unique
+     * @see CreateUserUseCaseImpl#createUser(CreateUserRequest)
      */
     @Test
-    void createUser_shouldCreateUserWhenUsernameIsUnique() {
+    public void createUser_shouldAddNewRepositoryWhenUsernameIsUnique(){
         //Arrange
         CreateUserRequest request=CreateUserRequest.builder()
-                .username("user")
-                .profilePictureUrl("user.jpg")
-                .email("user@email.com")
-                .name("user")
-                .password("user")
-                .phoneNumber("0123456789")
+                .username("user1")
                 .role(UserRole.OWNER)
+                .profilePictureUrl("Image.png")
+                .password("user1")
+                .name("user1")
+                .phoneNumber("0123456789")
                 .build();
-
-        when(userRepositoryMock.existsByUsername(request.getUsername())).thenReturn(false);
-
-        UserEntity user=UserEntity.builder()
-                .name(request.getName())
-                .phoneNumber(request.getPhoneNumber())
-                .role(request.getRole())
-                .profilePictureUrl(request.getProfilePictureUrl())
-                .password(request.getPassword())
-                .username(request.getUsername())
-                .email(request.getEmail())
-                .activated(false)
-                .build();
-
         //Act
         createUserUseCase.createUser(request);
-
         //Assert
-        verify(userRepositoryMock).save(user);
-
+        verify(userRepositoryMock).createUser(request);
     }
 }

@@ -7,7 +7,6 @@ import nl.fontys.s3.huister.business.request.user.ChangePasswordRequest;
 import nl.fontys.s3.huister.domain.entities.UserEntity;
 import nl.fontys.s3.huister.persistence.UserRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -20,23 +19,20 @@ public class ChangePasswordUseCaseImpl implements ChangePasswordUseCase {
      *
      * @param request filled with user id and new password
      *
-     * @should throw new UserNotFoundException when user is not found
+     * @should throw new UserNotFoundException when user cannot be found
      * @should not replace the old password if the new password matches the old password
-     * @should replace the old password if the new password does not match the old password
+     * @should replace the old password with the new password if both passwords isn't a match
      */
     @Override
-    @Transactional
     public void changePassword(ChangePasswordRequest request) {
-        //check if user is found
-        Optional<UserEntity>optionalUser=userRepository.findById(request.getId());
+        Optional<UserEntity>optionalUser=userRepository.getUserById(request.getId());
         if(optionalUser.isEmpty()){
             throw new UserNotFoundException();
         }
 
-        //if old password and new password are different, change the password
         UserEntity user=optionalUser.get();
         if (!user.getPassword().equals(request.getNewPassword())){
-            userRepository.setPassword(request.getId(), request.getNewPassword());
+            userRepository.changePassword(request.getId(), request.getNewPassword());
         }
     }
 }

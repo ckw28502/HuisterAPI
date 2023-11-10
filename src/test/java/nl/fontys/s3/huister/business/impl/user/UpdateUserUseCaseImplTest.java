@@ -3,6 +3,7 @@ package nl.fontys.s3.huister.business.impl.user;
 import nl.fontys.s3.huister.business.exception.user.UserNotFoundException;
 import nl.fontys.s3.huister.business.request.user.UpdateUserRequest;
 import nl.fontys.s3.huister.domain.entities.UserEntity;
+import nl.fontys.s3.huister.domain.entities.enumerator.UserRole;
 import nl.fontys.s3.huister.persistence.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -17,55 +18,58 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class UpdateUserUseCaseImplTest {
+public class UpdateUserUseCaseImplTest {
     @Mock
     private UserRepository userRepositoryMock;
-
     @InjectMocks
     private UpdateUserUseCaseImpl updateUserUseCase;
-
     /**
      * @verifies throw UserNotFoundException when user is not found
-     * @see UpdateUserUseCaseImpl#updateUser(nl.fontys.s3.huister.business.request.user.UpdateUserRequest)
+     * @see UpdateUserUseCaseImpl#updateUser(UpdateUserRequest)
      */
     @Test
-    void updateUser_shouldThrowUserNotFoundExceptionWhenUserIsNotFound() {
+    public void updateUser_shouldThrowUserNotFoundExceptionWhenUserIsNotFound() {
         //Arrange
         UpdateUserRequest request=UpdateUserRequest.builder()
-                .id(1L)
-                .phoneNumber("0987654321")
-                .name("resu")
+                .id(1)
+                .phoneNumber("0123456789")
+                .profilePictureUrl("image.jpg")
+                .name("user1")
                 .build();
-
-        when(userRepositoryMock.findById(request.getId())).thenReturn(Optional.empty());
-
+        when(userRepositoryMock.getUserById(1)).thenReturn(Optional.empty());
         //Act + Assert
         assertThrows(UserNotFoundException.class,()->updateUserUseCase.updateUser(request));
-
     }
 
     /**
      * @verifies update user when user is found
-     * @see UpdateUserUseCaseImpl#updateUser(nl.fontys.s3.huister.business.request.user.UpdateUserRequest)
+     * @see UpdateUserUseCaseImpl#updateUser(UpdateUserRequest)
      */
     @Test
-    void updateUser_shouldUpdateUserWhenUserIsFound() {
+    public void updateUser_shouldUpdateUserWhenUserIsFound() {
         //Arrange
         UpdateUserRequest request=UpdateUserRequest.builder()
-                .id(1L)
-                .phoneNumber("0987654321")
-                .name("resu")
+                .id(1)
+                .phoneNumber("0123456789")
+                .profilePictureUrl("image.jpg")
+                .name("user1")
+                .build();
+        UserEntity user= UserEntity.builder()
+                .id(1)
+                .phoneNumber("0123456789")
+                .profilePictureUrl("image.jpg")
+                .name("user1")
+                .password("user1")
+                .email("user1@gmail.com")
+                .role(UserRole.OWNER)
+                .username("user1")
+                .activated(true)
                 .build();
 
-        UserEntity user=UserEntity.builder().build();
-
-        when(userRepositoryMock.findById(request.getId())).thenReturn(Optional.of(user));
-
+        when(userRepositoryMock.getUserById(1)).thenReturn(Optional.of(user));
         //Act
         updateUserUseCase.updateUser(request);
-
         //Assert
-        verify(userRepositoryMock).updateUser(request.getName(),request.getPhoneNumber(),request.getId());
-
+        verify(userRepositoryMock).updateUser(request);
     }
 }

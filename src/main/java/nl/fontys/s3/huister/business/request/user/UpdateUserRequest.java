@@ -10,8 +10,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class UpdateUserRequest {
-    private String name;
-    private String phoneNumber;
-
-    private long id;
+    private String name,profilePictureUrl,phoneNumber;
+    private int id;
 }

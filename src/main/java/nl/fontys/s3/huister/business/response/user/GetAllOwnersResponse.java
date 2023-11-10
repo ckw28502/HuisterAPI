@@ -4,14 +4,11 @@ import lombok.*;
 
 @Builder
 @Getter
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode
 @AllArgsConstructor
-public class GetAllOwnersResponse {
-    private long id;
-    private int propertyOwned;
-    private int propertyRented;
+@NoArgsConstructor
 
-    private String name;
-    private String email;
-    private String profilePictureUrl;
+public class GetAllOwnersResponse {
+    private int id,propertyOwned,propertyRented;
+    private String name,email,profilePictureUrl;
 }

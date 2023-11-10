@@ -1,12 +1,15 @@
 package nl.fontys.s3.huister.business.response.city;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import nl.fontys.s3.huister.domain.entities.CityEntity;
 
 import java.util.List;
-@Getter
+@Data
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = false)
+@NoArgsConstructor
 @Builder
 public class GetAllCitiesResponse {
     private List<CityEntity>cities;

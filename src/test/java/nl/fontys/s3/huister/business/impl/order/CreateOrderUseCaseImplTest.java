@@ -4,19 +4,21 @@ import nl.fontys.s3.huister.business.exception.price.PriceMustBeMoreThanZeroExce
 import nl.fontys.s3.huister.business.exception.property.PropertyNotFoundException;
 import nl.fontys.s3.huister.business.exception.user.UserNotFoundException;
 import nl.fontys.s3.huister.business.request.order.CreateOrderRequest;
-import nl.fontys.s3.huister.domain.entities.OrderEntity;
 import nl.fontys.s3.huister.domain.entities.PropertyEntity;
 import nl.fontys.s3.huister.domain.entities.UserEntity;
-import nl.fontys.s3.huister.domain.entities.enumerator.OrderStatus;
+import nl.fontys.s3.huister.domain.entities.enumerator.UserRole;
 import nl.fontys.s3.huister.persistence.OrderRepository;
 import nl.fontys.s3.huister.persistence.PropertyRepository;
 import nl.fontys.s3.huister.persistence.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -24,59 +26,95 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class CreateOrderUseCaseImplTest {
+public class CreateOrderUseCaseImplTest {
+    @Mock
+    private OrderRepository orderRepositoryMock;
     @Mock
     private UserRepository userRepositoryMock;
     @Mock
     private PropertyRepository propertyRepositoryMock;
-    @Mock
-    private OrderRepository orderRepositoryMock;
-
     @InjectMocks
     private CreateOrderUseCaseImpl createOrderUseCase;
-
     /**
      * @verifies throw UserNotFoundException when owner or customer is not in the repository
-     * @see CreateOrderUseCaseImpl#createOrder(nl.fontys.s3.huister.business.request.order.CreateOrderRequest)
+     * @see CreateOrderUseCaseImpl#createOrder(CreateOrderRequest)
      */
-    @Test
-    void createOrder_shouldThrowUserNotFoundExceptionWhenOwnerOrCustomerIsNotInTheRepository() {
+    @ParameterizedTest
+    @ValueSource(strings = {"OWNER","CUSTOMER"})
+    public void createOrder_shouldThrowUserNotFoundExceptionWhenOwnerOrCustomerIsNotInTheRepository(String role) {
         //Arrange
         CreateOrderRequest request=CreateOrderRequest.builder()
-                .duration(4)
-                .price(300)
-                .ownerId(1L)
-                .customerId(2L)
-                .propertyId(1L)
+                .ownerId(1)
+                .customerId(2)
+                .duration(8)
+                .propertyId(1)
+                .price(500)
                 .build();
 
-        when(userRepositoryMock.findById(request.getOwnerId())).thenReturn(Optional.empty());
+        UserEntity user1= UserEntity.builder()
+                .id(1)
+                .username("user1")
+                .role(UserRole.OWNER)
+                .profilePictureUrl("Image.png")
+                .password("user1")
+                .name("user1")
+                .phoneNumber("0123456789")
+                .email("user1@gmail.com")
+                .activated(true)
+                .build();
+
+        if (role.equalsIgnoreCase("OWNER")){
+            when(userRepositoryMock.getUserById(request.getOwnerId())).thenReturn(Optional.empty());
+        } else {
+            when(userRepositoryMock.getUserById(request.getOwnerId())).thenReturn(Optional.of(user1));
+            when(userRepositoryMock.getUserById(request.getOwnerId())).thenReturn(Optional.empty());
+        }
         //Act + Assert
         assertThrows(UserNotFoundException.class,()->createOrderUseCase.createOrder(request));
-
     }
 
     /**
      * @verifies throw PropertyNotFoundException when property is not found in the repository
-     * @see CreateOrderUseCaseImpl#createOrder(nl.fontys.s3.huister.business.request.order.CreateOrderRequest)
+     * @see CreateOrderUseCaseImpl#createOrder(CreateOrderRequest)
      */
     @Test
-    void createOrder_shouldThrowPropertyNotFoundExceptionWhenPropertyIsNotFoundInTheRepository() {
+    public void createOrder_shouldThrowPropertyNotFoundExceptionWhenPropertyIsNotFoundInTheRepository() {
         //Arrange
         CreateOrderRequest request=CreateOrderRequest.builder()
-                .duration(4)
-                .price(300)
-                .ownerId(1L)
-                .customerId(2L)
-                .propertyId(1L)
+                .ownerId(1)
+                .customerId(2)
+                .duration(8)
+                .propertyId(1)
+                .price(500)
                 .build();
 
-        UserEntity owner= UserEntity.builder().id(1L).build();
-        UserEntity customer= UserEntity.builder().id(2L).build();
+        UserEntity user1= UserEntity.builder()
+                .id(1)
+                .username("user1")
+                .role(UserRole.OWNER)
+                .profilePictureUrl("Image.png")
+                .password("user1")
+                .name("user1")
+                .phoneNumber("0123456789")
+                .email("user1@gmail.com")
+                .activated(true)
+                .build();
 
-        when(userRepositoryMock.findById(request.getOwnerId())).thenReturn(Optional.of(owner));
-        when(userRepositoryMock.findById(request.getCustomerId())).thenReturn(Optional.of(customer));
-        when(propertyRepositoryMock.findById(request.getPropertyId())).thenReturn(Optional.empty());
+        UserEntity user2= UserEntity.builder()
+                .id(2)
+                .username("user2")
+                .role(UserRole.CUSTOMER)
+                .profilePictureUrl("Image.png")
+                .password("user2")
+                .name("user2")
+                .phoneNumber("9876543210")
+                .email("user2@gmail.com")
+                .activated(true)
+                .build();
+
+        when(userRepositoryMock.getUserById(request.getOwnerId())).thenReturn(Optional.of(user1));
+        when(userRepositoryMock.getUserById(request.getCustomerId())).thenReturn(Optional.of(user2));
+        when(propertyRepositoryMock.getPropertyById(request.getPropertyId())).thenReturn(Optional.empty());
 
         //Act + Assert
         assertThrows(PropertyNotFoundException.class,()->createOrderUseCase.createOrder(request));
@@ -84,70 +122,122 @@ class CreateOrderUseCaseImplTest {
 
     /**
      * @verifies throw PriceMustBeMoreThanZeroException when price is equals or below zero
-     * @see CreateOrderUseCaseImpl#createOrder(nl.fontys.s3.huister.business.request.order.CreateOrderRequest)
+     * @see CreateOrderUseCaseImpl#createOrder(CreateOrderRequest)
      */
     @Test
-    void createOrder_shouldThrowPriceMustBeMoreThanZeroExceptionWhenPriceIsEqualsOrBelowZero() {
+    public void createOrder_shouldThrowPriceMustBeMoreThanZeroExceptionWhenPriceIsEqualsOrBelowZero() {
         //Arrange
         CreateOrderRequest request=CreateOrderRequest.builder()
-                .duration(4)
+                .ownerId(1)
+                .customerId(2)
+                .duration(8)
+                .propertyId(1)
                 .price(0)
-                .ownerId(1L)
-                .customerId(2L)
-                .propertyId(1L)
                 .build();
 
-        UserEntity owner= UserEntity.builder().id(1L).build();
-        UserEntity customer= UserEntity.builder().id(2L).build();
+        UserEntity user1= UserEntity.builder()
+                .id(1)
+                .username("user1")
+                .role(UserRole.OWNER)
+                .profilePictureUrl("Image.png")
+                .password("user1")
+                .name("user1")
+                .phoneNumber("0123456789")
+                .email("user1@gmail.com")
+                .activated(true)
+                .build();
 
-        PropertyEntity property=PropertyEntity.builder().id(1L).build();
+        UserEntity user2= UserEntity.builder()
+                .id(2)
+                .username("user2")
+                .role(UserRole.CUSTOMER)
+                .profilePictureUrl("Image.png")
+                .password("user2")
+                .name("user2")
+                .email("user2@gmail.com")
+                .phoneNumber("9876543210")
+                .activated(true)
+                .build();
 
-        when(userRepositoryMock.findById(request.getOwnerId())).thenReturn(Optional.of(owner));
-        when(userRepositoryMock.findById(request.getCustomerId())).thenReturn(Optional.of(customer));
-        when(propertyRepositoryMock.findById(request.getPropertyId())).thenReturn(Optional.of(property));
+        PropertyEntity property1= PropertyEntity.builder()
+                .id(1)
+                .ownerId(1)
+                .cityId(1)
+                .streetName("street")
+                .description("Good Place")
+                .postCode("1111AA")
+                .price(600)
+                .imageUrls(List.of("image1.png","image2.png"))
+                .isRented(true)
+                .area(10)
+                .build();
+
+        when(userRepositoryMock.getUserById(request.getOwnerId())).thenReturn(Optional.of(user1));
+        when(userRepositoryMock.getUserById(request.getCustomerId())).thenReturn(Optional.of(user2));
+        when(propertyRepositoryMock.getPropertyById(request.getPropertyId())).thenReturn(Optional.of(property1));
 
         //Act + Assert
         assertThrows(PriceMustBeMoreThanZeroException.class,()->createOrderUseCase.createOrder(request));
     }
 
     /**
-     * @verifies create new order when request is valid
-     * @see CreateOrderUseCaseImpl#createOrder(nl.fontys.s3.huister.business.request.order.CreateOrderRequest)
+     * @verifies create new Order object when request data are valid
+     * @see CreateOrderUseCaseImpl#createOrder(CreateOrderRequest)
      */
     @Test
-    void createOrder_shouldCreateNewOrderWhenRequestIsValid() {
+    public void createOrder_shouldCreateNewOrderObjectWhenRequestDataAreValid() {
         //Arrange
         CreateOrderRequest request=CreateOrderRequest.builder()
-                .duration(4)
-                .price(370)
-                .ownerId(1L)
-                .customerId(2L)
-                .propertyId(1L)
+                .ownerId(1)
+                .customerId(2)
+                .duration(8)
+                .propertyId(1)
+                .price(500)
                 .build();
 
-        UserEntity owner= UserEntity.builder().id(1L).build();
-        UserEntity customer= UserEntity.builder().id(2L).build();
-
-        PropertyEntity property=PropertyEntity.builder().id(1L).build();
-
-        when(userRepositoryMock.findById(request.getOwnerId())).thenReturn(Optional.of(owner));
-        when(userRepositoryMock.findById(request.getCustomerId())).thenReturn(Optional.of(customer));
-        when(propertyRepositoryMock.findById(request.getPropertyId())).thenReturn(Optional.of(property));
-
-        OrderEntity order=OrderEntity.builder()
-                .property(property)
-                .owner(owner)
-                .status(OrderStatus.CREATED)
-                .duration(request.getDuration())
-                .customer(customer)
-                .price(request.getPrice())
+        UserEntity user1= UserEntity.builder()
+                .id(1)
+                .username("user1")
+                .role(UserRole.OWNER)
+                .profilePictureUrl("Image.png")
+                .password("user1")
+                .name("user1")
+                .phoneNumber("0123456789")
+                .email("user1@gmail.com")
+                .activated(true)
                 .build();
 
+        UserEntity user2= UserEntity.builder()
+                .id(2)
+                .username("user2")
+                .role(UserRole.CUSTOMER)
+                .profilePictureUrl("Image.png")
+                .password("user2")
+                .name("user2")
+                .email("user2@gmail.com")
+                .phoneNumber("9876543210")
+                .activated(true)
+                .build();
+
+        PropertyEntity property1= PropertyEntity.builder()
+                .id(1)
+                .ownerId(1)
+                .cityId(1)
+                .streetName("street")
+                .description("Good Place")
+                .postCode("1111AA")
+                .price(600)
+                .imageUrls(List.of("image1.png","image2.png"))
+                .isRented(true)
+                .area(10)
+                .build();
+
+        when(userRepositoryMock.getUserById(request.getOwnerId())).thenReturn(Optional.of(user1));
+        when(userRepositoryMock.getUserById(request.getCustomerId())).thenReturn(Optional.of(user2));
+        when(propertyRepositoryMock.getPropertyById(request.getPropertyId())).thenReturn(Optional.of(property1));
         //Act
         createOrderUseCase.createOrder(request);
-
         //Assert
-        verify(orderRepositoryMock).save(order);
-
+        verify(orderRepositoryMock).createOrder(request);
     }
 }
