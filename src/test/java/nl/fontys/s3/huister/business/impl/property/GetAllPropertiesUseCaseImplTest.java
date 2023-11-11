@@ -2,6 +2,7 @@ package nl.fontys.s3.huister.business.impl.property;
 
 import nl.fontys.s3.huister.business.exception.user.UserNotFoundException;
 import nl.fontys.s3.huister.business.response.property.GetAllPropertiesResponse;
+import nl.fontys.s3.huister.configuration.security.token.AccessToken;
 import nl.fontys.s3.huister.domain.entities.CityEntity;
 import nl.fontys.s3.huister.domain.entities.PropertyEntity;
 import nl.fontys.s3.huister.domain.entities.UserEntity;
@@ -30,6 +31,8 @@ class GetAllPropertiesUseCaseImplTest {
     private UserRepository userRepositoryMock;
     @Mock
     private PropertyRepository propertyRepositoryMock;
+    @Mock
+    private AccessToken requestAccessTokenMock;
 
     @InjectMocks
     private GetAllPropertiesUseCaseImpl getAllPropertiesUseCase;
@@ -37,21 +40,22 @@ class GetAllPropertiesUseCaseImplTest {
 
     /**
      * @verifies throw UserNotFoundException when user is not found
-     * @see GetAllPropertiesUseCaseImpl#getAllProperties(long)
+     * @see GetAllPropertiesUseCaseImpl#getAllProperties()
      */
     @Test
     void getAllProperties_shouldThrowUserNotFoundExceptionWhenUserIsNotFound() {
         //Arrange
-        when(userRepositoryMock.findById(1L)).thenReturn(Optional.empty());
+        when(requestAccessTokenMock.getId()).thenReturn(1L);
+        when(userRepositoryMock.findById(requestAccessTokenMock.getId())).thenReturn(Optional.empty());
 
         //Act + Assert
-        assertThrows(UserNotFoundException.class,()->getAllPropertiesUseCase.getAllProperties(1L));
+        assertThrows(UserNotFoundException.class,()->getAllPropertiesUseCase.getAllProperties());
 
     }
 
     /**
      * @verifies return List of responses when all data are valid
-     * @see GetAllPropertiesUseCaseImpl#getAllProperties(long)
+     * @see GetAllPropertiesUseCaseImpl#getAllProperties()
      */
     @ParameterizedTest
     @ValueSource(strings = {"ADMIN","OWNER","CUSTOMER"})
@@ -96,7 +100,8 @@ class GetAllPropertiesUseCaseImplTest {
                 .imageUrl("property2.jpg")
                 .build();
 
-        when(userRepositoryMock.findById(user1.getId())).thenReturn(Optional.of(user1));
+        when(requestAccessTokenMock.getId()).thenReturn(1L);
+        when(userRepositoryMock.findById(requestAccessTokenMock.getId())).thenReturn(Optional.of(user1));
 
         List<PropertyEntity>properties=new ArrayList<>();
         switch (role){
@@ -128,7 +133,7 @@ class GetAllPropertiesUseCaseImplTest {
                 .build()).toList();
 
         //Act
-        List<GetAllPropertiesResponse>actualResponses=getAllPropertiesUseCase.getAllProperties(user1.getId());
+        List<GetAllPropertiesResponse>actualResponses=getAllPropertiesUseCase.getAllProperties();
 
         //Assert
         assertEquals(expectedResponses,actualResponses);
@@ -137,7 +142,7 @@ class GetAllPropertiesUseCaseImplTest {
 
     /**
      * @verifies return an empty list when there is no appropriate property
-     * @see GetAllPropertiesUseCaseImpl#getAllProperties(long)
+     * @see GetAllPropertiesUseCaseImpl#getAllProperties()
      */
     @Test
     void getAllProperties_shouldReturnAnEmptyListWhenThereIsNoAppropriateProperty() {
@@ -147,10 +152,11 @@ class GetAllPropertiesUseCaseImplTest {
                 .role(UserRole.OWNER)
                 .build();
 
-        when(userRepositoryMock.findById(user1.getId())).thenReturn(Optional.of(user1));
+        when(requestAccessTokenMock.getId()).thenReturn(1L);
+        when(userRepositoryMock.findById(requestAccessTokenMock.getId())).thenReturn(Optional.of(user1));
 
         //Act
-        List<GetAllPropertiesResponse>responses=getAllPropertiesUseCase.getAllProperties(user1.getId());
+        List<GetAllPropertiesResponse>responses=getAllPropertiesUseCase.getAllProperties();
 
         //Assert
         assert responses.isEmpty();

@@ -7,8 +7,11 @@ import nl.fontys.s3.huister.business.exception.user.UserNotFoundException;
 import nl.fontys.s3.huister.business.interfaces.user.LoginUseCase;
 import nl.fontys.s3.huister.business.request.user.LoginRequest;
 import nl.fontys.s3.huister.business.response.user.LoginResponse;
+import nl.fontys.s3.huister.configuration.security.token.AccessTokenEncoder;
+import nl.fontys.s3.huister.configuration.security.token.impl.AccessTokenImpl;
 import nl.fontys.s3.huister.domain.entities.UserEntity;
 import nl.fontys.s3.huister.persistence.UserRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.Optional;
 
@@ -16,6 +19,8 @@ import java.util.Optional;
 @AllArgsConstructor
 public class LoginUseCaseImpl implements LoginUseCase {
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final AccessTokenEncoder accessTokenEncoder;
 
     /**
      *
@@ -35,7 +40,7 @@ public class LoginUseCaseImpl implements LoginUseCase {
         }
 
         UserEntity user=optionalUser.get();
-        if (!user.getPassword().equals(request.getPassword())){
+        if (!passwordEncoder.matches(request.getPassword(),user.getPassword())){
             throw new InvalidPasswordException();
         }
 
@@ -43,11 +48,12 @@ public class LoginUseCaseImpl implements LoginUseCase {
             throw new AccountHasNotBeenActivatedException();
         }
 
+        String token=accessTokenEncoder.encode(
+                new AccessTokenImpl(user.getUsername(), user.getId(), user.getRole(), user.getProfilePictureUrl())
+        );
+
         return LoginResponse.builder()
-                .id(user.getId())
-                .name(user.getName())
-                .role(user.getRole())
-                .profilePictureUrl(user.getProfilePictureUrl())
+                .token(token)
                 .build();
     }
 }

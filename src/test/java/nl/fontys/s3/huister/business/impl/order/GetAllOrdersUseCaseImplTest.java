@@ -2,6 +2,7 @@ package nl.fontys.s3.huister.business.impl.order;
 
 import nl.fontys.s3.huister.business.exception.user.UserNotFoundException;
 import nl.fontys.s3.huister.business.response.order.GetAllOrdersResponse;
+import nl.fontys.s3.huister.configuration.security.token.AccessToken;
 import nl.fontys.s3.huister.domain.entities.CityEntity;
 import nl.fontys.s3.huister.domain.entities.OrderEntity;
 import nl.fontys.s3.huister.domain.entities.PropertyEntity;
@@ -29,27 +30,30 @@ class GetAllOrdersUseCaseImplTest {
     private UserRepository userRepositoryMock;
     @Mock
     private OrderRepository orderRepositoryMock;
+    @Mock
+    private AccessToken requestAccessToken;
 
     @InjectMocks
     private GetAllOrdersUseCaseImpl getAllOrdersUseCase;
 
     /**
      * @verifies throw an UserNotFoundException when user is not found
-     * @see GetAllOrdersUseCaseImpl#getAllOrders(long)
+     * @see GetAllOrdersUseCaseImpl#getAllOrders()
      */
     @Test
     void getAllOrders_shouldThrowAnUserNotFoundExceptionWhenUserIsNotFound() {
         //Arrange
-        when(userRepositoryMock.findById(1L)).thenReturn(Optional.empty());
+        when(requestAccessToken.getId()).thenReturn(1L);
+        when(userRepositoryMock.findById(requestAccessToken.getId())).thenReturn(Optional.empty());
 
         //Act + Assert
-        assertThrows(UserNotFoundException.class,()->getAllOrdersUseCase.getAllOrders(1L));
+        assertThrows(UserNotFoundException.class,()->getAllOrdersUseCase.getAllOrders());
 
     }
 
     /**
      * @verifies return list of orders when user is found
-     * @see GetAllOrdersUseCaseImpl#getAllOrders(long)
+     * @see GetAllOrdersUseCaseImpl#getAllOrders()
      */
     @Test
     void getAllOrders_shouldReturnListOfOrdersWhenUserIsFound() {
@@ -76,7 +80,8 @@ class GetAllOrdersUseCaseImplTest {
                 .status(OrderStatus.CREATED)
                 .build());
 
-        when(userRepositoryMock.findById(user.getId())).thenReturn(Optional.of(user));
+        when(requestAccessToken.getId()).thenReturn(1L);
+        when(userRepositoryMock.findById(requestAccessToken.getId())).thenReturn(Optional.of(user));
         when(orderRepositoryMock.findAllByOwnerOrCustomer(user,user)).thenReturn(orders);
 
         List<GetAllOrdersResponse>expectedResponses=orders.stream().map(order ->GetAllOrdersResponse.builder()
@@ -90,7 +95,7 @@ class GetAllOrdersUseCaseImplTest {
         ).toList();
 
         //Act
-        List<GetAllOrdersResponse> actualResponses=getAllOrdersUseCase.getAllOrders(user.getId());
+        List<GetAllOrdersResponse> actualResponses=getAllOrdersUseCase.getAllOrders();
 
         //Assert
         assertEquals(expectedResponses,actualResponses);
@@ -98,7 +103,7 @@ class GetAllOrdersUseCaseImplTest {
 
     /**
      * @verifies return an empty list when there is no appropriate order
-     * @see GetAllOrdersUseCaseImpl#getAllOrders(long)
+     * @see GetAllOrdersUseCaseImpl#getAllOrders()
      */
     @Test
     void getAllOrders_shouldReturnAnEmptyListWhenThereIsNoAppropriateOrder() {
@@ -107,11 +112,12 @@ class GetAllOrdersUseCaseImplTest {
                 .id(1L)
                 .build();
 
-        when(userRepositoryMock.findById(user.getId())).thenReturn(Optional.of(user));
+        when(requestAccessToken.getId()).thenReturn(1L);
+        when(userRepositoryMock.findById(requestAccessToken.getId())).thenReturn(Optional.of(user));
         when(orderRepositoryMock.findAllByOwnerOrCustomer(user,user)).thenReturn(List.of());
 
         //Act
-        List<GetAllOrdersResponse> responses=getAllOrdersUseCase.getAllOrders(user.getId());
+        List<GetAllOrdersResponse> responses=getAllOrdersUseCase.getAllOrders();
 
         //Assert
         assert responses.isEmpty();

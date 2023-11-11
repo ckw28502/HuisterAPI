@@ -8,7 +8,6 @@ import lombok.*;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 public class CreatePropertyRequest {
-    private long ownerId;
     private long cityId;
 
     private String streetName;

@@ -5,6 +5,7 @@ import nl.fontys.s3.huister.business.exception.user.InvalidRoleException;
 import nl.fontys.s3.huister.business.exception.user.UserNotFoundException;
 import nl.fontys.s3.huister.business.interfaces.property.GetRentedNotRentedPropertyRatioUseCase;
 import nl.fontys.s3.huister.business.response.property.GetRentedNotRentedPropertyRatioResponse;
+import nl.fontys.s3.huister.configuration.security.token.AccessToken;
 import nl.fontys.s3.huister.domain.entities.UserEntity;
 import nl.fontys.s3.huister.persistence.PropertyRepository;
 import nl.fontys.s3.huister.persistence.UserRepository;
@@ -17,10 +18,10 @@ import java.util.Optional;
 public class GetRentedNotRentedPropertyRatioUseCaseImpl implements GetRentedNotRentedPropertyRatioUseCase {
     private final PropertyRepository propertyRepository;
     private final UserRepository userRepository;
+    private final AccessToken requestAccessToken;
 
     /**
      *
-     * @param userId current user id
      * @return number of rented property and number of not rented property
      *
      * @should throw UserNotFoundException when user is not found
@@ -28,8 +29,8 @@ public class GetRentedNotRentedPropertyRatioUseCaseImpl implements GetRentedNotR
      * @should return the correct response when user role is either admin or owner
      */
     @Override
-    public GetRentedNotRentedPropertyRatioResponse getRentedNotRentedPropertyRatio(long userId) {
-        Optional<UserEntity>optionalUser=userRepository.findById(userId);
+    public GetRentedNotRentedPropertyRatioResponse getRentedNotRentedPropertyRatio() {
+        Optional<UserEntity>optionalUser=userRepository.findById(requestAccessToken.getId());
         if (optionalUser.isEmpty()) {
             throw new UserNotFoundException();
         }

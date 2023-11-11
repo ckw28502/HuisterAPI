@@ -9,6 +9,7 @@ import nl.fontys.s3.huister.business.response.user.GetUserByIdResponse;
 import nl.fontys.s3.huister.business.response.user.LoginResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -34,6 +35,7 @@ public class UserController {
      *
      * @should return user
      */
+    @Secured({"ADMIN","OWNER","CUSTOMER"})
     @GetMapping("{id}")
     public ResponseEntity<GetUserByIdResponse>getUserById(@PathVariable(value = "id")final long id){
         return ResponseEntity.ok(getUserByIdUseCase.getUserById(id));
@@ -45,6 +47,7 @@ public class UserController {
      *
      * @should return list of owner
      */
+    @Secured({"ADMIN"})
     @GetMapping("/owners")
     public ResponseEntity<List<GetAllOwnersResponse>>getAllOwners(){
         return ResponseEntity.ok(getAllOwnersUseCase.getAllOwners());
@@ -92,18 +95,16 @@ public class UserController {
 
     /**
      *
-     * @param id user id
      * @param request update user request
      * @return http response with no content status
      *
      * @should update user
      */
-    @PutMapping("{id}")
+    @Secured({"OWNER","CUSTOMER"})
+    @PutMapping()
     public ResponseEntity<Void>updateUser(
-            @PathVariable(value = "id")final int id,
             @RequestBody@Valid UpdateUserRequest request
             ){
-        request.setId(id);
         updateUserUseCase.updateUser(request);
         return ResponseEntity.noContent().build();
     }

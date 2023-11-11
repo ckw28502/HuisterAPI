@@ -2,6 +2,7 @@ package nl.fontys.s3.huister.business.impl.user;
 
 import nl.fontys.s3.huister.business.exception.user.UserNotFoundException;
 import nl.fontys.s3.huister.business.request.user.UpdateUserRequest;
+import nl.fontys.s3.huister.configuration.security.token.AccessToken;
 import nl.fontys.s3.huister.domain.entities.UserEntity;
 import nl.fontys.s3.huister.persistence.UserRepository;
 import org.junit.jupiter.api.Test;
@@ -20,6 +21,8 @@ import static org.mockito.Mockito.when;
 class UpdateUserUseCaseImplTest {
     @Mock
     private UserRepository userRepositoryMock;
+    @Mock
+    private AccessToken requestAccessTokenMock;
 
     @InjectMocks
     private UpdateUserUseCaseImpl updateUserUseCase;
@@ -32,12 +35,12 @@ class UpdateUserUseCaseImplTest {
     void updateUser_shouldThrowUserNotFoundExceptionWhenUserIsNotFound() {
         //Arrange
         UpdateUserRequest request=UpdateUserRequest.builder()
-                .id(1L)
                 .phoneNumber("0987654321")
                 .name("resu")
                 .build();
 
-        when(userRepositoryMock.findById(request.getId())).thenReturn(Optional.empty());
+        when(requestAccessTokenMock.getId()).thenReturn(1L);
+        when(userRepositoryMock.findById(requestAccessTokenMock.getId())).thenReturn(Optional.empty());
 
         //Act + Assert
         assertThrows(UserNotFoundException.class,()->updateUserUseCase.updateUser(request));
@@ -52,20 +55,20 @@ class UpdateUserUseCaseImplTest {
     void updateUser_shouldUpdateUserWhenUserIsFound() {
         //Arrange
         UpdateUserRequest request=UpdateUserRequest.builder()
-                .id(1L)
                 .phoneNumber("0987654321")
                 .name("resu")
                 .build();
 
         UserEntity user=UserEntity.builder().build();
 
-        when(userRepositoryMock.findById(request.getId())).thenReturn(Optional.of(user));
+        when(requestAccessTokenMock.getId()).thenReturn(1L);
+        when(userRepositoryMock.findById(requestAccessTokenMock.getId())).thenReturn(Optional.of(user));
 
         //Act
         updateUserUseCase.updateUser(request);
 
         //Assert
-        verify(userRepositoryMock).updateUser(request.getName(),request.getPhoneNumber(),request.getId());
+        verify(userRepositoryMock).updateUser(request.getName(),request.getPhoneNumber(),1L);
 
     }
 }

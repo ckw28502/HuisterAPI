@@ -5,6 +5,8 @@ import nl.fontys.s3.huister.business.exception.user.InvalidPasswordException;
 import nl.fontys.s3.huister.business.exception.user.UserNotFoundException;
 import nl.fontys.s3.huister.business.request.user.LoginRequest;
 import nl.fontys.s3.huister.business.response.user.LoginResponse;
+import nl.fontys.s3.huister.configuration.security.token.AccessTokenEncoder;
+import nl.fontys.s3.huister.configuration.security.token.impl.AccessTokenImpl;
 import nl.fontys.s3.huister.domain.entities.UserEntity;
 import nl.fontys.s3.huister.domain.entities.enumerator.UserRole;
 import nl.fontys.s3.huister.persistence.UserRepository;
@@ -13,6 +15,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
 
@@ -25,8 +28,15 @@ class LoginUseCaseImplTest {
     @Mock
     private UserRepository userRepositoryMock;
 
+    @Mock
+    private PasswordEncoder passwordEncoder;
+    @Mock
+    private AccessTokenEncoder accessTokenEncoder;
+
     @InjectMocks
     private LoginUseCaseImpl loginUseCase;
+
+
 
     /**
      * @verifies throw UserNotFoundException when username is invalid
@@ -62,7 +72,7 @@ class LoginUseCaseImplTest {
                 .id(1L)
                 .profilePictureUrl("user.jpg")
                 .role(UserRole.OWNER)
-                .password("resu")
+                .password(passwordEncoder.encode("resu"))
                 .activated(false)
                 .name("user")
                 .build();
@@ -89,10 +99,12 @@ class LoginUseCaseImplTest {
                 .id(1L)
                 .profilePictureUrl("user.jpg")
                 .role(UserRole.OWNER)
-                .password("user")
+                .password(passwordEncoder.encode("user"))
                 .activated(false)
                 .name("user")
                 .build();
+
+        when(passwordEncoder.matches(request.getPassword(),user.getPassword())).thenReturn(true);
 
         when(userRepositoryMock.findByUsername(request.getUsername())).thenReturn(Optional.of(user));
 
@@ -114,20 +126,22 @@ class LoginUseCaseImplTest {
 
         UserEntity user=UserEntity.builder()
                 .id(1L)
+                .username("user")
                 .profilePictureUrl("user.jpg")
                 .role(UserRole.OWNER)
-                .password("user")
+                .password(passwordEncoder.encode("user"))
                 .activated(true)
                 .name("user")
                 .build();
 
+
         when(userRepositoryMock.findByUsername(request.getUsername())).thenReturn(Optional.of(user));
 
+        when(passwordEncoder.matches(request.getPassword(),user.getPassword())).thenReturn(true);
+
+
         LoginResponse expectedResponse=LoginResponse.builder()
-                .id(user.getId())
-                .name(user.getName())
-                .role(user.getRole())
-                .profilePictureUrl(user.getProfilePictureUrl())
+                .token(accessTokenEncoder.encode((new AccessTokenImpl(user.getUsername(),user.getId(),user.getRole(),user.getProfilePictureUrl()))))
                 .build();
 
         //Act

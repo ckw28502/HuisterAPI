@@ -1,12 +1,10 @@
 package nl.fontys.s3.huister.business.request.user;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
+import lombok.*;
 
 @Getter
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
 @EqualsAndHashCode
 public class LoginRequest {

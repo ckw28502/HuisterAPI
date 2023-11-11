@@ -10,6 +10,7 @@ import nl.fontys.s3.huister.business.response.property.GetPropertyDetailResponse
 import nl.fontys.s3.huister.business.response.property.GetRentedNotRentedPropertyRatioResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,16 +29,15 @@ public class PropertyController {
 
     /**
      *
-     * @param userId user id
      * @return list of properties
      *
      * @should return an empty list content if no properties found
      * @should return list of properties content if properties are found
      */
-    @GetMapping("{userId}")
-    public ResponseEntity<List<GetAllPropertiesResponse>>getAllProperties(
-            @PathVariable(value = "userId")long userId){
-        return ResponseEntity.ok(getAllPropertiesUseCase.getAllProperties(userId));
+    @Secured({"ADMIN","OWNER","CUSTOMER"})
+    @GetMapping()
+    public ResponseEntity<List<GetAllPropertiesResponse>>getAllProperties(){
+        return ResponseEntity.ok(getAllPropertiesUseCase.getAllProperties());
     }
 
     /**
@@ -47,6 +47,7 @@ public class PropertyController {
      *
      * @should return property content
      */
+    @Secured({"ADMIN","OWNER","CUSTOMER"})
     @GetMapping("detail/{id}")
     public ResponseEntity<GetPropertyDetailResponse>getPropertyDetail(
             @PathVariable(value = "id")final long id){
@@ -55,16 +56,14 @@ public class PropertyController {
 
     /**
      *
-     * @param userId user id
      * @return rented property and not rented property count
      *
      * @should return a valid response
      */
-    @GetMapping("dashboard/rentedRatio/{userId}")
-    public ResponseEntity<GetRentedNotRentedPropertyRatioResponse>getRentedNotRentedPropertyRatio(
-            @PathVariable(value = "userId")long userId
-    ){
-        return ResponseEntity.ok(getRentedNotRentedPropertyRatioUseCase.getRentedNotRentedPropertyRatio(userId));
+    @Secured({"ADMIN","OWNER"})
+    @GetMapping("dashboard/rentedRatio")
+    public ResponseEntity<GetRentedNotRentedPropertyRatioResponse>getRentedNotRentedPropertyRatio(){
+        return ResponseEntity.ok(getRentedNotRentedPropertyRatioUseCase.getRentedNotRentedPropertyRatio());
     }
 
     /**
@@ -75,6 +74,7 @@ public class PropertyController {
      * @should create property
      *
      */
+    @Secured("OWNER")
     @PostMapping
     public ResponseEntity<Integer>createProperty(@RequestBody @Valid CreatePropertyRequest request){
         createPropertyUseCase.createProperty(request);
@@ -90,6 +90,7 @@ public class PropertyController {
      * @should update property
      *
      */
+    @Secured({"OWNER"})
     @PutMapping("{id}")
     public ResponseEntity<Void>updateProperty(
             @RequestBody@Valid UpdatePropertyRequest request,
@@ -107,6 +108,7 @@ public class PropertyController {
      *
      * @should delete property
      */
+    @Secured({"OWNER"})
     @DeleteMapping("{id}")
     public ResponseEntity<Void>deleteProperty(@PathVariable(value = "id")final long id){
         deletePropertyUseCase.deleteProperty(id);

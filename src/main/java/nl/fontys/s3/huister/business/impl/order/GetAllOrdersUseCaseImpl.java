@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import nl.fontys.s3.huister.business.exception.user.UserNotFoundException;
 import nl.fontys.s3.huister.business.interfaces.order.GetAllOrdersUseCase;
 import nl.fontys.s3.huister.business.response.order.GetAllOrdersResponse;
+import nl.fontys.s3.huister.configuration.security.token.AccessToken;
 import nl.fontys.s3.huister.domain.entities.OrderEntity;
 import nl.fontys.s3.huister.domain.entities.UserEntity;
 import nl.fontys.s3.huister.persistence.OrderRepository;
@@ -18,10 +19,10 @@ import java.util.Optional;
 public class GetAllOrdersUseCaseImpl implements GetAllOrdersUseCase {
     private final OrderRepository orderRepository;
     private final UserRepository userRepository;
+    private final AccessToken requestAccessToken;
 
     /**
      *
-     * @param userId user id
      * @return list of orders
      *
      * @should throw an UserNotFoundException when user is not found
@@ -29,8 +30,8 @@ public class GetAllOrdersUseCaseImpl implements GetAllOrdersUseCase {
      * @should return list of orders when user is found
      */
     @Override
-    public List<GetAllOrdersResponse> getAllOrders(long userId) {
-        Optional<UserEntity>optionalUser=userRepository.findById(userId);
+    public List<GetAllOrdersResponse> getAllOrders() {
+        Optional<UserEntity>optionalUser=userRepository.findById(requestAccessToken.getId());
         if (optionalUser.isEmpty()){
             throw new UserNotFoundException();
         }

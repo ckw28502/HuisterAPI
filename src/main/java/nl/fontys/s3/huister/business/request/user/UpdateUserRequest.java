@@ -12,6 +12,4 @@ import lombok.NoArgsConstructor;
 public class UpdateUserRequest {
     private String name;
     private String phoneNumber;
-
-    private long id;
 }

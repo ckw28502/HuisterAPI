@@ -10,6 +10,7 @@ import nl.fontys.s3.huister.business.request.order.UpdateOrderRequest;
 import nl.fontys.s3.huister.business.response.order.GetAllOrdersResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,17 +26,15 @@ public class OrderController {
 
     /**
      *
-     * @param userId user id
      * @return HTTP response with list of order content
      *
      * @should return an empty list when no order is found
      * @should return a list of orders when orders are found
      */
-    @GetMapping("{userId}")
-    public ResponseEntity<List<GetAllOrdersResponse>>getAllOrders(
-            @PathVariable(value = "userId")long userId
-    ){
-        return ResponseEntity.ok(getAllOrdersUseCase.getAllOrders(userId));
+    @Secured({"OWNER","CUSTOMER"})
+    @GetMapping()
+    public ResponseEntity<List<GetAllOrdersResponse>>getAllOrders(){
+        return ResponseEntity.ok(getAllOrdersUseCase.getAllOrders());
     }
 
     /**
@@ -46,6 +45,7 @@ public class OrderController {
      * @should return a response with created status
      */
 
+    @Secured("CUSTOMER")
     @PostMapping
     public ResponseEntity<Void>createOrder(
             @RequestBody@Valid CreateOrderRequest request){
@@ -61,6 +61,7 @@ public class OrderController {
      *
      * @should return a no content response
      */
+    @Secured({"OWNER","CUSTOMER"})
     @PutMapping("{id}")
     public ResponseEntity<Void>updateOrder(
             @PathVariable(value = "id")final long id,

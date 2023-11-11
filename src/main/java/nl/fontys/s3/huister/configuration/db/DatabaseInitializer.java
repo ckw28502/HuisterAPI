@@ -13,6 +13,7 @@ import nl.fontys.s3.huister.persistence.PropertyRepository;
 import nl.fontys.s3.huister.persistence.UserRepository;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
@@ -25,6 +26,7 @@ public class DatabaseInitializer {
     private CityRepository cityRepository;
     private PropertyRepository propertyRepository;
     private OrderRepository orderRepository;
+    private PasswordEncoder passwordEncoder;
 
     @EventListener(ApplicationReadyEvent.class)
     public void populateDatabaseInitialDummyData(){
@@ -35,7 +37,7 @@ public class DatabaseInitializer {
             userRepository.save(UserEntity.builder()
                     .username("admin")
                     .role(UserRole.ADMIN)
-                    .password("admin")
+                    .password(passwordEncoder.encode("admin"))
                     .name("admin")
                     .email("admin@email.com")
                     .phoneNumber("0123456789")
@@ -47,7 +49,7 @@ public class DatabaseInitializer {
                     .activated(true)
                     .username("malexander2")
                     .role(UserRole.OWNER)
-                    .password("xL8,cJ#9")
+                    .password(passwordEncoder.encode("malexander2"))
                     .name("Maddi Alexander")
                     .email("malexander2@biglobe.ne.jp")
                     .profilePictureUrl("https://firebasestorage.googleapis.com/v0/b/huister-83675.appspot.com/o/images%2Fuser%2Fmalexander2.jpg?alt=media&amp;token=c1661cd0-7f06-4f50-9b2f-f45616946a89")
@@ -58,7 +60,7 @@ public class DatabaseInitializer {
                     .activated(false)
                     .username("vpluck0")
                     .role(UserRole.OWNER)
-                    .password("hJ6\\1?PtUE|76v")
+                    .password(passwordEncoder.encode("vpluck0"))
                     .name("Vaughan Pluck")
                     .email("vpluck0@nhs.uk")
                     .phoneNumber("209-703-3693")
@@ -69,7 +71,7 @@ public class DatabaseInitializer {
                     .username("wwiffill1")
                     .role(UserRole.CUSTOMER)
                     .profilePictureUrl("https://firebasestorage.googleapis.com/v0/b/huister-83675.appspot.com/o/images%2Fuser%2Fwwiffill1.jpg?alt=media&amp;token=3a7aac4c-c091-42be-b792-c1711a92786c")
-                    .password("fX7(mDdmj`43I}}")
+                    .password("wwiffill1")
                     .name("Willem Wiffill")
                     .email("wwiffill1@nhs.uk")
                     .phoneNumber("435-793-1696")

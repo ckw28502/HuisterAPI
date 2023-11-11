@@ -2,6 +2,7 @@ package nl.fontys.s3.huister.business.impl.property;
 
 import nl.fontys.s3.huister.business.exception.user.UserNotFoundException;
 import nl.fontys.s3.huister.business.request.property.CreatePropertyRequest;
+import nl.fontys.s3.huister.configuration.security.token.AccessToken;
 import nl.fontys.s3.huister.domain.entities.UserEntity;
 import nl.fontys.s3.huister.persistence.PropertyRepository;
 import nl.fontys.s3.huister.persistence.UserRepository;
@@ -23,6 +24,8 @@ class CreatePropertyUseCaseImplTest {
     private UserRepository userRepositoryMock;
     @Mock
     private PropertyRepository propertyRepositoryMock;
+    @Mock
+    private AccessToken requestAccessTokenMock;
 
     @InjectMocks
     private CreatePropertyUseCaseImpl createPropertyUseCase;
@@ -36,7 +39,8 @@ class CreatePropertyUseCaseImplTest {
         //Arrange
         CreatePropertyRequest request = CreatePropertyRequest.builder().build();
 
-        when(userRepositoryMock.findById(request.getOwnerId())).thenReturn(Optional.empty());
+        when(requestAccessTokenMock.getId()).thenReturn(1L);
+        when(userRepositoryMock.findById(requestAccessTokenMock.getId())).thenReturn(Optional.empty());
 
         //Act + Assert
         assertThrows(UserNotFoundException.class,()->createPropertyUseCase.createProperty(request));
@@ -52,16 +56,19 @@ class CreatePropertyUseCaseImplTest {
         //Arrange
         CreatePropertyRequest request = CreatePropertyRequest.builder().build();
 
-        UserEntity owner=UserEntity.builder().build();
+        UserEntity owner=UserEntity.builder()
+                .id(1L)
+                .build();
 
-        when(userRepositoryMock.findById(request.getOwnerId())).thenReturn(Optional.of(owner));
+        when(requestAccessTokenMock.getId()).thenReturn(1L);
+        when(userRepositoryMock.findById(requestAccessTokenMock.getId())).thenReturn(Optional.of(owner));
 
         //Act
         createPropertyUseCase.createProperty(request);
 
         //Assert
         verify(propertyRepositoryMock).saveProperty(
-                request.getOwnerId(),
+                owner.getId(),
                 request.getCityName(),
                 request.getStreetName(),
                 request.getPostCode(),

@@ -1,6 +1,7 @@
 package nl.fontys.s3.huister.business.impl.user;
 
 import lombok.AllArgsConstructor;
+import nl.fontys.s3.huister.configuration.security.token.AccessToken;
 import nl.fontys.s3.huister.domain.entities.UserEntity;
 import nl.fontys.s3.huister.business.exception.user.UserNotFoundException;
 import nl.fontys.s3.huister.business.interfaces.user.UpdateUserUseCase;
@@ -15,6 +16,7 @@ import java.util.Optional;
 @AllArgsConstructor
 public class UpdateUserUseCaseImpl implements UpdateUserUseCase {
     private final UserRepository userRepository;
+    private final AccessToken requestAccessToken;
 
     /**
      *
@@ -26,10 +28,10 @@ public class UpdateUserUseCaseImpl implements UpdateUserUseCase {
     @Override
     @Transactional
     public void updateUser(UpdateUserRequest request) {
-        Optional<UserEntity>user=userRepository.findById(request.getId());
+        Optional<UserEntity>user=userRepository.findById(requestAccessToken.getId());
         if (user.isEmpty()){
             throw new UserNotFoundException();
         }
-        userRepository.updateUser(request.getName(),request.getPhoneNumber(),request.getId());
+        userRepository.updateUser(request.getName(),request.getPhoneNumber(),requestAccessToken.getId());
     }
 }

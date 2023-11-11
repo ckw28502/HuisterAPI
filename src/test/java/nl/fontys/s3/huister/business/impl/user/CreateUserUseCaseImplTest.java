@@ -10,6 +10,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.verify;
@@ -18,10 +19,14 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class CreateUserUseCaseImplTest {
     @Mock
+    private  PasswordEncoder passwordEncoder;
+
+    @Mock
     private UserRepository userRepositoryMock;
 
     @InjectMocks
     private CreateUserUseCaseImpl createUserUseCase;
+
 
     /**
      * @verifies throw UsernameExistException when username exists
@@ -71,7 +76,7 @@ class CreateUserUseCaseImplTest {
                 .phoneNumber(request.getPhoneNumber())
                 .role(request.getRole())
                 .profilePictureUrl(request.getProfilePictureUrl())
-                .password(request.getPassword())
+                .password(passwordEncoder.encode(request.getPassword()))
                 .username(request.getUsername())
                 .email(request.getEmail())
                 .activated(false)
