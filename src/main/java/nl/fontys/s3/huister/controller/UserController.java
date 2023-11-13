@@ -1,5 +1,6 @@
 package nl.fontys.s3.huister.controller;
 
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import nl.fontys.s3.huister.business.interfaces.user.*;
@@ -9,7 +10,6 @@ import nl.fontys.s3.huister.business.response.user.GetUserByIdResponse;
 import nl.fontys.s3.huister.business.response.user.LoginResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -33,9 +33,10 @@ public class UserController {
      * @param id user id
      * @return user
      *
-     * @should return user
+     * @should return 401 if user is unauthorized
+     * @should return 200 if user is authorized
      */
-    @Secured({"ADMIN","OWNER","CUSTOMER"})
+    @RolesAllowed({"ADMIN","OWNER","CUSTOMER"})
     @GetMapping("{id}")
     public ResponseEntity<GetUserByIdResponse>getUserById(@PathVariable(value = "id")final long id){
         return ResponseEntity.ok(getUserByIdUseCase.getUserById(id));
@@ -45,9 +46,11 @@ public class UserController {
      *
      * @return list of owner
      *
-     * @should return list of owner
+     * @should return 401 when user is not logged-in
+     * @should return 403 when user is not admin
+     * @should return 200 when user is admin
      */
-    @Secured({"ADMIN"})
+    @RolesAllowed({"ADMIN"})
     @GetMapping("/owners")
     public ResponseEntity<List<GetAllOwnersResponse>>getAllOwners(){
         return ResponseEntity.ok(getAllOwnersUseCase.getAllOwners());
@@ -58,8 +61,9 @@ public class UserController {
      * @param request create user request
      * @return http with created status
      *
-     * @should create user
+     * @should return 201
      */
+
     @PostMapping()
     public ResponseEntity<Void>createUser(@RequestBody CreateUserRequest request){
         createUserUseCase.createUser(request);
@@ -71,7 +75,7 @@ public class UserController {
      * @param request login request
      * @return login token
      *
-     * @should return token
+     * @should return 200
      */
     @PostMapping("/login")
     public ResponseEntity<LoginResponse>login(@RequestBody@Valid LoginRequest request){
@@ -84,7 +88,7 @@ public class UserController {
      * @param request set profile picture url request
      * @return http response with no content status
      *
-     * @should set profile picture url
+     * @should return 204
      *
      */
     @PutMapping("/image")
@@ -98,9 +102,11 @@ public class UserController {
      * @param request update user request
      * @return http response with no content status
      *
-     * @should update user
+     * @should return 401 when user is not logged-in
+     * @should return 403 when user is admin
+     * @should return 204 when user is authorized
      */
-    @Secured({"OWNER","CUSTOMER"})
+    @RolesAllowed({"OWNER","CUSTOMER"})
     @PutMapping()
     public ResponseEntity<Void>updateUser(
             @RequestBody@Valid UpdateUserRequest request
@@ -115,7 +121,7 @@ public class UserController {
      * @param request new password request
      * @return http response with no content status
      *
-     * @should update password
+     * @should return 204
      */
     @PutMapping("/changePassword/{id}")
     public ResponseEntity<Void>changePassword(@PathVariable(value = "id")long id, @RequestBody@Valid ChangePasswordRequest request){

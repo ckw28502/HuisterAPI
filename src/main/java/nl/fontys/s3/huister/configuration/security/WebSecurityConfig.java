@@ -17,7 +17,8 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @EnableWebSecurity
-@EnableMethodSecurity(jsr250Enabled = true,securedEnabled = true)
+@EnableMethodSecurity(jsr250Enabled = true
+)
 @Configuration
 public class WebSecurityConfig {
 
@@ -39,6 +40,8 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests(registry ->
                         registry.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()                 // CORS pre-flight requests should be public
                                 .requestMatchers(HttpMethod.POST, "/users", "/users/login").permitAll() // Creating a student and login are public
+                                .requestMatchers(HttpMethod.PUT,"/users/image",
+                                        "/users/changePassword/{id}").permitAll()
                                 .requestMatchers(SWAGGER_UI_RESOURCES).permitAll()                        // Swagger is also public (In "real life" it would only be public in non-production environments)
                                 .anyRequest().authenticated()                                             // Everything else --> authentication required, which is Spring security's default behaviour
                 )

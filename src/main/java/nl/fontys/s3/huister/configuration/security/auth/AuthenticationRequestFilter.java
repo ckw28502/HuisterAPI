@@ -23,6 +23,8 @@ import java.util.List;
 @Component
 public class AuthenticationRequestFilter extends OncePerRequestFilter {
 
+    private static final String SPRING_SECURITY_ROLE_PREFIX = "ROLE_";
+
 
     @Autowired
     private AccessTokenDecoder accessTokenDecoder;
@@ -56,7 +58,7 @@ public class AuthenticationRequestFilter extends OncePerRequestFilter {
 
     private void setupSpringSecurityContext(AccessToken accessToken) {
         UserDetails userDetails = new User(accessToken.getSubject(), "",
-                List.of(new SimpleGrantedAuthority(accessToken.getRole().name())));
+                List.of(new SimpleGrantedAuthority(SPRING_SECURITY_ROLE_PREFIX + accessToken.getRole().name())));
 
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
                 userDetails, null, userDetails.getAuthorities());

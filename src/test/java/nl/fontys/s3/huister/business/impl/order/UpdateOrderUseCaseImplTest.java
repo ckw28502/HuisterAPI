@@ -1,6 +1,7 @@
 package nl.fontys.s3.huister.business.impl.order;
 
 import nl.fontys.s3.huister.business.exception.order.OrderNotFoundException;
+import nl.fontys.s3.huister.business.exception.user.UnauthorizedUserException;
 import nl.fontys.s3.huister.business.exception.utilities.InvalidOperationException;
 import nl.fontys.s3.huister.business.request.order.UpdateOrderRequest;
 import nl.fontys.s3.huister.configuration.security.token.AccessToken;
@@ -155,7 +156,7 @@ class UpdateOrderUseCaseImplTest {
                 .id(1L)
                 .customer(customer)
                 .owner(owner)
-                .status(OrderStatus.ACCEPTED)
+                .status(OrderStatus.CREATED)
                 .build();
 
         when(orderRepositoryMock.findById(request.getId())).thenReturn(Optional.of(order));
@@ -191,12 +192,12 @@ class UpdateOrderUseCaseImplTest {
                 .id(1L)
                 .customer(customer)
                 .owner(owner)
-                .status(OrderStatus.ACCEPTED)
+                .status(OrderStatus.CREATED)
                 .build();
 
         when(orderRepositoryMock.findById(request.getId())).thenReturn(Optional.of(order));
 
         //Act + Assert
-        assertThrows(InvalidOperationException.class,()->updateOrderUseCase.updateOrder(request));
+        assertThrows(UnauthorizedUserException.class,()->updateOrderUseCase.updateOrder(request));
     }
 }

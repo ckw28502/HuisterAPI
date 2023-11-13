@@ -5,6 +5,6 @@ import org.springframework.web.server.ResponseStatusException;
 
 public class InvalidOperationException extends ResponseStatusException {
     public InvalidOperationException() {
-        super(HttpStatus.BAD_REQUEST,"INVALID_OPERATION");
+        super(HttpStatus.FORBIDDEN,"INVALID_OPERATION");
     }
 }

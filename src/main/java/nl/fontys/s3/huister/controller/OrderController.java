@@ -1,5 +1,6 @@
 package nl.fontys.s3.huister.controller;
 
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import nl.fontys.s3.huister.business.interfaces.order.CreateOrderUseCase;
@@ -10,7 +11,6 @@ import nl.fontys.s3.huister.business.request.order.UpdateOrderRequest;
 import nl.fontys.s3.huister.business.response.order.GetAllOrdersResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,10 +28,11 @@ public class OrderController {
      *
      * @return HTTP response with list of order content
      *
-     * @should return an empty list when no order is found
-     * @should return a list of orders when orders are found
+     * @should return 401 when user is not logged-in
+     * @should return 403 when user is admin
+     * @should return 200 when user is authorized
      */
-    @Secured({"OWNER","CUSTOMER"})
+    @RolesAllowed({"OWNER","CUSTOMER"})
     @GetMapping()
     public ResponseEntity<List<GetAllOrdersResponse>>getAllOrders(){
         return ResponseEntity.ok(getAllOrdersUseCase.getAllOrders());
@@ -42,10 +43,13 @@ public class OrderController {
      * @param request request for creating new order
      * @return HTTP response with created status
      *
-     * @should return a response with created status
+     * @should return 401 when user is not logged-in
+     * @should return 403 when user is unauthorized
+     * @should return 201 when user is customer
+     *
      */
 
-    @Secured("CUSTOMER")
+    @RolesAllowed("CUSTOMER")
     @PostMapping
     public ResponseEntity<Void>createOrder(
             @RequestBody@Valid CreateOrderRequest request){
@@ -59,9 +63,12 @@ public class OrderController {
      * @param request new order value
      * @return HTTP response with no content status
      *
-     * @should return a no content response
+     * @should return 401 when user is not logged-in
+     * @should return 403 when user is admin
+     * @should return 204 when user is authorized
+     *
      */
-    @Secured({"OWNER","CUSTOMER"})
+    @RolesAllowed({"OWNER","CUSTOMER"})
     @PutMapping("{id}")
     public ResponseEntity<Void>updateOrder(
             @PathVariable(value = "id")final long id,

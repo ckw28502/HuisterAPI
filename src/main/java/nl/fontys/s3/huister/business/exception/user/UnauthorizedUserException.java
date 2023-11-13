@@ -5,6 +5,6 @@ import org.springframework.web.server.ResponseStatusException;
 
 public class UnauthorizedUserException extends ResponseStatusException {
     public UnauthorizedUserException() {
-        super(HttpStatus.UNAUTHORIZED,"UNAUTHORIZED_USER");
+        super(HttpStatus.FORBIDDEN,"UNAUTHORIZED_USER");
     }
 }

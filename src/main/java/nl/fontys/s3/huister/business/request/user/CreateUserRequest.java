@@ -1,15 +1,13 @@
 package nl.fontys.s3.huister.business.request.user;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import nl.fontys.s3.huister.domain.entities.enumerator.UserRole;
 
-@Data
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@EqualsAndHashCode
 public class CreateUserRequest {
     private String username;
     private String email;
