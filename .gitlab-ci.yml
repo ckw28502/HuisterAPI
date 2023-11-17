@@ -4,6 +4,7 @@ variables:
 stages: 
  - build
  - test
+ - jacoco
  - sonarqube-check
 build:
  stage: build
@@ -13,6 +14,18 @@ test:
  stage: test
  script:
   - ./gradlew test
+
+jacocoReport:
+ stage: jacoco
+ script:
+  - ./gradlew jacocoTestReport
+ artifacts:
+  paths:
+   - build/reports/jacoco/test/html/
+  expire_in: 1 week
+ only:
+  - master  # Adjust the branch as needed
+
 sonarqube-check:
  stage: sonarqube-check
  image: gradle:8.2.0-jdk17-jammy
