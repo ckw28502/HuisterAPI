@@ -1,9 +1,9 @@
-package nl.fontys.s3.huister.domain.entities;
+package nl.fontys.s3.huister.persistence.entities;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
-import nl.fontys.s3.huister.domain.entities.enumerator.OrderStatus;
+import nl.fontys.s3.huister.persistence.entities.enumerator.OrderStatus;
 
 @Getter
 @AllArgsConstructor

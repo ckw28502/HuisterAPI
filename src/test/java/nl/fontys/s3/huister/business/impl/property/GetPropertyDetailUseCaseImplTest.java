@@ -2,9 +2,9 @@ package nl.fontys.s3.huister.business.impl.property;
 
 import nl.fontys.s3.huister.business.exception.property.PropertyNotFoundException;
 import nl.fontys.s3.huister.business.response.property.GetPropertyDetailResponse;
-import nl.fontys.s3.huister.domain.entities.CityEntity;
-import nl.fontys.s3.huister.domain.entities.PropertyEntity;
-import nl.fontys.s3.huister.domain.entities.UserEntity;
+import nl.fontys.s3.huister.persistence.entities.CityEntity;
+import nl.fontys.s3.huister.persistence.entities.PropertyEntity;
+import nl.fontys.s3.huister.persistence.entities.UserEntity;
 import nl.fontys.s3.huister.persistence.PropertyRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

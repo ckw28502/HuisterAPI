@@ -1,7 +1,7 @@
 package nl.fontys.s3.huister.business.impl.property;
 
 import lombok.AllArgsConstructor;
-import nl.fontys.s3.huister.domain.entities.PropertyEntity;
+import nl.fontys.s3.huister.persistence.entities.PropertyEntity;
 import nl.fontys.s3.huister.business.exception.property.PropertyNotFoundException;
 import nl.fontys.s3.huister.business.interfaces.property.GetPropertyDetailUseCase;
 import nl.fontys.s3.huister.business.response.property.GetPropertyDetailResponse;

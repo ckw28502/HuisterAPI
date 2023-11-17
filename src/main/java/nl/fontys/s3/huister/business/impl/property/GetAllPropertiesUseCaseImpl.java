@@ -7,8 +7,8 @@ import nl.fontys.s3.huister.business.response.property.GetAllPropertiesResponse;
 import nl.fontys.s3.huister.configuration.security.token.AccessToken;
 import nl.fontys.s3.huister.persistence.PropertyRepository;
 import nl.fontys.s3.huister.persistence.UserRepository;
-import nl.fontys.s3.huister.domain.entities.PropertyEntity;
-import nl.fontys.s3.huister.domain.entities.UserEntity;
+import nl.fontys.s3.huister.persistence.entities.PropertyEntity;
+import nl.fontys.s3.huister.persistence.entities.UserEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;

@@ -4,9 +4,9 @@ import nl.fontys.s3.huister.business.exception.property.PropertyNotFoundExceptio
 import nl.fontys.s3.huister.business.exception.user.UnauthorizedUserException;
 import nl.fontys.s3.huister.business.request.property.UpdatePropertyRequest;
 import nl.fontys.s3.huister.configuration.security.token.AccessToken;
-import nl.fontys.s3.huister.domain.entities.PropertyEntity;
-import nl.fontys.s3.huister.domain.entities.UserEntity;
-import nl.fontys.s3.huister.domain.entities.enumerator.UserRole;
+import nl.fontys.s3.huister.persistence.entities.PropertyEntity;
+import nl.fontys.s3.huister.persistence.entities.UserEntity;
+import nl.fontys.s3.huister.persistence.entities.enumerator.UserRole;
 import nl.fontys.s3.huister.persistence.PropertyRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

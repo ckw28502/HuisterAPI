@@ -3,7 +3,7 @@ package nl.fontys.s3.huister.configuration.security.token.impl;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import nl.fontys.s3.huister.configuration.security.token.AccessToken;
-import nl.fontys.s3.huister.domain.entities.enumerator.UserRole;
+import nl.fontys.s3.huister.persistence.entities.enumerator.UserRole;
 
 
 @EqualsAndHashCode

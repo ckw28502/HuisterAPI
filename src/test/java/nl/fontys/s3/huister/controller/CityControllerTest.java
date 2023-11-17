@@ -53,7 +53,7 @@ class CityControllerTest {
      */
     @Test
     @WithMockUser(roles = {"ADMIN","OWNER","CUSTOMER"})
-    public void getAllCities_shouldReturn200WithLoggedinUser() throws Exception {
+    void getAllCities_shouldReturn200WithLoggedinUser() throws Exception {
         //Arrange
         GetAllCitiesResponse response=GetAllCitiesResponse.builder()
                 .cities(List.of())

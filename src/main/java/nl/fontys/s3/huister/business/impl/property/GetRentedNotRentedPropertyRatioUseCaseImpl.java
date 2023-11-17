@@ -6,7 +6,7 @@ import nl.fontys.s3.huister.business.exception.user.UserNotFoundException;
 import nl.fontys.s3.huister.business.interfaces.property.GetRentedNotRentedPropertyRatioUseCase;
 import nl.fontys.s3.huister.business.response.property.GetRentedNotRentedPropertyRatioResponse;
 import nl.fontys.s3.huister.configuration.security.token.AccessToken;
-import nl.fontys.s3.huister.domain.entities.UserEntity;
+import nl.fontys.s3.huister.persistence.entities.UserEntity;
 import nl.fontys.s3.huister.persistence.PropertyRepository;
 import nl.fontys.s3.huister.persistence.UserRepository;
 import org.springframework.stereotype.Service;

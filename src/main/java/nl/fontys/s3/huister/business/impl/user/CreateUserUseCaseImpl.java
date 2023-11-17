@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import nl.fontys.s3.huister.business.exception.user.UsernameExistException;
 import nl.fontys.s3.huister.business.interfaces.user.CreateUserUseCase;
 import nl.fontys.s3.huister.business.request.user.CreateUserRequest;
-import nl.fontys.s3.huister.domain.entities.UserEntity;
+import nl.fontys.s3.huister.persistence.entities.UserEntity;
 import nl.fontys.s3.huister.persistence.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;

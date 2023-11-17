@@ -18,7 +18,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/properties")
 @AllArgsConstructor
-@CrossOrigin(origins = {"http://localhost:5173","http://localhost:4173"})
 public class PropertyController {
     private final GetAllPropertiesUseCase getAllPropertiesUseCase;
     private final GetPropertyDetailUseCase getPropertyDetailUseCase;

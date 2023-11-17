@@ -9,7 +9,7 @@ import nl.fontys.s3.huister.business.request.user.LoginRequest;
 import nl.fontys.s3.huister.business.response.user.LoginResponse;
 import nl.fontys.s3.huister.configuration.security.token.AccessTokenEncoder;
 import nl.fontys.s3.huister.configuration.security.token.impl.AccessTokenImpl;
-import nl.fontys.s3.huister.domain.entities.UserEntity;
+import nl.fontys.s3.huister.persistence.entities.UserEntity;
 import nl.fontys.s3.huister.persistence.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;

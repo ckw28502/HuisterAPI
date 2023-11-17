@@ -7,7 +7,7 @@ import nl.fontys.s3.huister.configuration.security.token.AccessToken;
 import nl.fontys.s3.huister.configuration.security.token.AccessTokenDecoder;
 import nl.fontys.s3.huister.configuration.security.token.AccessTokenEncoder;
 import nl.fontys.s3.huister.configuration.security.token.exception.InvalidAccessTokenException;
-import nl.fontys.s3.huister.domain.entities.enumerator.UserRole;
+import nl.fontys.s3.huister.persistence.entities.enumerator.UserRole;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 

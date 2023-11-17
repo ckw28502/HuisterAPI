@@ -7,9 +7,9 @@ import nl.fontys.s3.huister.business.exception.utilities.InvalidOperationExcepti
 import nl.fontys.s3.huister.business.interfaces.order.UpdateOrderUseCase;
 import nl.fontys.s3.huister.business.request.order.UpdateOrderRequest;
 import nl.fontys.s3.huister.configuration.security.token.AccessToken;
-import nl.fontys.s3.huister.domain.entities.OrderEntity;
-import nl.fontys.s3.huister.domain.entities.enumerator.OrderStatus;
-import nl.fontys.s3.huister.domain.entities.enumerator.UserRole;
+import nl.fontys.s3.huister.persistence.entities.OrderEntity;
+import nl.fontys.s3.huister.persistence.entities.enumerator.OrderStatus;
+import nl.fontys.s3.huister.persistence.entities.enumerator.UserRole;
 import nl.fontys.s3.huister.persistence.OrderRepository;
 import org.springframework.stereotype.Service;
 

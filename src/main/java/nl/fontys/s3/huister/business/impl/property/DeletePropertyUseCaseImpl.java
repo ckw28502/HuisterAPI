@@ -3,7 +3,7 @@ package nl.fontys.s3.huister.business.impl.property;
 import lombok.AllArgsConstructor;
 import nl.fontys.s3.huister.business.exception.user.UnauthorizedUserException;
 import nl.fontys.s3.huister.configuration.security.token.AccessToken;
-import nl.fontys.s3.huister.domain.entities.PropertyEntity;
+import nl.fontys.s3.huister.persistence.entities.PropertyEntity;
 import nl.fontys.s3.huister.business.exception.property.PropertyNotFoundException;
 import nl.fontys.s3.huister.business.interfaces.property.DeletePropertyUseCase;
 import nl.fontys.s3.huister.persistence.PropertyRepository;

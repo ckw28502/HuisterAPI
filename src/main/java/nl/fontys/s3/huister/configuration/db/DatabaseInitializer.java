@@ -1,12 +1,12 @@
 package nl.fontys.s3.huister.configuration.db;
 
 import lombok.AllArgsConstructor;
-import nl.fontys.s3.huister.domain.entities.CityEntity;
-import nl.fontys.s3.huister.domain.entities.OrderEntity;
-import nl.fontys.s3.huister.domain.entities.PropertyEntity;
-import nl.fontys.s3.huister.domain.entities.UserEntity;
-import nl.fontys.s3.huister.domain.entities.enumerator.OrderStatus;
-import nl.fontys.s3.huister.domain.entities.enumerator.UserRole;
+import nl.fontys.s3.huister.persistence.entities.CityEntity;
+import nl.fontys.s3.huister.persistence.entities.OrderEntity;
+import nl.fontys.s3.huister.persistence.entities.PropertyEntity;
+import nl.fontys.s3.huister.persistence.entities.UserEntity;
+import nl.fontys.s3.huister.persistence.entities.enumerator.OrderStatus;
+import nl.fontys.s3.huister.persistence.entities.enumerator.UserRole;
 import nl.fontys.s3.huister.persistence.CityRepository;
 import nl.fontys.s3.huister.persistence.OrderRepository;
 import nl.fontys.s3.huister.persistence.PropertyRepository;

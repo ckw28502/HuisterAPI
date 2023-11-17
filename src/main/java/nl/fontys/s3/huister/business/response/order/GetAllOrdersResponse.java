@@ -1,7 +1,7 @@
 package nl.fontys.s3.huister.business.response.order;
 
 import lombok.*;
-import nl.fontys.s3.huister.domain.entities.enumerator.OrderStatus;
+import nl.fontys.s3.huister.persistence.entities.enumerator.OrderStatus;
 
 @Getter
 @AllArgsConstructor
