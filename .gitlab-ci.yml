@@ -18,7 +18,7 @@ test:
   - ./gradlew test
  artifacts:
   paths:
-   - build/reports/jacoco/test/html/
+   - build/reports/jacoco/test/
   expire_in: 1 week
 
 jacocoReport:
@@ -27,7 +27,7 @@ jacocoReport:
   - ./gradlew jacocoTestReport
  artifacts:
   paths:
-   - build/reports/jacoco/test/html/
+   - build/reports/jacoco/test/
   expire_in: 1 week
  only:
   - master  # Adjust the branch as needed
