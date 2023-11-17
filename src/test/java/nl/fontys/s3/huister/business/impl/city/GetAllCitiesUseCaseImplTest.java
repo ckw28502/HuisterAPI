@@ -2,9 +2,10 @@ package nl.fontys.s3.huister.business.impl.city;
 
 import nl.fontys.s3.huister.business.exception.user.UserNotFoundException;
 import nl.fontys.s3.huister.business.response.city.GetAllCitiesResponse;
-import nl.fontys.s3.huister.domain.entities.CityEntity;
-import nl.fontys.s3.huister.domain.entities.UserEntity;
-import nl.fontys.s3.huister.domain.entities.enumerator.UserRole;
+import nl.fontys.s3.huister.configuration.security.token.AccessToken;
+import nl.fontys.s3.huister.persistence.entities.CityEntity;
+import nl.fontys.s3.huister.persistence.entities.UserEntity;
+import nl.fontys.s3.huister.persistence.entities.enumerator.UserRole;
 import nl.fontys.s3.huister.persistence.CityRepository;
 import nl.fontys.s3.huister.persistence.UserRepository;
 import org.junit.jupiter.api.Test;
@@ -29,25 +30,28 @@ class GetAllCitiesUseCaseImplTest {
     private UserRepository userRepositoryMock;
     @Mock
     private CityRepository cityRepositoryMock;
+    @Mock
+    private AccessToken requestAccessTokenMock;
     @InjectMocks
     private GetAllCitiesUseCaseImpl getAllCitiesUseCase;
 
     /**
      * @verifies throw UserNotFoundException when user is not found
-     * @see GetAllCitiesUseCaseImpl#getAllCities(long)
+     * @see GetAllCitiesUseCaseImpl#getAllCities()
      */
     @Test
     void getAllCities_shouldThrowUserNotFoundExceptionWhenUserIsNotFound() {
         //Arrange
-        when(userRepositoryMock.findById(1L)).thenReturn(Optional.empty());
+        when(requestAccessTokenMock.getId()).thenReturn(1L);
+        when(userRepositoryMock.findById(requestAccessTokenMock.getId())).thenReturn(Optional.empty());
 
         //Act + Assert
-        assertThrows(UserNotFoundException.class,()->getAllCitiesUseCase.getAllCities(1L));
+        assertThrows(UserNotFoundException.class,()->getAllCitiesUseCase.getAllCities());
     }
 
     /**
      * @verifies return an empty list when there is no city
-     * @see GetAllCitiesUseCaseImpl#getAllCities(long)
+     * @see GetAllCitiesUseCaseImpl#getAllCities()
      */
     @Test
     void getAllCities_shouldReturnAnEmptyListWhenThereIsNoCity() {
@@ -56,8 +60,8 @@ class GetAllCitiesUseCaseImplTest {
                 .id(1L)
                 .role(UserRole.ADMIN)
                 .build();
-
-        when(userRepositoryMock.findById(1L)).thenReturn(Optional.of(user));
+        when(requestAccessTokenMock.getId()).thenReturn(1L);
+        when(userRepositoryMock.findById(requestAccessTokenMock.getId())).thenReturn(Optional.of(user));
 
         when(cityRepositoryMock.findAll()).thenReturn(List.of());
 
@@ -66,7 +70,7 @@ class GetAllCitiesUseCaseImplTest {
                 .build();
 
         //Act
-        GetAllCitiesResponse actualResponse=getAllCitiesUseCase.getAllCities(user.getId());
+        GetAllCitiesResponse actualResponse=getAllCitiesUseCase.getAllCities();
 
         //Assert
         assertEquals(expectedResponses,actualResponse);
@@ -74,7 +78,7 @@ class GetAllCitiesUseCaseImplTest {
 
     /**
      * @verifies return list of cities when cities found according to user's role
-     * @see GetAllCitiesUseCaseImpl#getAllCities(long)
+     * @see GetAllCitiesUseCaseImpl#getAllCities()
      */
     @ParameterizedTest
     @ValueSource(strings = {"ADMIN","OWNER","CUSTOMER"})
@@ -94,8 +98,8 @@ class GetAllCitiesUseCaseImplTest {
                 .id(2L)
                 .name("city2")
                 .build();
-
-        when(userRepositoryMock.findById(1L)).thenReturn(Optional.of(user));
+        when(requestAccessTokenMock.getId()).thenReturn(1L);
+        when(userRepositoryMock.findById(requestAccessTokenMock.getId())).thenReturn(Optional.of(user));
 
         List<CityEntity>cities=new ArrayList<>();
         switch (role){
@@ -118,7 +122,7 @@ class GetAllCitiesUseCaseImplTest {
                 .build();
 
         //Act
-        GetAllCitiesResponse actualResponse=getAllCitiesUseCase.getAllCities(user.getId());
+        GetAllCitiesResponse actualResponse=getAllCitiesUseCase.getAllCities();
 
         //Assert
         assertEquals(expectedResponses,actualResponse);

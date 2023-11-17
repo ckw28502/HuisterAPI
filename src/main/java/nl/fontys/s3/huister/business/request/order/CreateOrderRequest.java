@@ -9,7 +9,6 @@ import lombok.*;
 @EqualsAndHashCode(callSuper = false)
 public class CreateOrderRequest {
     private long ownerId;
-    private long customerId;
     private long propertyId;
     private int duration;
 

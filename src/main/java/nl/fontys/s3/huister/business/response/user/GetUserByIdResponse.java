@@ -1,7 +1,7 @@
 package nl.fontys.s3.huister.business.response.user;
 
 import lombok.*;
-import nl.fontys.s3.huister.domain.entities.enumerator.UserRole;
+import nl.fontys.s3.huister.persistence.entities.enumerator.UserRole;
 
 @EqualsAndHashCode(callSuper = false)
 @Getter

@@ -4,14 +4,17 @@ import lombok.AllArgsConstructor;
 import nl.fontys.s3.huister.business.exception.user.UsernameExistException;
 import nl.fontys.s3.huister.business.interfaces.user.CreateUserUseCase;
 import nl.fontys.s3.huister.business.request.user.CreateUserRequest;
-import nl.fontys.s3.huister.domain.entities.UserEntity;
+import nl.fontys.s3.huister.persistence.entities.UserEntity;
 import nl.fontys.s3.huister.persistence.UserRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 @AllArgsConstructor
 public class CreateUserUseCaseImpl implements CreateUserUseCase {
     private final UserRepository userRepository;
+
+    private final PasswordEncoder passwordEncoder;
 
     /**
      *
@@ -30,7 +33,7 @@ public class CreateUserUseCaseImpl implements CreateUserUseCase {
                 .phoneNumber(request.getPhoneNumber())
                 .role(request.getRole())
                 .profilePictureUrl(request.getProfilePictureUrl())
-                .password(request.getPassword())
+                .password(passwordEncoder.encode(request.getPassword()))
                 .username(request.getUsername())
                 .email(request.getEmail())
                 .activated(false)

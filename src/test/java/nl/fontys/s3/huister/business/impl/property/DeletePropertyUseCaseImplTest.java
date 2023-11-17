@@ -1,7 +1,11 @@
 package nl.fontys.s3.huister.business.impl.property;
 
 import nl.fontys.s3.huister.business.exception.property.PropertyNotFoundException;
-import nl.fontys.s3.huister.domain.entities.PropertyEntity;
+import nl.fontys.s3.huister.business.exception.user.UnauthorizedUserException;
+import nl.fontys.s3.huister.configuration.security.token.AccessToken;
+import nl.fontys.s3.huister.persistence.entities.PropertyEntity;
+import nl.fontys.s3.huister.persistence.entities.UserEntity;
+import nl.fontys.s3.huister.persistence.entities.enumerator.UserRole;
 import nl.fontys.s3.huister.persistence.PropertyRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,6 +23,8 @@ import static org.mockito.Mockito.when;
 class DeletePropertyUseCaseImplTest {
     @Mock
     private PropertyRepository propertyRepositoryMock;
+    @Mock
+    private AccessToken requestAccessTokenMock;
 
     @InjectMocks
     private DeletePropertyUseCaseImpl deletePropertyUseCase;
@@ -44,15 +50,49 @@ class DeletePropertyUseCaseImplTest {
     @Test
     void deleteProperty_shouldDeleteProperty() {
         //Arrange
-        PropertyEntity property=PropertyEntity.builder().build();
+        UserEntity owner=UserEntity.builder()
+                .id(1L)
+                .role(UserRole.OWNER)
+                .build();
+
+        PropertyEntity property=PropertyEntity.builder()
+                .id(1L)
+                .owner(owner)
+                .build();
 
         when(propertyRepositoryMock.findById(property.getId())).thenReturn(Optional.of(property));
+        when(requestAccessTokenMock.getId()).thenReturn(1L);
 
         //Act
         deletePropertyUseCase.deleteProperty(property.getId());
 
         //Assert
         verify(propertyRepositoryMock).deleteProperty(property.getId());
+
+    }
+
+    /**
+     * @verifies throw UnauthorizedUserException when user is unauthorized
+     * @see DeletePropertyUseCaseImpl#deleteProperty(long)
+     */
+    @Test
+    void deleteProperty_shouldThrowUnauthorizedUserExceptionWhenUserIsUnauthorized() {
+        //Arrange
+        UserEntity owner=UserEntity.builder()
+                .id(1L)
+                .role(UserRole.OWNER)
+                .build();
+
+        PropertyEntity property=PropertyEntity.builder()
+                .id(1L)
+                .owner(owner)
+                .build();
+
+        when(propertyRepositoryMock.findById(property.getId())).thenReturn(Optional.of(property));
+        when(requestAccessTokenMock.getId()).thenReturn(2L);
+
+        //Act + Assert
+        assertThrows(UnauthorizedUserException.class,()->deletePropertyUseCase.deleteProperty(1L));
 
     }
 }

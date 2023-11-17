@@ -1,0 +1,78 @@
+@startuml
+
+'Controller Layer
+package "Controller"{
+    Class CityController
+    Class UserController
+    Class PropertyController
+    Class OrderController
+}
+
+package "Business"{
+Interface CityUseCasesCollection
+Interface UserUseCasesCollection
+Interface PropertyUseCasesCollection
+Interface OrderUseCasesCollection
+
+Class CityUseCasesCollectionImpl
+Class UserUseCasesCollectionImpl
+Class PropertyUseCasesCollectionImpl
+Class OrderUseCasesCollectionImpl
+
+CityUseCasesCollection <|.. CityUseCasesCollectionImpl
+UserUseCasesCollection <|.. UserUseCasesCollectionImpl
+PropertyUseCasesCollection <|.. PropertyUseCasesCollectionImpl
+OrderUseCasesCollection <|.. OrderUseCasesCollectionImpl
+
+}
+
+package "Repository"{
+    Interface CityRepository
+    Interface UserRepository
+    Interface PropertyRepository
+    Interface OrderRepository
+}
+
+package "Domain"{
+    Class CityEntity
+    Class UserEntity
+    Class PropertyEntity
+    Class OrderEntity
+}
+
+package "Domain.Enum"{
+    Enum UserRole
+    Enum OrderStatus
+}
+
+'Relations
+CityController --> CityUseCasesCollection
+UserController --> UserUseCasesCollection
+PropertyController --> PropertyUseCasesCollection
+OrderController --> OrderUseCasesCollection
+
+CityUseCasesCollectionImpl --> CityRepository
+
+UserUseCasesCollectionImpl --> UserRepository
+
+PropertyUseCasesCollectionImpl --> CityRepository
+PropertyUseCasesCollectionImpl --> UserRepository
+PropertyUseCasesCollectionImpl --> PropertyRepository
+
+OrderUseCasesCollectionImpl --> UserRepository
+OrderUseCasesCollectionImpl --> PropertyRepository
+OrderUseCasesCollectionImpl --> OrderRepository
+
+CityEntity <-- CityRepository
+
+UserEntity <-- UserRepository
+
+PropertyEntity <-- PropertyRepository
+
+OrderEntity <-- OrderRepository
+
+UserRole <-- UserEntity
+
+OrderStatus <-- OrderEntity
+
+@enduml

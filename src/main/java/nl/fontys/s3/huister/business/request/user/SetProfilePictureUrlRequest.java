@@ -1,14 +1,12 @@
 package nl.fontys.s3.huister.business.request.user;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@Data
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@EqualsAndHashCode
 public class SetProfilePictureUrlRequest {
     private String username;
     private String profilePictureUrl;

@@ -22,7 +22,7 @@ if (applicationPropertiesFile.exists()) {
 		url = properties.getProperty('spring.datasource.url')
 		driver = 'com.mysql.jdbc.Driver'
 		user = properties.getProperty('spring.datasource.username')
-		password = properties.getProperty('spring.0datasource.password')
+		password = properties.getProperty('spring.datasource.password')
 	}
 } else {
 	throw new GradleException("application.properties file not found!")
@@ -71,13 +71,17 @@ dependencies {
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation group: 'com.google.code.gson', name: 'gson', version: '2.8.9'
 	implementation 'mysql:mysql-connector-java:8.0.33'
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	implementation 'org.flywaydb:flyway-mysql:8.4.4'
-
+	implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
+	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
+	testImplementation 'org.springframework.security:spring-security-test'
 }
 
 tasks.named('test') {

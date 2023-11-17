@@ -1,18 +1,16 @@
-package nl.fontys.s3.huister.domain.entities;
+package nl.fontys.s3.huister.persistence.entities;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import nl.fontys.s3.huister.domain.entities.enumerator.OrderStatus;
+import lombok.*;
+import nl.fontys.s3.huister.persistence.entities.enumerator.OrderStatus;
 
-@Data
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Entity
+@EqualsAndHashCode
 @Table(name = "ORDER_TABLE")
 public class OrderEntity {
     @Id

@@ -6,10 +6,11 @@ import nl.fontys.s3.huister.business.exception.property.PropertyNotFoundExceptio
 import nl.fontys.s3.huister.business.exception.user.UserNotFoundException;
 import nl.fontys.s3.huister.business.interfaces.order.CreateOrderUseCase;
 import nl.fontys.s3.huister.business.request.order.CreateOrderRequest;
-import nl.fontys.s3.huister.domain.entities.OrderEntity;
-import nl.fontys.s3.huister.domain.entities.PropertyEntity;
-import nl.fontys.s3.huister.domain.entities.UserEntity;
-import nl.fontys.s3.huister.domain.entities.enumerator.OrderStatus;
+import nl.fontys.s3.huister.configuration.security.token.AccessToken;
+import nl.fontys.s3.huister.persistence.entities.OrderEntity;
+import nl.fontys.s3.huister.persistence.entities.PropertyEntity;
+import nl.fontys.s3.huister.persistence.entities.UserEntity;
+import nl.fontys.s3.huister.persistence.entities.enumerator.OrderStatus;
 import nl.fontys.s3.huister.persistence.OrderRepository;
 import nl.fontys.s3.huister.persistence.PropertyRepository;
 import nl.fontys.s3.huister.persistence.UserRepository;
@@ -23,12 +24,14 @@ public class CreateOrderUseCaseImpl implements CreateOrderUseCase {
     private final OrderRepository orderRepository;
     private final UserRepository userRepository;
     private final PropertyRepository propertyRepository;
+    private final AccessToken requestAccessToken;
 
     /**
      *
      * @param request contains new order request from client
      *
-     * @should throw UserNotFoundException when owner or customer is not in the repository
+     * @should throw UserNotFoundException when owner is not in the repository
+     * @should throw UserNotFoundException when customer is not in the repository
      * @should throw PropertyNotFoundException when property is not found in the repository
      * @should throw PriceMustBeMoreThanZeroException when price is equals or below zero
      * @should create new order when request is valid
@@ -36,7 +39,7 @@ public class CreateOrderUseCaseImpl implements CreateOrderUseCase {
     @Override
     public void createOrder(CreateOrderRequest request) {
         UserEntity owner=getUser(request.getOwnerId());
-        UserEntity customer=getUser(request.getCustomerId());
+        UserEntity customer=getUser(requestAccessToken.getId());
 
         Optional<PropertyEntity>optionalProperty=propertyRepository.findById(request.getPropertyId());
         if (optionalProperty.isEmpty()) {

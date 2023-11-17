@@ -1,7 +1,7 @@
 package nl.fontys.s3.huister.business.impl.user;
 
 import lombok.AllArgsConstructor;
-import nl.fontys.s3.huister.domain.entities.UserEntity;
+import nl.fontys.s3.huister.persistence.entities.UserEntity;
 import nl.fontys.s3.huister.business.exception.user.UserNotFoundException;
 import nl.fontys.s3.huister.business.interfaces.user.GetUserByIdUseCase;
 import nl.fontys.s3.huister.business.response.user.GetUserByIdResponse;

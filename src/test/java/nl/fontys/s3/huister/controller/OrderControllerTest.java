@@ -7,18 +7,16 @@ import nl.fontys.s3.huister.business.interfaces.order.UpdateOrderUseCase;
 import nl.fontys.s3.huister.business.request.order.CreateOrderRequest;
 import nl.fontys.s3.huister.business.request.order.UpdateOrderRequest;
 import nl.fontys.s3.huister.business.response.order.GetAllOrdersResponse;
-import nl.fontys.s3.huister.configuration.utilities.GsonConfig;
-import nl.fontys.s3.huister.domain.entities.enumerator.OrderStatus;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Import;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.time.LocalDate;
 import java.util.List;
 
 import static org.mockito.Mockito.verify;
@@ -29,96 +27,110 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ExtendWith(SpringExtension.class)
-@WebMvcTest(OrderController.class)
-@Import(GsonConfig.class)
+@SpringBootTest
+@AutoConfigureMockMvc
 class OrderControllerTest {
-
     @Autowired
     private MockMvc mockMvc;
-
-    @MockBean
-    private GetAllOrdersUseCase getAllOrdersUseCaseMock;
-    @MockBean
-    private CreateOrderUseCase createOrderUseCaseMock;
-    @MockBean
-    private UpdateOrderUseCase updateOrderUseCaseMock;
-
     @Autowired
     private Gson gson;
 
+    @MockBean
+    private GetAllOrdersUseCase getAllOrdersUseCase;
+    @MockBean
+    private CreateOrderUseCase createOrderUseCase;
+    @MockBean
+    private UpdateOrderUseCase updateOrderUseCase;
 
     /**
-     * @verifies return an empty list when no order is found
-     * @see OrderController#getAllOrders(long)
+     * @verifies return 401 when user is not logged-in
+     * @see OrderController#getAllOrders()
      */
     @Test
-    void getAllOrders_shouldReturnAnEmptyListWhenNoOrderIsFound() throws Exception {
-        //Arrange
-        List<GetAllOrdersResponse>responses=List.of();
+    void getAllOrders_shouldReturn401WhenUserIsNotLoggedin() throws Exception {
+        mockMvc.perform(get("/orders"))
+                .andDo(print())
+                .andExpect(status().isUnauthorized());
+    }
 
-        when(getAllOrdersUseCaseMock.getAllOrders(1)).thenReturn(responses);
+    /**
+     * @verifies return 403 when user is admin
+     * @see OrderController#getAllOrders()
+     */
+    @Test
+    @WithMockUser(roles = "ADMIN")
+    void getAllOrders_shouldReturn403WhenUserIsAdmin() throws Exception {
+        mockMvc.perform(get("/orders"))
+                .andDo(print())
+                .andExpect(status().isForbidden());
+    }
+
+    /**
+     * @verifies return 200 when user is authorized
+     * @see OrderController#getAllOrders()
+     */
+    @Test
+    @WithMockUser(roles = {"OWNER","CUSTOMER"})
+    void getAllOrders_shouldReturn200WhenUserIsAuthorized() throws Exception {
+        //Arrange
+        List<GetAllOrdersResponse>responses=List.of(GetAllOrdersResponse.builder().build());
+
+        when(getAllOrdersUseCase.getAllOrders()).thenReturn(responses);
 
         //Act + Assert
-        mockMvc.perform(get("/orders/1"))
+        mockMvc.perform(get("/orders"))
                 .andDo(print())
-                .andExpect(header().string("content-type",APPLICATION_JSON_VALUE))
                 .andExpect(status().isOk())
+                .andExpect(header().string("Content-Type",APPLICATION_JSON_VALUE))
                 .andExpect(content().json(gson.toJson(responses)));
 
     }
 
     /**
-     * @verifies return a list of orders when orders are found
-     * @see OrderController#getAllOrders(long)
-     */
-    @Test
-    void getAllOrders_shouldReturnAListOfOrdersWhenOrdersAreFound() throws Exception {
-        //Arrange
-
-        GetAllOrdersResponse response1=GetAllOrdersResponse.builder()
-                .endRent(LocalDate.now().toString())
-                .streetName("property1 street")
-                .price(800)
-                .imageUrl("property1Image.png")
-                .cityName("city1")
-                .status(OrderStatus.ACCEPTED)
-                .build();
-
-        GetAllOrdersResponse response2=GetAllOrdersResponse.builder()
-                .endRent(LocalDate.now().toString())
-                .streetName("property2 street")
-                .price(500.52)
-                .imageUrl("property2Image.png")
-                .cityName("city2")
-                .status(OrderStatus.ACCEPTED)
-                .build();
-
-        List<GetAllOrdersResponse>responses=List.of(response1,response2);
-
-        when(getAllOrdersUseCaseMock.getAllOrders(1)).thenReturn(responses);
-
-        //Act + Assert
-        mockMvc.perform(get("/orders/1"))
-                .andDo(print())
-                .andExpect(header().string("content-type",APPLICATION_JSON_VALUE))
-                .andExpect(status().isOk())
-                .andExpect(content().json(gson.toJson(responses)));
-    }
-
-    /**
-     * @verifies return a response with created status
+     * @verifies return 401 when user is not logged-in
      * @see OrderController#createOrder(nl.fontys.s3.huister.business.request.order.CreateOrderRequest)
      */
     @Test
-    void createOrder_shouldReturnAResponseWithCreatedStatus() throws Exception {
+    void createOrder_shouldReturn401WhenUserIsNotLoggedin() throws Exception {
         //Arrange
-        CreateOrderRequest request=CreateOrderRequest.builder()
-                .customerId(1L)
-                .ownerId(2)
-                .propertyId(1)
-                .duration(2)
-                .price(600.95)
-                .build();
+        CreateOrderRequest request= CreateOrderRequest.builder().build();
+
+        //Act + Assert
+        mockMvc.perform(post("/orders")
+                .contentType(APPLICATION_JSON_VALUE)
+                .content(gson.toJson(request)))
+                .andDo(print())
+                .andExpect(status().isUnauthorized());
+
+    }
+
+    /**
+     * @verifies return 403 when user is unauthorized
+     * @see OrderController#createOrder(nl.fontys.s3.huister.business.request.order.CreateOrderRequest)
+     */
+    @Test
+    @WithMockUser(roles = {"ADMIN","OWNER"})
+    void createOrder_shouldReturn403WhenUserIsUnauthorized() throws Exception {
+        //Arrange
+        CreateOrderRequest request= CreateOrderRequest.builder().build();
+
+        //Act + Assert
+        mockMvc.perform(post("/orders")
+                        .contentType(APPLICATION_JSON_VALUE)
+                        .content(gson.toJson(request)))
+                .andDo(print())
+                .andExpect(status().isForbidden());
+    }
+
+    /**
+     * @verifies return 201 when user is customer
+     * @see OrderController#createOrder(nl.fontys.s3.huister.business.request.order.CreateOrderRequest)
+     */
+    @Test
+    @WithMockUser(roles = "CUSTOMER")
+    void createOrder_shouldReturn201WhenUserIsCustomer() throws Exception {
+        //Arrange
+        CreateOrderRequest request= CreateOrderRequest.builder().build();
 
         //Act + Assert
         mockMvc.perform(post("/orders")
@@ -126,20 +138,19 @@ class OrderControllerTest {
                         .content(gson.toJson(request)))
                 .andDo(print())
                 .andExpect(status().isCreated());
-        verify(createOrderUseCaseMock).createOrder(request);
 
+        verify(createOrderUseCase).createOrder(request);
     }
 
     /**
-     * @verifies return a no content response
+     * @verifies return 401 when user is not logged-in
      * @see OrderController#updateOrder(long, nl.fontys.s3.huister.business.request.order.UpdateOrderRequest)
      */
     @Test
-    void updateOrder_shouldReturnANoContentResponse() throws Exception {
+    void updateOrder_shouldReturn401WhenUserIsNotLoggedin() throws Exception {
         //Arrange
         UpdateOrderRequest request=UpdateOrderRequest.builder()
                 .id(1L)
-                .status(OrderStatus.ACCEPTED)
                 .build();
 
         //Act + Assert
@@ -147,9 +158,49 @@ class OrderControllerTest {
                 .contentType(APPLICATION_JSON_VALUE)
                 .content(gson.toJson(request)))
                 .andDo(print())
+                .andExpect(status().isUnauthorized());
+
+    }
+
+    /**
+     * @verifies return 403 when user is admin
+     * @see OrderController#updateOrder(long, nl.fontys.s3.huister.business.request.order.UpdateOrderRequest)
+     */
+    @Test
+    @WithMockUser(roles = "ADMIN")
+    void updateOrder_shouldReturn403WhenUserIsAdmin() throws Exception {
+        //Arrange
+        UpdateOrderRequest request=UpdateOrderRequest.builder()
+                .id(1L)
+                .build();
+
+        //Act + Assert
+        mockMvc.perform(put("/orders/1")
+                        .contentType(APPLICATION_JSON_VALUE)
+                        .content(gson.toJson(request)))
+                .andDo(print())
+                .andExpect(status().isForbidden());
+    }
+
+    /**
+     * @verifies return 204 when user is authorized
+     * @see OrderController#updateOrder(long, nl.fontys.s3.huister.business.request.order.UpdateOrderRequest)
+     */
+    @Test
+    @WithMockUser(roles = {"OWNER","CUSTOMER"})
+    void updateOrder_shouldReturn204WhenUserIsAuthorized() throws Exception {
+        //Arrange
+        UpdateOrderRequest request=UpdateOrderRequest.builder()
+                .id(1L)
+                .build();
+
+        //Act + Assert
+        mockMvc.perform(put("/orders/1")
+                        .contentType(APPLICATION_JSON_VALUE)
+                        .content(gson.toJson(request)))
+                .andDo(print())
                 .andExpect(status().isNoContent());
 
-        verify(updateOrderUseCaseMock).updateOrder(request);
-
+        verify(updateOrderUseCase).updateOrder(request);
     }
 }

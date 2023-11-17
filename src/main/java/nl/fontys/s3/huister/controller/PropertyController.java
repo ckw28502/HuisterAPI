@@ -1,5 +1,6 @@
 package nl.fontys.s3.huister.controller;
 
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import nl.fontys.s3.huister.business.interfaces.property.*;
@@ -17,7 +18,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/properties")
 @AllArgsConstructor
-@CrossOrigin(origins = {"http://localhost:5173","http://localhost:4173"})
 public class PropertyController {
     private final GetAllPropertiesUseCase getAllPropertiesUseCase;
     private final GetPropertyDetailUseCase getPropertyDetailUseCase;
@@ -28,16 +28,15 @@ public class PropertyController {
 
     /**
      *
-     * @param userId user id
      * @return list of properties
      *
-     * @should return an empty list content if no properties found
-     * @should return list of properties content if properties are found
+     * @should return 401 if user is not logged-in
+     * @should return 200 if user is logged-in
      */
-    @GetMapping("{userId}")
-    public ResponseEntity<List<GetAllPropertiesResponse>>getAllProperties(
-            @PathVariable(value = "userId")long userId){
-        return ResponseEntity.ok(getAllPropertiesUseCase.getAllProperties(userId));
+    @RolesAllowed({"ADMIN","OWNER","CUSTOMER"})
+    @GetMapping()
+    public ResponseEntity<List<GetAllPropertiesResponse>>getAllProperties(){
+        return ResponseEntity.ok(getAllPropertiesUseCase.getAllProperties());
     }
 
     /**
@@ -45,9 +44,11 @@ public class PropertyController {
      * @param id property id
      * @return property
      *
-     * @should return property content
+     * @should return 401 if user is not logged-in
+     * @should return 200 if user is logged-in
      */
-    @GetMapping("detail/{id}")
+    @RolesAllowed({"ADMIN","OWNER","CUSTOMER"})
+    @GetMapping("{id}")
     public ResponseEntity<GetPropertyDetailResponse>getPropertyDetail(
             @PathVariable(value = "id")final long id){
         return ResponseEntity.ok(getPropertyDetailUseCase.getPropertyDetail(id));
@@ -55,16 +56,16 @@ public class PropertyController {
 
     /**
      *
-     * @param userId user id
      * @return rented property and not rented property count
      *
-     * @should return a valid response
+     * @should return 401 if user is not logged-in
+     * @should return 403 if user is customer
+     * @should return 204 if user is authorized
      */
-    @GetMapping("dashboard/rentedRatio/{userId}")
-    public ResponseEntity<GetRentedNotRentedPropertyRatioResponse>getRentedNotRentedPropertyRatio(
-            @PathVariable(value = "userId")long userId
-    ){
-        return ResponseEntity.ok(getRentedNotRentedPropertyRatioUseCase.getRentedNotRentedPropertyRatio(userId));
+    @RolesAllowed({"ADMIN","OWNER"})
+    @GetMapping("dashboard/rentedRatio")
+    public ResponseEntity<GetRentedNotRentedPropertyRatioResponse>getRentedNotRentedPropertyRatio(){
+        return ResponseEntity.ok(getRentedNotRentedPropertyRatioUseCase.getRentedNotRentedPropertyRatio());
     }
 
     /**
@@ -72,9 +73,12 @@ public class PropertyController {
      * @param request create property request
      * @return http created response
      *
-     * @should create property
+     * @should return 401 if user is not logged-in
+     * @should return 403 if user is not authorized
+     * @should return 201 if user is owner
      *
      */
+    @RolesAllowed("OWNER")
     @PostMapping
     public ResponseEntity<Integer>createProperty(@RequestBody @Valid CreatePropertyRequest request){
         createPropertyUseCase.createProperty(request);
@@ -87,9 +91,12 @@ public class PropertyController {
      * @param id property id
      * @return http response with no content status
      *
-     * @should update property
+     * @should return 401 if user is not logged-in
+     * @should return 403 if user is not authorized
+     * @should return 201 if user is owner
      *
      */
+    @RolesAllowed("OWNER")
     @PutMapping("{id}")
     public ResponseEntity<Void>updateProperty(
             @RequestBody@Valid UpdatePropertyRequest request,
@@ -105,8 +112,11 @@ public class PropertyController {
      * @param id property id
      * @return http response with no content status
      *
-     * @should delete property
+     * @should return 401 if user is not logged-in
+     * @should return 403 if user is not authorized
+     * @should return 201 if user is owner
      */
+    @RolesAllowed({"OWNER"})
     @DeleteMapping("{id}")
     public ResponseEntity<Void>deleteProperty(@PathVariable(value = "id")final long id){
         deletePropertyUseCase.deleteProperty(id);

@@ -1,17 +1,13 @@
 package nl.fontys.s3.huister.business.request.user;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@Data
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@EqualsAndHashCode
 public class UpdateUserRequest {
     private String name;
     private String phoneNumber;
-
-    private long id;
 }

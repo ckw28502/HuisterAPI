@@ -7,13 +7,13 @@ import nl.fontys.s3.huister.business.request.property.UpdatePropertyRequest;
 import nl.fontys.s3.huister.business.response.property.GetAllPropertiesResponse;
 import nl.fontys.s3.huister.business.response.property.GetPropertyDetailResponse;
 import nl.fontys.s3.huister.business.response.property.GetRentedNotRentedPropertyRatioResponse;
-import nl.fontys.s3.huister.configuration.utilities.GsonConfig;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Import;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -26,14 +26,12 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@SpringBootTest
 @ExtendWith(SpringExtension.class)
-@WebMvcTest(PropertyController.class)
-@Import(GsonConfig.class)
-public class PropertyControllerTest {
-
+@AutoConfigureMockMvc
+class PropertyControllerTest {
     @Autowired
     private MockMvc mockMvc;
-
     @Autowired
     private Gson gson;
 
@@ -49,125 +47,163 @@ public class PropertyControllerTest {
     private DeletePropertyUseCase deletePropertyUseCaseMock;
     @MockBean
     private GetRentedNotRentedPropertyRatioUseCase getRentedNotRentedPropertyRatioUseCaseMock;
-
     /**
-     * @verifies return an empty list content if no properties found
-     * @see PropertyController#getAllProperties(long)
+     * @verifies return 401 if user is not logged-in
+     * @see PropertyController#getAllProperties()
      */
     @Test
-    void getAllProperties_shouldReturnAnEmptyListContentIfNoPropertiesFound() throws Exception {
-        //Arrange
-        List<GetAllPropertiesResponse>responses=List.of();
+    void getAllProperties_shouldReturn401IfUserIsNotLoggedin() throws Exception {
+        mockMvc.perform(get("/properties"))
+                .andDo(print())
+                .andExpect(status().isUnauthorized());
 
-        when(getAllPropertiesUseCaseMock.getAllProperties(1L)).thenReturn(responses);
+    }
+
+    /**
+     * @verifies return 200 if user is logged-in
+     * @see PropertyController#getAllProperties()
+     */
+    @Test
+    @WithMockUser(roles = {"ADMIN","OWNER","CUSTOMER"})
+    void getAllProperties_shouldReturn200IfUserIsLoggedin() throws Exception {
+        //Arrange
+        List<GetAllPropertiesResponse> responses= List.of(GetAllPropertiesResponse.builder().build());
+
+        when(getAllPropertiesUseCaseMock.getAllProperties()).thenReturn(responses);
 
         //Act + Assert
-        mockMvc.perform(get("/properties/1"))
+        mockMvc.perform(get("/properties"))
                 .andDo(print())
+                .andExpect(header().string("Content-Type",APPLICATION_JSON_VALUE))
                 .andExpect(status().isOk())
-                .andExpect(header().string("content-type",APPLICATION_JSON_VALUE))
                 .andExpect(content().json(gson.toJson(responses)));
 
     }
 
     /**
-     * @verifies return list of properties content if properties are found
-     * @see PropertyController#getAllProperties(long)
-     */
-    @Test
-    void getAllProperties_shouldReturnListOfPropertiesContentIfPropertiesAreFound() throws Exception {
-        //Arrange
-        List<GetAllPropertiesResponse>responses=List.of(GetAllPropertiesResponse.builder()
-                .price(300)
-                .id(1L)
-                .cityName("city")
-                .area(12)
-                .ownerName("owner")
-                .postCode("1111AA")
-                .streetName("property street")
-                .description("description")
-                .imageUrl("property.jpg")
-                .build());
-
-        when(getAllPropertiesUseCaseMock.getAllProperties(1L)).thenReturn(responses);
-
-        //Act + Assert
-        mockMvc.perform(get("/properties/1"))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(header().string("content-type",APPLICATION_JSON_VALUE))
-                .andExpect(content().json(gson.toJson(responses)));
-    }
-
-    /**
-     * @verifies return property content
+     * @verifies return 401 if user is not logged-in
      * @see PropertyController#getPropertyDetail(long)
      */
     @Test
-    void getPropertyDetail_shouldReturnPropertyContent() throws Exception {
-        //Arrange
-        GetPropertyDetailResponse response=GetPropertyDetailResponse.builder()
-                .area(1)
-                .ownerId(1L)
-                .description("property")
-                .postCode("1111AA")
-                .streetName("property street")
-                .ownerName("owner")
-                .cityName("city")
-                .price(1)
-                .id(1L)
-                .imageUrl("property.jpg")
-                .build();
-
-        when(getPropertyDetailUseCaseMock.getPropertyDetail(response.getId())).thenReturn(response);
-
-        //Act + Assert
-        mockMvc.perform(get("/properties/detail/1"))
+    void getPropertyDetail_shouldReturn401IfUserIsNotLoggedin() throws Exception {
+        mockMvc.perform(get("/properties/1"))
                 .andDo(print())
-                .andExpect(header().string("content-type",APPLICATION_JSON_VALUE))
-                .andExpect(status().isOk())
-                .andExpect(content().json(gson.toJson(response)));
-
+                .andExpect(status().isUnauthorized());
     }
 
     /**
-     * @verifies return a valid response
-     * @see PropertyController#getRentedNotRentedPropertyRatio(long)
+     * @verifies return 200 if user is logged-in
+     * @see PropertyController#getPropertyDetail(long)
      */
     @Test
-    void getRentedNotRentedPropertyRatio_shouldReturnAValidResponse() throws Exception {
+    @WithMockUser(roles = {"ADMIN","OWNER","CUSTOMER"})
+    void getPropertyDetail_shouldReturn200IfUserIsLoggedin() throws Exception {
         //Arrange
-        GetRentedNotRentedPropertyRatioResponse response=GetRentedNotRentedPropertyRatioResponse.builder()
-                .rented(1)
-                .notRented(1)
+        GetPropertyDetailResponse response=GetPropertyDetailResponse.builder()
+                .id(1L)
                 .build();
 
-        when(getRentedNotRentedPropertyRatioUseCaseMock.getRentedNotRentedPropertyRatio(1L)).thenReturn(response);
+        when(getPropertyDetailUseCaseMock.getPropertyDetail(1L)).thenReturn(response);
+
         //Act + Assert
-        mockMvc.perform(get("/properties/dashboard/rentedRatio/1"))
+        mockMvc.perform(get("/properties/1"))
                 .andDo(print())
-                .andExpect(header().string("content-type",APPLICATION_JSON_VALUE))
                 .andExpect(status().isOk())
+                .andExpect(header().string("Content-Type",APPLICATION_JSON_VALUE))
                 .andExpect(content().json(gson.toJson(response)));
+
     }
 
     /**
-     * @verifies create property
+     * @verifies return 401 if user is not logged-in
+     * @see PropertyController#getRentedNotRentedPropertyRatio()
+     */
+    @Test
+    void getRentedNotRentedPropertyRatio_shouldReturn401IfUserIsNotLoggedin() throws Exception {
+        mockMvc.perform(get("/properties/dashboard/rentedRatio"))
+                .andDo(print())
+                .andExpect(status().isUnauthorized());
+    }
+
+    /**
+     * @verifies return 403 if user is customer
+     * @see PropertyController#getRentedNotRentedPropertyRatio()
+     */
+    @Test
+    @WithMockUser(roles = "CUSTOMER")
+    void getRentedNotRentedPropertyRatio_shouldReturn403IfUserIsCustomer() throws Exception {
+        mockMvc.perform(get("/properties/dashboard/rentedRatio"))
+                .andDo(print())
+                .andExpect(status().isForbidden());
+    }
+
+    /**
+     * @verifies return 204 if user is authorized
+     * @see PropertyController#getRentedNotRentedPropertyRatio()
+     */
+    @Test
+    @WithMockUser(roles = {"ADMIN","OWNER"})
+    void getRentedNotRentedPropertyRatio_shouldReturn204IfUserIsAuthorized() throws Exception {
+        //Arrange
+        GetRentedNotRentedPropertyRatioResponse response=GetRentedNotRentedPropertyRatioResponse.builder()
+                .build();
+
+        when(getRentedNotRentedPropertyRatioUseCaseMock.getRentedNotRentedPropertyRatio()).thenReturn(response);
+
+        //Act + Assert
+        mockMvc.perform(get("/properties/dashboard/rentedRatio"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(header().string("Content-Type",APPLICATION_JSON_VALUE))
+                .andExpect(content().json(gson.toJson(response)));
+
+    }
+
+    /**
+     * @verifies return 401 if user is not logged-in
      * @see PropertyController#createProperty(nl.fontys.s3.huister.business.request.property.CreatePropertyRequest)
      */
     @Test
-    void createProperty_shouldCreateProperty() throws Exception {
+    void createProperty_shouldReturn401IfUserIsNotLoggedin() throws Exception {
         //Arrange
-        CreatePropertyRequest request=CreatePropertyRequest.builder()
-                .area(1)
-                .ownerId(1L)
-                .description("property")
-                .postCode("1111AA")
-                .streetName("property street")
-                .cityName("city")
-                .price(1)
-                .imageUrl("property.jpg")
-                .build();
+        CreatePropertyRequest request=CreatePropertyRequest.builder().build();
+
+        //Act + Assert
+        mockMvc.perform(post("/properties")
+                .contentType(APPLICATION_JSON_VALUE)
+                .content(gson.toJson(request)))
+                .andDo(print())
+                .andExpect(status().isUnauthorized());
+
+    }
+
+    /**
+     * @verifies return 403 if user is not authorized
+     * @see PropertyController#createProperty(nl.fontys.s3.huister.business.request.property.CreatePropertyRequest)
+     */
+    @Test
+    @WithMockUser(roles = {"ADMIN","CUSTOMER"})
+    void createProperty_shouldReturn403IfUserIsNotAuthorized() throws Exception {
+        //Arrange
+        CreatePropertyRequest request=CreatePropertyRequest.builder().build();
+
+        //Act + Assert
+        mockMvc.perform(post("/properties")
+                        .contentType(APPLICATION_JSON_VALUE)
+                        .content(gson.toJson(request)))
+                .andDo(print())
+                .andExpect(status().isForbidden());
+    }
+
+    /**
+     * @verifies return 201 if user is owner
+     * @see PropertyController#createProperty(nl.fontys.s3.huister.business.request.property.CreatePropertyRequest)
+     */
+    @Test
+    @WithMockUser(roles = {"OWNER"})
+    void createProperty_shouldReturn201IfUserIsOwner() throws Exception {
+        //Arrange
+        CreatePropertyRequest request=CreatePropertyRequest.builder().build();
 
         //Act + Assert
         mockMvc.perform(post("/properties")
@@ -181,17 +217,57 @@ public class PropertyControllerTest {
     }
 
     /**
-     * @verifies update property
+     * @verifies return 401 if user is not logged-in
      * @see PropertyController#updateProperty(nl.fontys.s3.huister.business.request.property.UpdatePropertyRequest, long)
      */
     @Test
-    void updateProperty_shouldUpdateProperty() throws Exception {
+    void updateProperty_shouldReturn401IfUserIsNotLoggedin() throws Exception {
         //Arrange
         UpdatePropertyRequest request=UpdatePropertyRequest.builder()
-                .imageUrl("property.png")
-                .description("property")
                 .id(1L)
-                .price(1)
+                .build();
+
+        //Act + Assert
+        mockMvc.perform(put("/properties/1")
+                .contentType(APPLICATION_JSON_VALUE)
+                .content(gson.toJson(request)))
+                .andDo(print())
+                .andExpect(status().isUnauthorized());
+
+    }
+
+    /**
+     * @verifies return 403 if user is not authorized
+     * @see PropertyController#updateProperty(nl.fontys.s3.huister.business.request.property.UpdatePropertyRequest, long)
+     */
+    @Test
+    @WithMockUser(roles = {"ADMIN","CUSTOMER"})
+    void updateProperty_shouldReturn403IfUserIsNotAuthorized() throws Exception {
+        //Arrange
+        UpdatePropertyRequest request=UpdatePropertyRequest.builder()
+                .id(1L)
+                .build();
+
+        //Act + Assert
+        mockMvc.perform(put("/properties/1")
+                        .contentType(APPLICATION_JSON_VALUE)
+                        .content(gson.toJson(request)))
+                .andDo(print())
+                .andExpect(status().isForbidden());
+
+
+    }
+
+    /**
+     * @verifies return 201 if user is owner
+     * @see PropertyController#updateProperty(nl.fontys.s3.huister.business.request.property.UpdatePropertyRequest, long)
+     */
+    @Test
+    @WithMockUser(roles = "OWNER")
+    void updateProperty_shouldReturn201IfUserIsOwner() throws Exception {
+        //Arrange
+        UpdatePropertyRequest request=UpdatePropertyRequest.builder()
+                .id(1L)
                 .build();
 
         //Act + Assert
@@ -202,14 +278,39 @@ public class PropertyControllerTest {
                 .andExpect(status().isNoContent());
 
         verify(updatePropertyUseCaseMock).updateProperty(request);
+
     }
 
     /**
-     * @verifies delete property
+     * @verifies return 401 if user is not logged-in
      * @see PropertyController#deleteProperty(long)
      */
     @Test
-    public void deleteProperty_shouldDeleteProperty() throws Exception {
+    void deleteProperty_shouldReturn401IfUserIsNotLoggedin() throws Exception {
+        mockMvc.perform(delete("/properties/1"))
+                .andDo(print())
+                .andExpect(status().isUnauthorized());
+    }
+
+    /**
+     * @verifies return 403 if user is not authorized
+     * @see PropertyController#deleteProperty(long)
+     */
+    @Test
+    @WithMockUser(roles = {"ADMIN","CUSTOMER"})
+    void deleteProperty_shouldReturn403IfUserIsNotAuthorized() throws Exception {
+        mockMvc.perform(delete("/properties/1"))
+                .andDo(print())
+                .andExpect(status().isForbidden());
+    }
+
+    /**
+     * @verifies return 201 if user is owner
+     * @see PropertyController#deleteProperty(long)
+     */
+    @Test
+    @WithMockUser(roles = "OWNER")
+    void deleteProperty_shouldReturn201IfUserIsOwner() throws Exception {
         mockMvc.perform(delete("/properties/1"))
                 .andDo(print())
                 .andExpect(status().isNoContent());

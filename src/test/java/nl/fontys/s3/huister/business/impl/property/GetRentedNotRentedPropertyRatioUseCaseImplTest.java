@@ -3,8 +3,9 @@ package nl.fontys.s3.huister.business.impl.property;
 import nl.fontys.s3.huister.business.exception.user.InvalidRoleException;
 import nl.fontys.s3.huister.business.exception.user.UserNotFoundException;
 import nl.fontys.s3.huister.business.response.property.GetRentedNotRentedPropertyRatioResponse;
-import nl.fontys.s3.huister.domain.entities.UserEntity;
-import nl.fontys.s3.huister.domain.entities.enumerator.UserRole;
+import nl.fontys.s3.huister.configuration.security.token.AccessToken;
+import nl.fontys.s3.huister.persistence.entities.UserEntity;
+import nl.fontys.s3.huister.persistence.entities.enumerator.UserRole;
 import nl.fontys.s3.huister.persistence.PropertyRepository;
 import nl.fontys.s3.huister.persistence.UserRepository;
 import org.junit.jupiter.api.Test;
@@ -27,28 +28,31 @@ class GetRentedNotRentedPropertyRatioUseCaseImplTest {
     private PropertyRepository propertyRepositoryMock;
     @Mock
     private UserRepository userRepositoryMock;
+    @Mock
+    private AccessToken requestAccessTokenMock;
 
     @InjectMocks
     private GetRentedNotRentedPropertyRatioUseCaseImpl getRentedNotRentedPropertyRatioUseCase;
 
     /**
      * @verifies throw UserNotFoundException when user is not found
-     * @see GetRentedNotRentedPropertyRatioUseCaseImpl#getRentedNotRentedPropertyRatio(long)
+     * @see GetRentedNotRentedPropertyRatioUseCaseImpl#getRentedNotRentedPropertyRatio()
      */
     @Test
     void getRentedNotRentedPropertyRatio_shouldThrowUserNotFoundExceptionWhenUserIsNotFound() {
         //Arrange
-        when(userRepositoryMock.findById(1L)).thenReturn(Optional.empty());
+        when(requestAccessTokenMock.getId()).thenReturn(1L);
+        when(userRepositoryMock.findById(requestAccessTokenMock.getId())).thenReturn(Optional.empty());
 
         //Act + Assert
         assertThrows(UserNotFoundException.class,()->
-                getRentedNotRentedPropertyRatioUseCase.getRentedNotRentedPropertyRatio(1L));
+                getRentedNotRentedPropertyRatioUseCase.getRentedNotRentedPropertyRatio());
 
     }
 
     /**
      * @verifies throw InvalidRoleException when user role is customer
-     * @see GetRentedNotRentedPropertyRatioUseCaseImpl#getRentedNotRentedPropertyRatio(long)
+     * @see GetRentedNotRentedPropertyRatioUseCaseImpl#getRentedNotRentedPropertyRatio()
      */
     @Test
     void getRentedNotRentedPropertyRatio_shouldThrowInvalidRoleExceptionWhenUserRoleIsCustomer() {
@@ -58,17 +62,18 @@ class GetRentedNotRentedPropertyRatioUseCaseImplTest {
                 .id(1L)
                 .build();
 
-        when(userRepositoryMock.findById(user.getId())).thenReturn(Optional.of(user));
+        when(requestAccessTokenMock.getId()).thenReturn(1L);
+        when(userRepositoryMock.findById(requestAccessTokenMock.getId())).thenReturn(Optional.of(user));
 
         //Act + Assert
         assertThrows(InvalidRoleException.class,
-                ()->getRentedNotRentedPropertyRatioUseCase.getRentedNotRentedPropertyRatio(1L));
+                ()->getRentedNotRentedPropertyRatioUseCase.getRentedNotRentedPropertyRatio());
 
     }
 
     /**
      * @verifies return the correct response when user role is either admin or owner
-     * @see GetRentedNotRentedPropertyRatioUseCaseImpl#getRentedNotRentedPropertyRatio(long)
+     * @see GetRentedNotRentedPropertyRatioUseCaseImpl#getRentedNotRentedPropertyRatio()
      */
     @ParameterizedTest
     @ValueSource(strings = {"ADMIN","OWNER"})
@@ -79,9 +84,12 @@ class GetRentedNotRentedPropertyRatioUseCaseImplTest {
                 .id(1L)
                 .build();
 
-        when(userRepositoryMock.findById(user.getId())).thenReturn(Optional.of(user));
+        when(requestAccessTokenMock.getId()).thenReturn(1L);
+        when(userRepositoryMock.findById(requestAccessTokenMock.getId())).thenReturn(Optional.of(user));
+
         int rentedProperty=1;
         int notRentedProperty=1;
+
         switch (role){
             case ADMIN -> {
                 when(propertyRepositoryMock.countByEndRentIsNull()).thenReturn(notRentedProperty);
@@ -100,7 +108,7 @@ class GetRentedNotRentedPropertyRatioUseCaseImplTest {
 
         //Act
         GetRentedNotRentedPropertyRatioResponse actualResponse=getRentedNotRentedPropertyRatioUseCase
-                .getRentedNotRentedPropertyRatio(user.getId());
+                .getRentedNotRentedPropertyRatio();
 
         //Assert
         assertEquals(expectedResponse,actualResponse);

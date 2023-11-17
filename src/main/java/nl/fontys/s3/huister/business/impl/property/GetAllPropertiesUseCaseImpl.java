@@ -3,10 +3,12 @@ package nl.fontys.s3.huister.business.impl.property;
 import lombok.AllArgsConstructor;
 import nl.fontys.s3.huister.business.interfaces.property.GetAllPropertiesUseCase;
 import nl.fontys.s3.huister.business.exception.user.UserNotFoundException;
-import nl.fontys.s3.huister.business.response.property.GetAllPropertiesResponse;import nl.fontys.s3.huister.persistence.PropertyRepository;
+import nl.fontys.s3.huister.business.response.property.GetAllPropertiesResponse;
+import nl.fontys.s3.huister.configuration.security.token.AccessToken;
+import nl.fontys.s3.huister.persistence.PropertyRepository;
 import nl.fontys.s3.huister.persistence.UserRepository;
-import nl.fontys.s3.huister.domain.entities.PropertyEntity;
-import nl.fontys.s3.huister.domain.entities.UserEntity;
+import nl.fontys.s3.huister.persistence.entities.PropertyEntity;
+import nl.fontys.s3.huister.persistence.entities.UserEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -18,10 +20,10 @@ import java.util.Optional;
 public class GetAllPropertiesUseCaseImpl implements GetAllPropertiesUseCase {
     private final PropertyRepository propertyRepository;
     private final UserRepository userRepository;
+    private final AccessToken requestAccessToken;
 
     /**
      *
-     * @param userId logged in user id
      * @return List of properties data
      *
      * @should throw UserNotFoundException when user is not found
@@ -29,10 +31,10 @@ public class GetAllPropertiesUseCaseImpl implements GetAllPropertiesUseCase {
      * @should return List of responses when all data are valid
      */
     @Override
-    public List<GetAllPropertiesResponse> getAllProperties(long userId) {
+    public List<GetAllPropertiesResponse> getAllProperties() {
 
         //get current logged in user
-        Optional<UserEntity> optionalUser=userRepository.findById(userId);
+        Optional<UserEntity> optionalUser=userRepository.findById(requestAccessToken.getId());
         if (optionalUser.isEmpty()){
             throw new UserNotFoundException();
         }
@@ -43,7 +45,7 @@ public class GetAllPropertiesUseCaseImpl implements GetAllPropertiesUseCase {
             case ADMIN:
                 yield propertyRepository.findAll();
             case OWNER:
-                yield propertyRepository.findAllByOwnerId(userId);
+                yield propertyRepository.findAllByOwnerId(user.getId());
             case CUSTOMER:
                 yield propertyRepository.findAllByEndRentIsNull();
         };

@@ -1,7 +1,7 @@
 package nl.fontys.s3.huister.business.response.city;
 
 import lombok.*;
-import nl.fontys.s3.huister.domain.entities.CityEntity;
+import nl.fontys.s3.huister.persistence.entities.CityEntity;
 
 import java.util.List;
 @Getter
