@@ -23,8 +23,6 @@ jacocoReport:
   paths:
    - build/reports/jacoco/test/html/
   expire_in: 1 week
- only:
-  - master  # Adjust the branch as needed
 
 sonarqube-check:
  stage: sonarqube-check
