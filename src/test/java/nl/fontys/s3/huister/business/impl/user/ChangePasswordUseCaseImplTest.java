@@ -31,9 +31,9 @@ class ChangePasswordUseCaseImplTest {
     void changePassword_shouldThrowNewUserNotFoundExceptionWhenUserIsNotFound() {
         //Arrange
         ChangePasswordRequest request= ChangePasswordRequest.builder()
-                .id(1L)
+                .username("user")
                 .newPassword("password").build();
-        when(userRepositoryMock.findById(request.getId())).thenReturn(Optional.empty());
+        when(userRepositoryMock.findByUsername(request.getUsername())).thenReturn(Optional.empty());
 
         //Act + Assert
         assertThrows(UserNotFoundException.class,()->changePasswordUseCase.changePassword(request));
@@ -47,19 +47,19 @@ class ChangePasswordUseCaseImplTest {
     void changePassword_shouldNotReplaceTheOldPasswordIfTheNewPasswordMatchesTheOldPassword() {
         //Arrange
         ChangePasswordRequest request= ChangePasswordRequest.builder()
-                .id(1L)
+                .username("user")
                 .newPassword("password").build();
 
         UserEntity user= UserEntity.builder()
                 .password("password")
                 .build();
-        when(userRepositoryMock.findById(request.getId())).thenReturn(Optional.of(user));
+        when(userRepositoryMock.findByUsername(request.getUsername())).thenReturn(Optional.of(user));
 
         //Act
         changePasswordUseCase.changePassword(request);
 
         //Assert
-        verify(userRepositoryMock,never()).setPassword(request.getId(),request.getNewPassword());
+        verify(userRepositoryMock,never()).setPassword(user.getId(),request.getNewPassword());
     }
 
     /**
@@ -70,18 +70,18 @@ class ChangePasswordUseCaseImplTest {
     void changePassword_shouldReplaceTheOldPasswordIfTheNewPasswordDoesNotMatchTheOldPassword() {
         //Arrange
         ChangePasswordRequest request= ChangePasswordRequest.builder()
-                .id(1L)
+                .username("user")
                 .newPassword("new password").build();
 
         UserEntity user= UserEntity.builder()
                 .password("old password")
                 .build();
-        when(userRepositoryMock.findById(request.getId())).thenReturn(Optional.of(user));
+        when(userRepositoryMock.findByUsername(request.getUsername())).thenReturn(Optional.of(user));
 
         //Act
         changePasswordUseCase.changePassword(request);
 
         //Assert
-        verify(userRepositoryMock).setPassword(request.getId(),request.getNewPassword());
+        verify(userRepositoryMock).setPassword(user.getId(),request.getNewPassword());
     }
 }

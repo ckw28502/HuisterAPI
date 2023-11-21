@@ -48,6 +48,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
     private GetAllOwnersUseCase getAllOwnersUseCase;
     @MockBean
     private SetProfilePictureUrlUseCase setProfilePictureUrlUseCase;
+    @MockBean
+    private ActivateAccountUseCase activateAccountUseCase;
     /**
      * @verifies return 401 if user is unauthorized
      * @see UserController#getUserById(long)
@@ -252,17 +254,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
     /**
      * @verifies return 204
-     * @see UserController#changePassword(long, nl.fontys.s3.huister.business.request.user.ChangePasswordRequest)
+     * @see UserController#changePassword(nl.fontys.s3.huister.business.request.user.ChangePasswordRequest)
      */
     @Test
     void changePassword_shouldReturn204() throws Exception {
         //Arrange
         ChangePasswordRequest request=ChangePasswordRequest.builder()
-                .id(1L)
+                .username("user")
                 .build();
 
         //Act + Assert
-        mockMvc.perform(put("/users/changePassword/1")
+        mockMvc.perform(put("/users/changePassword")
                 .contentType(APPLICATION_JSON_VALUE)
                 .content(gson.toJson(request)))
                 .andDo(print())
@@ -270,5 +272,24 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
         verify(changePasswordUseCase).changePassword(request);
 
+    }
+
+    /**
+     * @verifies return 204
+     * @see UserController#activateAccount(ActivateAccountRequest)
+     */
+    @Test
+    void activateAccount_shouldReturn204() throws Exception {
+        //Arrange
+        ActivateAccountRequest request= ActivateAccountRequest.builder().build();
+
+        //Act + Assert
+        mockMvc.perform(put("/users/activate")
+                .contentType(APPLICATION_JSON_VALUE)
+                .content(gson.toJson(request)))
+                .andDo(print())
+                .andExpect(status().isNoContent());
+
+        verify(activateAccountUseCase).activateAccount(request);
     }
 }

@@ -6,8 +6,13 @@ import nl.fontys.s3.huister.business.interfaces.user.CreateUserUseCase;
 import nl.fontys.s3.huister.business.request.user.CreateUserRequest;
 import nl.fontys.s3.huister.persistence.entities.UserEntity;
 import nl.fontys.s3.huister.persistence.UserRepository;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 @Service
 @AllArgsConstructor
@@ -15,6 +20,8 @@ public class CreateUserUseCaseImpl implements CreateUserUseCase {
     private final UserRepository userRepository;
 
     private final PasswordEncoder passwordEncoder;
+
+    private JavaMailSender javaMailSender;
 
     /**
      *
@@ -39,5 +46,14 @@ public class CreateUserUseCaseImpl implements CreateUserUseCase {
                 .activated(false)
                 .build();
         userRepository.save(newUser);
+
+        String encodedUsername= URLEncoder.encode(request.getUsername(), StandardCharsets.UTF_8);
+        //Email
+        SimpleMailMessage message=new SimpleMailMessage();
+        message.setTo(request.getEmail());
+        message.setSubject("ACTIVATE YOUR HUISTER ACCOUNT!!!");
+        message.setText("Click this link to activate your account!\n" +
+                "http://localhost:5173/activate/"+encodedUsername);
+        javaMailSender.send(message);
     }
 }

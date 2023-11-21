@@ -25,6 +25,8 @@ public class UserController {
     private final ChangePasswordUseCase changePasswordUseCase;
     private final GetAllOwnersUseCase getAllOwnersUseCase;
     private final SetProfilePictureUrlUseCase setProfilePictureUrlUseCase;
+    private final ActivateAccountUseCase activateAccountUseCase;
+    private final ForgotPasswordUseCase forgotPasswordUseCase;
 
 
     /**
@@ -66,7 +68,13 @@ public class UserController {
     @PostMapping()
     public ResponseEntity<Void>createUser(@RequestBody CreateUserRequest request){
         createUserUseCase.createUser(request);
-       return ResponseEntity.status(HttpStatus.CREATED).build();
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    @PostMapping("/forgot")
+    public ResponseEntity<Void>forgotPassword(@RequestBody ForgotPasswordRequest request){
+        forgotPasswordUseCase.forgotPassword(request);
+        return ResponseEntity.noContent().build();
     }
 
     /**
@@ -116,16 +124,27 @@ public class UserController {
 
     /**
      *
-     * @param id user id
      * @param request new password request
      * @return http response with no content status
      *
      * @should return 204
      */
-    @PutMapping("/changePassword/{id}")
-    public ResponseEntity<Void>changePassword(@PathVariable(value = "id")long id, @RequestBody@Valid ChangePasswordRequest request){
-        request.setId(id);
+    @PutMapping("/changePassword")
+    public ResponseEntity<Void>changePassword( @RequestBody@Valid ChangePasswordRequest request){
         changePasswordUseCase.changePassword(request);
+        return ResponseEntity.noContent().build();
+    }
+
+    /**
+     *
+     * @param request ActivateAccountRequest
+     * @return http response with 204 status
+     *
+     * @should return 204
+     */
+    @PutMapping("/activate")
+    public ResponseEntity<Void>activateAccount(@RequestBody ActivateAccountRequest request){
+        activateAccountUseCase.activateAccount(request);
         return ResponseEntity.noContent().build();
     }
 }

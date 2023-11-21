@@ -10,6 +10,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -23,6 +25,8 @@ class CreateUserUseCaseImplTest {
 
     @Mock
     private UserRepository userRepositoryMock;
+    @Mock
+    private JavaMailSender javaMailSender;
 
     @InjectMocks
     private CreateUserUseCaseImpl createUserUseCase;
@@ -82,11 +86,18 @@ class CreateUserUseCaseImplTest {
                 .activated(false)
                 .build();
 
+        SimpleMailMessage message=new SimpleMailMessage();
+        message.setTo(request.getEmail());
+        message.setSubject("ACTIVATE YOUR HUISTER ACCOUNT!!!");
+        message.setText("Click this link to activate your account!\n" +
+                "http://localhost:5173/activate/"+request.getUsername());
+
         //Act
         createUserUseCase.createUser(request);
 
         //Assert
         verify(userRepositoryMock).save(user);
+        verify(javaMailSender).send(message);
 
     }
 }

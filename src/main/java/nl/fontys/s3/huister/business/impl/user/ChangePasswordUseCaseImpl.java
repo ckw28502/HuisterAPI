@@ -28,7 +28,7 @@ public class ChangePasswordUseCaseImpl implements ChangePasswordUseCase {
     @Transactional
     public void changePassword(ChangePasswordRequest request) {
         //check if user is found
-        Optional<UserEntity>optionalUser=userRepository.findById(request.getId());
+        Optional<UserEntity>optionalUser=userRepository.findByUsername(request.getUsername());
         if(optionalUser.isEmpty()){
             throw new UserNotFoundException();
         }
@@ -36,7 +36,7 @@ public class ChangePasswordUseCaseImpl implements ChangePasswordUseCase {
         //if old password and new password are different, change the password
         UserEntity user=optionalUser.get();
         if (!user.getPassword().equals(request.getNewPassword())){
-            userRepository.setPassword(request.getId(), request.getNewPassword());
+            userRepository.setPassword(user.getId(), request.getNewPassword());
         }
     }
 }
