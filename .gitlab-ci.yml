@@ -16,21 +16,6 @@ test:
  stage: test
  script:
   - ./gradlew test
- artifacts:
-  paths:
-   - build/reports/jacoco/test/
-  expire_in: 1 week
-
-jacocoReport:
- stage: jacoco
- script:
-  - ./gradlew jacocoTestReport
- artifacts:
-  paths:
-   - build/reports/jacoco/test/
-  expire_in: 1 week
- only:
-  - master  # Adjust the branch as needed
 
 sonarqube-check:
  stage: sonarqube-check
@@ -43,7 +28,7 @@ sonarqube-check:
   paths:
    - .sonar/cache
  script:
-  - ./gradlew sonarqube --info
+  - ./gradlew test sonar
  allow_failure: true
  only:
   - merge_requests
