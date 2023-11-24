@@ -27,6 +27,11 @@ public class PropertyEntity {
     @Column(name = "street_name")
     @NotBlank
     private String streetName;
+
+    @Column(name = "house_number")
+    @NotNull
+    private int houseNumber;
+
     @Column(name = "post_code")
     @NotBlank
     private String postCode;

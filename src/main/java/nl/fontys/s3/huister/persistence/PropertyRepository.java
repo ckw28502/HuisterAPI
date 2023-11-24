@@ -23,7 +23,8 @@ public interface PropertyRepository extends JpaRepository<PropertyEntity,Long> {
             @Param("description")String description,
             @Param("image_url")String imageUrl,
             @Param("area")double area,
-            @Param("price")double price
+            @Param("price")double price,
+            @Param("house_number")int houseNumber
     );
 
     @Procedure("delete_property")

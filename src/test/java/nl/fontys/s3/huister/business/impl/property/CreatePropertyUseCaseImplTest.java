@@ -75,7 +75,8 @@ class CreatePropertyUseCaseImplTest {
                 request.getDescription(),
                 request.getImageUrl(),
                 request.getArea(),
-                request.getPrice()
+                request.getPrice(),
+                request.getHouseNumber()
         );
 
     }

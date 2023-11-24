@@ -8,7 +8,8 @@ CREATE PROCEDURE `save_property`(
     IN description VARCHAR(255),
     IN image_url TEXT,
     IN area DOUBLE,
-    IN price DOUBLE
+    IN price DOUBLE,
+    IN house_number INT
 )
 BEGIN
     DECLARE city_id BIGINT;
@@ -39,7 +40,8 @@ BEGIN
         image_url,
         area,
         price,
-        end_rent
+        end_rent,
+        house_number
     ) VALUES (
         owner_id,
         city_id,
@@ -49,7 +51,8 @@ BEGIN
         image_url,
         area,
         price,
-        NULL
+        NULL,
+        house_number
     );
 
 END

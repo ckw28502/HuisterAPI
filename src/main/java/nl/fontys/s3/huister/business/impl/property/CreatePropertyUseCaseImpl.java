@@ -40,7 +40,8 @@ public class CreatePropertyUseCaseImpl implements CreatePropertyUseCase {
                 request.getDescription(),
                 request.getImageUrl(),
                 request.getArea(),
-                request.getPrice()
+                request.getPrice(),
+                request.getHouseNumber()
         );
     }
 }
