@@ -21,6 +21,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -138,10 +139,12 @@ class LoginUseCaseImplTest {
         when(userRepositoryMock.findByUsername(request.getUsername())).thenReturn(Optional.of(user));
 
         when(passwordEncoder.matches(request.getPassword(),user.getPassword())).thenReturn(true);
+        when(accessTokenEncoder.encode((new AccessTokenImpl(user.getUsername(),user.getId(),user.getRole(),user.getProfilePictureUrl()))))
+                .thenReturn("token");
 
 
         LoginResponse expectedResponse=LoginResponse.builder()
-                .token(accessTokenEncoder.encode((new AccessTokenImpl(user.getUsername(),user.getId(),user.getRole(),user.getProfilePictureUrl()))))
+                .token("token")
                 .build();
 
         //Act
@@ -149,6 +152,7 @@ class LoginUseCaseImplTest {
 
         //Assert
         assertEquals(expectedResponse,actualResponse);
+        verify(userRepositoryMock).saveToken(expectedResponse.getToken(),user.getUsername());
 
     }
 }

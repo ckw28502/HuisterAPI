@@ -16,6 +16,8 @@ public interface UserRepository extends JpaRepository<UserEntity,Long> {
 
     boolean existsByUsername(String username);
 
+    Optional<UserEntity>findByToken(String token);
+
 
     @Modifying
     @Query("UPDATE UserEntity SET profilePictureUrl=:profilePictureUrl WHERE username=:username")
@@ -31,4 +33,8 @@ public interface UserRepository extends JpaRepository<UserEntity,Long> {
     @Query("UPDATE UserEntity SET activated=true WHERE username=:username")
     void activateAccount(@Param("username") String username);
     List<UserEntity> findAllByRole(UserRole role);
+
+    @Modifying
+    @Query("UPDATE UserEntity SET token=:token WHERE username=:username")
+    void saveToken(@Param("token")String token, @Param("username") String username);
 }

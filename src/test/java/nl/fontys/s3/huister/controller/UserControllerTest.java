@@ -6,6 +6,7 @@ import nl.fontys.s3.huister.business.request.user.*;
 import nl.fontys.s3.huister.business.response.user.GetAllOwnersResponse;
 import nl.fontys.s3.huister.business.response.user.GetUserByIdResponse;
 import nl.fontys.s3.huister.business.response.user.LoginResponse;
+import nl.fontys.s3.huister.business.response.user.RefreshTokenResponse;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +51,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
     private SetProfilePictureUrlUseCase setProfilePictureUrlUseCase;
     @MockBean
     private ActivateAccountUseCase activateAccountUseCase;
+    @MockBean
+    private ForgotPasswordUseCase forgotPasswordUseCase;
+    @MockBean
+    private RefreshTokenUseCase refreshTokenUseCase;
     /**
      * @verifies return 401 if user is unauthorized
      * @see UserController#getUserById(long)
@@ -291,5 +296,50 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
                 .andExpect(status().isNoContent());
 
         verify(activateAccountUseCase).activateAccount(request);
+    }
+
+    /**
+     * @verifies return 204
+     * @see UserController#forgotPassword(ForgotPasswordRequest)
+     */
+    @Test
+    void forgotPassword_shouldReturn204() throws Exception {
+        //Arrange
+        ForgotPasswordRequest request=ForgotPasswordRequest.builder().build();
+
+        //Act + Assert
+        mockMvc.perform(post("/users/forgot")
+                .contentType(APPLICATION_JSON_VALUE)
+                .content(gson.toJson(request)))
+                .andDo(print())
+                .andExpect(status().isNoContent());
+
+        verify(forgotPasswordUseCase).forgotPassword(request);
+
+    }
+
+    /**
+     * @verifies return 200
+     * @see UserController#refreshToken(RefreshTokenRequest)
+     */
+    @Test
+    void refreshToken_shouldReturn200() throws Exception {
+        //Arrange
+        RefreshTokenRequest request= RefreshTokenRequest.builder().build();
+        RefreshTokenResponse response=RefreshTokenResponse.builder().build();
+
+        when(refreshTokenUseCase.refreshToken(request)).thenReturn(response);
+
+        //Act + Assert
+        mockMvc.perform(post("/users/token")
+                .contentType(APPLICATION_JSON_VALUE)
+                .content(gson.toJson(request)))
+                .andDo(print())
+                .andExpect(header().string("Content-Type",APPLICATION_JSON_VALUE))
+                .andExpect(status().isOk())
+                .andExpect(content().json(gson.toJson(response)));
+
+        verify(refreshTokenUseCase).refreshToken(request);
+
     }
 }

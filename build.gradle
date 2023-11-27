@@ -20,7 +20,7 @@ if (applicationPropertiesFile.exists()) {
 	// Configure Flyway
 	flyway {
 		url = properties.getProperty('spring.datasource.url')
-		driver = 'com.mysql.jdbc.Driver'
+		driver = 'com.mysql.cj.jdbc.Driver'
 		user = properties.getProperty('spring.datasource.username')
 		password = properties.getProperty('spring.datasource.password')
 	}

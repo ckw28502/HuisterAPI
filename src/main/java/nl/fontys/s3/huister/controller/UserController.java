@@ -8,6 +8,7 @@ import nl.fontys.s3.huister.business.request.user.*;
 import nl.fontys.s3.huister.business.response.user.GetAllOwnersResponse;
 import nl.fontys.s3.huister.business.response.user.GetUserByIdResponse;
 import nl.fontys.s3.huister.business.response.user.LoginResponse;
+import nl.fontys.s3.huister.business.response.user.RefreshTokenResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,6 +28,7 @@ public class UserController {
     private final SetProfilePictureUrlUseCase setProfilePictureUrlUseCase;
     private final ActivateAccountUseCase activateAccountUseCase;
     private final ForgotPasswordUseCase forgotPasswordUseCase;
+    private final RefreshTokenUseCase refreshTokenUseCase;
 
 
     /**
@@ -71,10 +73,30 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
+    /**
+     *
+     * @param request forgot password request
+     * @return http with no content status
+     *
+     * @should return 204
+     *
+     */
     @PostMapping("/forgot")
     public ResponseEntity<Void>forgotPassword(@RequestBody ForgotPasswordRequest request){
         forgotPasswordUseCase.forgotPassword(request);
         return ResponseEntity.noContent().build();
+    }
+
+    /**
+     *
+     * @param request refresh token request
+     * @return http response with ok status
+     *
+     * @should return 200
+     */
+    @PostMapping("/token")
+    public ResponseEntity<RefreshTokenResponse>refreshToken(@RequestBody RefreshTokenRequest request){
+        return ResponseEntity.ok().body(refreshTokenUseCase.refreshToken(request));
     }
 
     /**
@@ -147,4 +169,5 @@ public class UserController {
         activateAccountUseCase.activateAccount(request);
         return ResponseEntity.noContent().build();
     }
+
 }

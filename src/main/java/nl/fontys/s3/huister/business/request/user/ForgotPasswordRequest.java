@@ -6,6 +6,7 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 @Getter
+@EqualsAndHashCode
 public class ForgotPasswordRequest {
     private String username;
 }
