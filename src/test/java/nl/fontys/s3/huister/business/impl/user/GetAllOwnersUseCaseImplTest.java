@@ -16,6 +16,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -43,7 +44,7 @@ class GetAllOwnersUseCaseImplTest {
         List<GetAllOwnersResponse>responses=getAllOwnersUseCase.getAllOwners();
 
         //Assert
-        assert responses.isEmpty();
+        assertTrue(responses.isEmpty());
 
     }
 
