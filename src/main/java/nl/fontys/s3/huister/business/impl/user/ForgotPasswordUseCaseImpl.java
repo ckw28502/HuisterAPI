@@ -17,6 +17,14 @@ import java.util.Optional;
 public class ForgotPasswordUseCaseImpl implements ForgotPasswordUseCase {
     private UserRepository userRepository;
     private JavaMailSender sender;
+
+    /**
+     *
+     * @param request Forgot Password Request
+     *
+     * @should throw UserNotFoundException when user is not found
+     * @should send an email if user is found
+     */
     @Override
     public void forgotPassword(ForgotPasswordRequest request) {
         Optional<UserEntity>optionalUser=userRepository.findByUsername(request.getUsername());
