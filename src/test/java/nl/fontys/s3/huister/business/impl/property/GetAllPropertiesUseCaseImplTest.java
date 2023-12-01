@@ -107,11 +107,11 @@ class GetAllPropertiesUseCaseImplTest {
         switch (role){
             case ADMIN -> {
                 properties.addAll(List.of(property1,property2));
-                when(propertyRepositoryMock.findAll()).thenReturn(properties);
+                when(propertyRepositoryMock.findAllByIsDeletedIsNull()).thenReturn(properties);
             }
             case OWNER -> {
                 properties.add((property1));
-                when(propertyRepositoryMock.findAllByOwnerId(user1.getId())).thenReturn(properties);
+                when(propertyRepositoryMock.findAllByOwnerIdAndIsDeletedIsNull(user1.getId())).thenReturn(properties);
             }
             case CUSTOMER -> {
                 properties.add((property2));

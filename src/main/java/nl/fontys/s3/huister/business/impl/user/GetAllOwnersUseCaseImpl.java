@@ -36,7 +36,7 @@ public class GetAllOwnersUseCaseImpl implements GetAllOwnersUseCase {
                 .name(owner.getName())
                 .email(owner.getEmail())
                 .profilePictureUrl(owner.getProfilePictureUrl())
-                .propertyOwned(propertyRepository.countByOwner(owner))
+                .propertyOwned(propertyRepository.countByOwnerAndIsDeletedIsNull(owner))
                 .propertyRented(orderRepository.countByOwnerAndStatus(owner, OrderStatus.ACCEPTED))
                 .build()).toList();
     }

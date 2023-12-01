@@ -78,7 +78,7 @@ class CreateOrderUseCaseImplTest {
         when(requestAccessTokenMock.getId()).thenReturn(2L);
         when(userRepositoryMock.findById(request.getOwnerId())).thenReturn(Optional.of(owner));
         when(userRepositoryMock.findById(2L)).thenReturn(Optional.of(customer));
-        when(propertyRepositoryMock.findById(request.getPropertyId())).thenReturn(Optional.empty());
+        when(propertyRepositoryMock.findByIdAndIsDeletedIsNull(request.getPropertyId())).thenReturn(Optional.empty());
 
         //Act + Assert
         assertThrows(PropertyNotFoundException.class,()->createOrderUseCase.createOrder(request));
@@ -106,7 +106,7 @@ class CreateOrderUseCaseImplTest {
         when(requestAccessTokenMock.getId()).thenReturn(2L);
         when(userRepositoryMock.findById(request.getOwnerId())).thenReturn(Optional.of(owner));
         when(userRepositoryMock.findById(2L)).thenReturn(Optional.of(customer));
-        when(propertyRepositoryMock.findById(request.getPropertyId())).thenReturn(Optional.of(property));
+        when(propertyRepositoryMock.findByIdAndIsDeletedIsNull(request.getPropertyId())).thenReturn(Optional.of(property));
 
         //Act + Assert
         assertThrows(PriceMustBeMoreThanZeroException.class,()->createOrderUseCase.createOrder(request));
@@ -134,7 +134,7 @@ class CreateOrderUseCaseImplTest {
         when(requestAccessTokenMock.getId()).thenReturn(2L);
         when(userRepositoryMock.findById(request.getOwnerId())).thenReturn(Optional.of(owner));
         when(userRepositoryMock.findById(2L)).thenReturn(Optional.of(customer));
-        when(propertyRepositoryMock.findById(request.getPropertyId())).thenReturn(Optional.of(property));
+        when(propertyRepositoryMock.findByIdAndIsDeletedIsNull(request.getPropertyId())).thenReturn(Optional.of(property));
 
         OrderEntity order=OrderEntity.builder()
                 .property(property)

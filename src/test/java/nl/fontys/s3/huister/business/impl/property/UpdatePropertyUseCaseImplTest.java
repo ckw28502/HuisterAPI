@@ -43,7 +43,7 @@ class UpdatePropertyUseCaseImplTest {
                 .price(450.15)
                 .build();
 
-        when(propertyRepositoryMock.findById(request.getId())).thenReturn(Optional.empty());
+        when(propertyRepositoryMock.findByIdAndIsDeletedIsNull(request.getId())).thenReturn(Optional.empty());
 
         //Act + Assert
         assertThrows(PropertyNotFoundException.class,()->updatePropertyUseCase.updateProperty(request));
@@ -74,7 +74,7 @@ class UpdatePropertyUseCaseImplTest {
                 .owner(owner)
                 .build();
 
-        when(propertyRepositoryMock.findById(request.getId())).thenReturn(Optional.of(property));
+        when(propertyRepositoryMock.findByIdAndIsDeletedIsNull(request.getId())).thenReturn(Optional.of(property));
 
         when(requestAccessTokenMock.getId()).thenReturn(1L);
 
@@ -112,7 +112,7 @@ class UpdatePropertyUseCaseImplTest {
                 .owner(owner)
                 .build();
 
-        when(propertyRepositoryMock.findById(request.getId())).thenReturn(Optional.of(property));
+        when(propertyRepositoryMock.findByIdAndIsDeletedIsNull(request.getId())).thenReturn(Optional.of(property));
 
         when(requestAccessTokenMock.getId()).thenReturn(2L);
 

@@ -92,12 +92,12 @@ class GetRentedNotRentedPropertyRatioUseCaseImplTest {
 
         switch (role){
             case ADMIN -> {
-                when(propertyRepositoryMock.countByEndRentIsNull()).thenReturn(notRentedProperty);
-                when(propertyRepositoryMock.countByEndRentIsNotNull()).thenReturn(rentedProperty);
+                when(propertyRepositoryMock.countByEndRentIsNullAndIsDeletedIsNull()).thenReturn(notRentedProperty);
+                when(propertyRepositoryMock.countByEndRentIsNotNullAndIsDeletedIsNull()).thenReturn(rentedProperty);
             }
             case OWNER -> {
-                when(propertyRepositoryMock.countByEndRentIsNotNullAndOwner(user)).thenReturn(rentedProperty);
-                when(propertyRepositoryMock.countByEndRentIsNullAndOwner(user)).thenReturn(notRentedProperty);
+                when(propertyRepositoryMock.countByEndRentIsNotNullAndOwnerAndIsDeletedIsNull(user)).thenReturn(rentedProperty);
+                when(propertyRepositoryMock.countByEndRentIsNullAndOwnerAndIsDeletedIsNull(user)).thenReturn(notRentedProperty);
             }
         }
 

@@ -30,7 +30,7 @@ public class UpdatePropertyUseCaseImpl implements UpdatePropertyUseCase {
     @Override
     @Transactional
     public void updateProperty(UpdatePropertyRequest request) {
-        Optional<PropertyEntity>optionalProperty=propertyRepository.findById(request.getId());
+        Optional<PropertyEntity>optionalProperty=propertyRepository.findByIdAndIsDeletedIsNull(request.getId());
         if (optionalProperty.isEmpty()){
             throw new PropertyNotFoundException();
         }

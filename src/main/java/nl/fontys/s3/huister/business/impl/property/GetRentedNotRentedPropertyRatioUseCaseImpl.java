@@ -41,12 +41,12 @@ public class GetRentedNotRentedPropertyRatioUseCaseImpl implements GetRentedNotR
 
         switch (user.getRole()){
             case ADMIN -> {
-                rentedCount=propertyRepository.countByEndRentIsNotNull();
-                notRentedCount=propertyRepository.countByEndRentIsNull();
+                rentedCount=propertyRepository.countByEndRentIsNotNullAndIsDeletedIsNull();
+                notRentedCount=propertyRepository.countByEndRentIsNullAndIsDeletedIsNull();
             }
             case OWNER -> {
-                rentedCount=propertyRepository.countByEndRentIsNotNullAndOwner(user);
-                notRentedCount=propertyRepository.countByEndRentIsNullAndOwner(user);
+                rentedCount=propertyRepository.countByEndRentIsNotNullAndOwnerAndIsDeletedIsNull(user);
+                notRentedCount=propertyRepository.countByEndRentIsNullAndOwnerAndIsDeletedIsNull(user);
             }
             case CUSTOMER ->throw new InvalidRoleException();
         }

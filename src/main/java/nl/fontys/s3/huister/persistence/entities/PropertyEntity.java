@@ -52,4 +52,7 @@ public class PropertyEntity {
 
     @Column(name = "end_rent")
     private LocalDate endRent;
+
+    @Column(name = "is_deleted",columnDefinition = "TIMESTAMP")
+    private LocalDate isDeleted;
 }
