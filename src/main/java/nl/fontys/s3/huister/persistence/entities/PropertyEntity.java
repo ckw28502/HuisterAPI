@@ -27,6 +27,11 @@ public class PropertyEntity {
     @Column(name = "street_name")
     @NotBlank
     private String streetName;
+
+    @Column(name = "house_number")
+    @NotNull
+    private int houseNumber;
+
     @Column(name = "post_code")
     @NotBlank
     private String postCode;
@@ -47,4 +52,7 @@ public class PropertyEntity {
 
     @Column(name = "end_rent")
     private LocalDate endRent;
+
+    @Column(name = "is_deleted",columnDefinition = "TIMESTAMP")
+    private LocalDate isDeleted;
 }

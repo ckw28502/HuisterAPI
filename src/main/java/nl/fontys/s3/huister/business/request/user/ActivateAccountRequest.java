@@ -4,10 +4,9 @@ import lombok.*;
 
 @Getter
 @AllArgsConstructor
-@NoArgsConstructor
 @Builder
 @EqualsAndHashCode
-public class ChangePasswordRequest {
+@NoArgsConstructor
+public class ActivateAccountRequest {
     private String username;
-    private String newPassword;
 }

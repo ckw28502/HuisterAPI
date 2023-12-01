@@ -1,5 +1,6 @@
 package nl.fontys.s3.huister.business.impl.user;
 
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import nl.fontys.s3.huister.business.exception.user.AccountHasNotBeenActivatedException;
 import nl.fontys.s3.huister.business.exception.user.InvalidPasswordException;
@@ -33,6 +34,7 @@ public class LoginUseCaseImpl implements LoginUseCase {
      * @should return response when credentials are valid
      */
     @Override
+    @Transactional
     public LoginResponse login(LoginRequest request) {
         Optional<UserEntity>optionalUser=userRepository.findByUsername(request.getUsername());
         if (optionalUser.isEmpty()){
@@ -51,6 +53,8 @@ public class LoginUseCaseImpl implements LoginUseCase {
         String token=accessTokenEncoder.encode(
                 new AccessTokenImpl(user.getUsername(), user.getId(), user.getRole(), user.getProfilePictureUrl())
         );
+
+        userRepository.saveToken(token,user.getUsername());
 
         return LoginResponse.builder()
                 .token(token)

@@ -2,12 +2,11 @@ package nl.fontys.s3.huister.business.request.user;
 
 import lombok.*;
 
-@Getter
-@AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@AllArgsConstructor
+@Getter
 @EqualsAndHashCode
-public class ChangePasswordRequest {
+public class ForgotPasswordRequest {
     private String username;
-    private String newPassword;
 }

@@ -16,6 +16,7 @@ public class GetPropertyDetailResponse {
     private String description;
     private String ownerName;
     private String cityName;
+    private int houseNumber;
 
     private String imageUrl;
 

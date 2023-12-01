@@ -14,12 +14,12 @@ BEGIN
     FROM property_table p
     WHERE p.id=property_id;
 
-    DELETE FROM property_table WHERE id=property_id;
+    UPDATE property_table SET is_deleted=CURRENT_TIMESTAMP() WHERE id=property_id;
 
     SELECT COUNT(*)
     INTO count_property
     FROM property_table p
-    WHERE p.city_id=city_id
+    WHERE p.city_id=city_id AND p.is_deleted=NULL
     GROUP BY p.city_id;
 
     IF count_property<1 THEN

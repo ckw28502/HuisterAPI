@@ -72,7 +72,7 @@ class GetAllOwnersUseCaseImplTest {
                 .propertyRented(0)
                 .build();
 
-        when(propertyRepositoryMock.countByOwner(owner)).thenReturn(0);
+        when(propertyRepositoryMock.countByOwnerAndIsDeletedIsNull(owner)).thenReturn(0);
         when(orderRepositoryMock.countByOwnerAndStatus(owner,OrderStatus.ACCEPTED)).thenReturn(0);
 
         //Act

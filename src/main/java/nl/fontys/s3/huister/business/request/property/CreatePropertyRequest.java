@@ -8,14 +8,14 @@ import lombok.*;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 public class CreatePropertyRequest {
-    private long cityId;
-
     private String streetName;
     private String postCode;
     private String description;
     private String cityName;
 
     private String imageUrl;
+
+    private int houseNumber;
 
     private double area,price;
 }

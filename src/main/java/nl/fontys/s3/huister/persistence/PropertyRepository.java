@@ -10,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.lang.NonNull;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface PropertyRepository extends JpaRepository<PropertyEntity,Long> {
     List<PropertyEntity> findAllByEndRentIsNull();
@@ -23,25 +24,28 @@ public interface PropertyRepository extends JpaRepository<PropertyEntity,Long> {
             @Param("description")String description,
             @Param("image_url")String imageUrl,
             @Param("area")double area,
-            @Param("price")double price
+            @Param("price")double price,
+            @Param("house_number")int houseNumber
     );
 
     @Procedure("delete_property")
     void deleteProperty(@Param("property_id")long propertyId);
+
+    Optional<PropertyEntity> findByIdAndIsDeletedIsNull(long id);
+
     @NonNull
-    List<PropertyEntity> findAll();
-    List<PropertyEntity> findAllByOwnerId(long ownerId);
+    List<PropertyEntity> findAllByIsDeletedIsNull();
+    List<PropertyEntity> findAllByOwnerIdAndIsDeletedIsNull(long ownerId);
     @Modifying
     @Query("UPDATE PropertyEntity SET imageUrl=:imageUrl,description=:description,price=:price WHERE id=:id")
     void updateProperty(@Param("id")long id,@Param("imageUrl")String imageUrl,@Param("description")String description, @Param("price")double price);
-    int countByOwner(UserEntity owner);
+    int countByOwnerAndIsDeletedIsNull(UserEntity owner);
 
-    int countByEndRentIsNotNull();
-    int countByEndRentIsNull();
+    int countByEndRentIsNotNullAndIsDeletedIsNull();
+    int countByEndRentIsNullAndIsDeletedIsNull();
 
-    int countByEndRentIsNotNullAndOwner(UserEntity owner);
-    int countByEndRentIsNullAndOwner(UserEntity owner);
+    int countByEndRentIsNotNullAndOwnerAndIsDeletedIsNull(UserEntity owner);
+    int countByEndRentIsNullAndOwnerAndIsDeletedIsNull(UserEntity owner);
 
-    boolean existsById(long id);
 
 }

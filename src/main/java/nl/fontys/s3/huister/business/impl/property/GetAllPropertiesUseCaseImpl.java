@@ -43,9 +43,9 @@ public class GetAllPropertiesUseCaseImpl implements GetAllPropertiesUseCase {
         //get retrieved data based on user role
         List<PropertyEntity>properties=switch (user.getRole()){
             case ADMIN:
-                yield propertyRepository.findAll();
+                yield propertyRepository.findAllByIsDeletedIsNull();
             case OWNER:
-                yield propertyRepository.findAllByOwnerId(user.getId());
+                yield propertyRepository.findAllByOwnerIdAndIsDeletedIsNull(user.getId());
             case CUSTOMER:
                 yield propertyRepository.findAllByEndRentIsNull();
         };

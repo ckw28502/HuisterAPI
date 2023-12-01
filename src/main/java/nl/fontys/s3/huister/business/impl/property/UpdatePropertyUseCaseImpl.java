@@ -1,5 +1,6 @@
 package nl.fontys.s3.huister.business.impl.property;
 
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import nl.fontys.s3.huister.business.exception.property.PropertyNotFoundException;
 import nl.fontys.s3.huister.business.exception.user.UnauthorizedUserException;
@@ -27,8 +28,9 @@ public class UpdatePropertyUseCaseImpl implements UpdatePropertyUseCase {
      * @should update the chosen property
      */
     @Override
+    @Transactional
     public void updateProperty(UpdatePropertyRequest request) {
-        Optional<PropertyEntity>optionalProperty=propertyRepository.findById(request.getId());
+        Optional<PropertyEntity>optionalProperty=propertyRepository.findByIdAndIsDeletedIsNull(request.getId());
         if (optionalProperty.isEmpty()){
             throw new PropertyNotFoundException();
         }

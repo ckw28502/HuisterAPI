@@ -41,4 +41,7 @@ public class UserEntity {
     private String profilePictureUrl;
     @Column(name = "activated")
     private boolean activated;
+
+    @Column(name = "token",columnDefinition = "TEXT")
+    private String token;
 }

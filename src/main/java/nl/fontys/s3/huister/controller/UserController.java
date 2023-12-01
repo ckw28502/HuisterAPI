@@ -8,6 +8,7 @@ import nl.fontys.s3.huister.business.request.user.*;
 import nl.fontys.s3.huister.business.response.user.GetAllOwnersResponse;
 import nl.fontys.s3.huister.business.response.user.GetUserByIdResponse;
 import nl.fontys.s3.huister.business.response.user.LoginResponse;
+import nl.fontys.s3.huister.business.response.user.RefreshTokenResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,6 +26,9 @@ public class UserController {
     private final ChangePasswordUseCase changePasswordUseCase;
     private final GetAllOwnersUseCase getAllOwnersUseCase;
     private final SetProfilePictureUrlUseCase setProfilePictureUrlUseCase;
+    private final ActivateAccountUseCase activateAccountUseCase;
+    private final ForgotPasswordUseCase forgotPasswordUseCase;
+    private final RefreshTokenUseCase refreshTokenUseCase;
 
 
     /**
@@ -66,7 +70,33 @@ public class UserController {
     @PostMapping()
     public ResponseEntity<Void>createUser(@RequestBody CreateUserRequest request){
         createUserUseCase.createUser(request);
-       return ResponseEntity.status(HttpStatus.CREATED).build();
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    /**
+     *
+     * @param request forgot password request
+     * @return http with no content status
+     *
+     * @should return 204
+     *
+     */
+    @PostMapping("/forgot")
+    public ResponseEntity<Void>forgotPassword(@RequestBody ForgotPasswordRequest request){
+        forgotPasswordUseCase.forgotPassword(request);
+        return ResponseEntity.noContent().build();
+    }
+
+    /**
+     *
+     * @param request refresh token request
+     * @return http response with ok status
+     *
+     * @should return 200
+     */
+    @PostMapping("/token")
+    public ResponseEntity<RefreshTokenResponse>refreshToken(@RequestBody RefreshTokenRequest request){
+        return ResponseEntity.ok().body(refreshTokenUseCase.refreshToken(request));
     }
 
     /**
@@ -116,16 +146,28 @@ public class UserController {
 
     /**
      *
-     * @param id user id
      * @param request new password request
      * @return http response with no content status
      *
      * @should return 204
      */
-    @PutMapping("/changePassword/{id}")
-    public ResponseEntity<Void>changePassword(@PathVariable(value = "id")long id, @RequestBody@Valid ChangePasswordRequest request){
-        request.setId(id);
+    @PutMapping("/changePassword")
+    public ResponseEntity<Void>changePassword( @RequestBody@Valid ChangePasswordRequest request){
         changePasswordUseCase.changePassword(request);
         return ResponseEntity.noContent().build();
     }
+
+    /**
+     *
+     * @param request ActivateAccountRequest
+     * @return http response with 204 status
+     *
+     * @should return 204
+     */
+    @PutMapping("/activate")
+    public ResponseEntity<Void>activateAccount(@RequestBody ActivateAccountRequest request){
+        activateAccountUseCase.activateAccount(request);
+        return ResponseEntity.noContent().build();
+    }
+
 }

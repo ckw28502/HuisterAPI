@@ -41,7 +41,7 @@ public class CreateOrderUseCaseImpl implements CreateOrderUseCase {
         UserEntity owner=getUser(request.getOwnerId());
         UserEntity customer=getUser(requestAccessToken.getId());
 
-        Optional<PropertyEntity>optionalProperty=propertyRepository.findById(request.getPropertyId());
+        Optional<PropertyEntity>optionalProperty=propertyRepository.findByIdAndIsDeletedIsNull(request.getPropertyId());
         if (optionalProperty.isEmpty()) {
             throw new PropertyNotFoundException();
         }
