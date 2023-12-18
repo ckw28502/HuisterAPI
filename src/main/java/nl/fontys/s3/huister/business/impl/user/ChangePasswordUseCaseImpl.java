@@ -6,6 +6,7 @@ import nl.fontys.s3.huister.business.interfaces.user.ChangePasswordUseCase;
 import nl.fontys.s3.huister.business.request.user.ChangePasswordRequest;
 import nl.fontys.s3.huister.persistence.entities.UserEntity;
 import nl.fontys.s3.huister.persistence.UserRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,6 +16,8 @@ import java.util.Optional;
 @AllArgsConstructor
 public class ChangePasswordUseCaseImpl implements ChangePasswordUseCase {
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+
 
     /**
      *
@@ -35,8 +38,8 @@ public class ChangePasswordUseCaseImpl implements ChangePasswordUseCase {
 
         //if old password and new password are different, change the password
         UserEntity user=optionalUser.get();
-        if (!user.getPassword().equals(request.getNewPassword())){
-            userRepository.setPassword(user.getId(), request.getNewPassword());
+        if (!passwordEncoder.matches(request.getNewPassword(),user.getPassword())){
+            userRepository.setPassword(user.getId(), passwordEncoder.encode(request.getNewPassword()));
         }
     }
 }

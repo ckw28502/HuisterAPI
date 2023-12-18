@@ -1,5 +1,6 @@
 package nl.fontys.s3.huister.business.impl.order;
 
+import nl.fontys.s3.huister.business.Converter;
 import nl.fontys.s3.huister.business.exception.price.PriceMustBeMoreThanZeroException;
 import nl.fontys.s3.huister.business.exception.property.PropertyNotFoundException;
 import nl.fontys.s3.huister.business.exception.user.UserNotFoundException;
@@ -17,6 +18,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 
 import java.util.Optional;
 
@@ -30,6 +32,12 @@ class CreateOrderUseCaseImplTest {
     private UserRepository userRepositoryMock;
     @Mock
     private PropertyRepository propertyRepositoryMock;
+
+    @Mock
+    private Converter converter;
+    @Mock
+    private SimpMessagingTemplate messagingTemplate;
+
     @Mock
     private OrderRepository orderRepositoryMock;
     @Mock
@@ -48,11 +56,9 @@ class CreateOrderUseCaseImplTest {
         CreateOrderRequest request=CreateOrderRequest.builder()
                 .duration(4)
                 .price(300)
-                .ownerId(1L)
                 .propertyId(1L)
                 .build();
 
-        when(userRepositoryMock.findById(request.getOwnerId())).thenReturn(Optional.empty());
         //Act + Assert
         assertThrows(UserNotFoundException.class,()->createOrderUseCase.createOrder(request));
 
@@ -68,7 +74,6 @@ class CreateOrderUseCaseImplTest {
         CreateOrderRequest request=CreateOrderRequest.builder()
                 .duration(4)
                 .price(300)
-                .ownerId(1L)
                 .propertyId(1L)
                 .build();
 
@@ -76,7 +81,6 @@ class CreateOrderUseCaseImplTest {
         UserEntity customer= UserEntity.builder().id(2L).build();
 
         when(requestAccessTokenMock.getId()).thenReturn(2L);
-        when(userRepositoryMock.findById(request.getOwnerId())).thenReturn(Optional.of(owner));
         when(userRepositoryMock.findById(2L)).thenReturn(Optional.of(customer));
         when(propertyRepositoryMock.findByIdAndIsDeletedIsNull(request.getPropertyId())).thenReturn(Optional.empty());
 
@@ -94,7 +98,6 @@ class CreateOrderUseCaseImplTest {
         CreateOrderRequest request=CreateOrderRequest.builder()
                 .duration(4)
                 .price(0)
-                .ownerId(1L)
                 .propertyId(1L)
                 .build();
 
@@ -104,7 +107,6 @@ class CreateOrderUseCaseImplTest {
         PropertyEntity property=PropertyEntity.builder().id(2L).build();
 
         when(requestAccessTokenMock.getId()).thenReturn(2L);
-        when(userRepositoryMock.findById(request.getOwnerId())).thenReturn(Optional.of(owner));
         when(userRepositoryMock.findById(2L)).thenReturn(Optional.of(customer));
         when(propertyRepositoryMock.findByIdAndIsDeletedIsNull(request.getPropertyId())).thenReturn(Optional.of(property));
 
@@ -122,17 +124,15 @@ class CreateOrderUseCaseImplTest {
         CreateOrderRequest request=CreateOrderRequest.builder()
                 .duration(4)
                 .price(370)
-                .ownerId(1L)
                 .propertyId(1L)
                 .build();
 
         UserEntity owner= UserEntity.builder().id(1L).build();
         UserEntity customer= UserEntity.builder().id(2L).build();
 
-        PropertyEntity property=PropertyEntity.builder().id(1L).build();
+        PropertyEntity property=PropertyEntity.builder().id(1L).owner(owner).build();
 
         when(requestAccessTokenMock.getId()).thenReturn(2L);
-        when(userRepositoryMock.findById(request.getOwnerId())).thenReturn(Optional.of(owner));
         when(userRepositoryMock.findById(2L)).thenReturn(Optional.of(customer));
         when(propertyRepositoryMock.findByIdAndIsDeletedIsNull(request.getPropertyId())).thenReturn(Optional.of(property));
 
@@ -144,6 +144,7 @@ class CreateOrderUseCaseImplTest {
                 .customer(customer)
                 .price(request.getPrice())
                 .build();
+
 
         //Act
         createOrderUseCase.createOrder(request);
@@ -163,14 +164,12 @@ class CreateOrderUseCaseImplTest {
         CreateOrderRequest request=CreateOrderRequest.builder()
                 .duration(4)
                 .price(300)
-                .ownerId(1L)
                 .propertyId(1L)
                 .build();
 
         UserEntity owner= UserEntity.builder().id(1L).build();
 
         when(requestAccessTokenMock.getId()).thenReturn(2L);
-        when(userRepositoryMock.findById(request.getOwnerId())).thenReturn(Optional.of(owner));
         when(userRepositoryMock.findById(2L)).thenReturn(Optional.empty());
 
         //Act + Assert

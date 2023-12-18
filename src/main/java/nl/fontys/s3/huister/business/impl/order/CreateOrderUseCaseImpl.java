@@ -1,6 +1,7 @@
 package nl.fontys.s3.huister.business.impl.order;
 
 import lombok.AllArgsConstructor;
+import nl.fontys.s3.huister.business.Converter;
 import nl.fontys.s3.huister.business.exception.price.PriceMustBeMoreThanZeroException;
 import nl.fontys.s3.huister.business.exception.property.PropertyNotFoundException;
 import nl.fontys.s3.huister.business.exception.user.UserNotFoundException;
@@ -14,6 +15,7 @@ import nl.fontys.s3.huister.persistence.entities.enumerator.OrderStatus;
 import nl.fontys.s3.huister.persistence.OrderRepository;
 import nl.fontys.s3.huister.persistence.PropertyRepository;
 import nl.fontys.s3.huister.persistence.UserRepository;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -25,6 +27,8 @@ public class CreateOrderUseCaseImpl implements CreateOrderUseCase {
     private final UserRepository userRepository;
     private final PropertyRepository propertyRepository;
     private final AccessToken requestAccessToken;
+    private final SimpMessagingTemplate messagingTemplate;
+    private final Converter converter;
 
     /**
      *
@@ -38,7 +42,6 @@ public class CreateOrderUseCaseImpl implements CreateOrderUseCase {
      */
     @Override
     public void createOrder(CreateOrderRequest request) {
-        UserEntity owner=getUser(request.getOwnerId());
         UserEntity customer=getUser(requestAccessToken.getId());
 
         Optional<PropertyEntity>optionalProperty=propertyRepository.findByIdAndIsDeletedIsNull(request.getPropertyId());
@@ -53,14 +56,18 @@ public class CreateOrderUseCaseImpl implements CreateOrderUseCase {
 
         OrderEntity order=OrderEntity.builder()
                 .property(optionalProperty.get())
-                .owner(owner)
+                .owner(optionalProperty.get().getOwner())
                 .status(OrderStatus.CREATED)
                 .duration(request.getDuration())
                 .customer(customer)
                 .price(request.getPrice())
                 .build();
 
-        orderRepository.save(order);
+        OrderEntity newOrder=orderRepository.save(order);
+        messagingTemplate.convertAndSend(
+                "/notifications/order/"+order.getOwner().getId(),
+                converter.orderToResponse(newOrder)
+        );
     }
 
     private UserEntity getUser(long userId) {

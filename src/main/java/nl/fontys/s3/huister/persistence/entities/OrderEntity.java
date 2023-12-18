@@ -38,5 +38,6 @@ public class OrderEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
+    @Setter
     private OrderStatus status;
 }

@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface PropertyRepository extends JpaRepository<PropertyEntity,Long> {
-    List<PropertyEntity> findAllByEndRentIsNull();
+    List<PropertyEntity> findAllByEndRentIsNullAndIsDeletedIsNull();
 
     @Procedure("save_property")
     void saveProperty(
@@ -40,6 +40,12 @@ public interface PropertyRepository extends JpaRepository<PropertyEntity,Long> {
     @Query("UPDATE PropertyEntity SET imageUrl=:imageUrl,description=:description,price=:price WHERE id=:id")
     void updateProperty(@Param("id")long id,@Param("imageUrl")String imageUrl,@Param("description")String description, @Param("price")double price);
     int countByOwnerAndIsDeletedIsNull(UserEntity owner);
+
+    @Modifying
+    @Query("UPDATE PropertyEntity SET endRent=CURRENT_DATE WHERE id=:id")
+    void buyProperty(@Param("id") long id);
+
+    PropertyEntity findFirstIsByOrderByIdDesc();
 
     int countByEndRentIsNotNullAndIsDeletedIsNull();
     int countByEndRentIsNullAndIsDeletedIsNull();

@@ -35,12 +35,7 @@ public class WebSecurityConfig {
 
         // Allow requests from localhost:5173 and localhost:4173
         config.addAllowedOrigin("http://localhost:5173");
-//        config.addAllowedOrigin("http://localhost:4173");
 
-        // Allow headers: GET, PUT, POST, DELETE
-//        config.addAllowedMethod("GET");
-//        config.addAllowedMethod("PUT");
-//        config.addAllowedMethod("POST");
         config.addAllowedMethod("*");
 
         // You can add more headers as needed
@@ -67,9 +62,10 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests(registry ->
                         registry.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()                 // CORS pre-flight requests should be public
                                 .requestMatchers(HttpMethod.POST, "/users", "/users/login"
-                                        ,"/users/forgot","/users/token").permitAll() // Creating a student and login are public
+                                        ,"/users/forgot","/users/token","/ws/**").permitAll() // Creating a student and login are public
                                 .requestMatchers(HttpMethod.PUT, "/users/image",
                                         "/users/changePassword","/users/activate").permitAll()
+                                .requestMatchers("/ws/**").permitAll()
                                 .requestMatchers(SWAGGER_UI_RESOURCES).permitAll()                        // Swagger is also public (In "real life" it would only be public in non-production environments)
                                 .anyRequest().authenticated()                                             // Everything else --> authentication required, which is Spring security's default behaviour
                 )

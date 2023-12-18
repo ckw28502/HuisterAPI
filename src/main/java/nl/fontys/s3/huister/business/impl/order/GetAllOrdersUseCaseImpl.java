@@ -1,6 +1,7 @@
 package nl.fontys.s3.huister.business.impl.order;
 
 import lombok.AllArgsConstructor;
+import nl.fontys.s3.huister.business.Converter;
 import nl.fontys.s3.huister.business.exception.user.UserNotFoundException;
 import nl.fontys.s3.huister.business.interfaces.order.GetAllOrdersUseCase;
 import nl.fontys.s3.huister.business.response.order.GetAllOrdersResponse;
@@ -20,6 +21,7 @@ public class GetAllOrdersUseCaseImpl implements GetAllOrdersUseCase {
     private final OrderRepository orderRepository;
     private final UserRepository userRepository;
     private final AccessToken requestAccessToken;
+    private final Converter converter;
 
     /**
      *
@@ -38,14 +40,6 @@ public class GetAllOrdersUseCaseImpl implements GetAllOrdersUseCase {
 
         UserEntity user=optionalUser.get();
         List<OrderEntity> orders=orderRepository.findAllByOwnerOrCustomer(user,user);
-        return orders.stream().map(order ->GetAllOrdersResponse.builder()
-                    .cityName(order.getProperty().getCity().getName())
-                    .price(order.getPrice())
-                    .imageUrl(order.getProperty().getImageUrl())
-                    .streetName(order.getProperty().getStreetName())
-                    .endRent(order.getProperty().getEndRent().toString())
-                    .status(order.getStatus())
-                    .build()
-        ).toList();
+        return orders.stream().map(converter::orderToResponse).toList();
     }
 }
