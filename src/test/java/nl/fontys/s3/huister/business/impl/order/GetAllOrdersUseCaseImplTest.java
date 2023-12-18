@@ -1,5 +1,6 @@
 package nl.fontys.s3.huister.business.impl.order;
 
+import nl.fontys.s3.huister.business.Converter;
 import nl.fontys.s3.huister.business.exception.user.UserNotFoundException;
 import nl.fontys.s3.huister.business.response.order.GetAllOrdersResponse;
 import nl.fontys.s3.huister.configuration.security.token.AccessToken;
@@ -17,6 +18,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,6 +33,8 @@ class GetAllOrdersUseCaseImplTest {
     private OrderRepository orderRepositoryMock;
     @Mock
     private AccessToken requestAccessToken;
+    @Mock
+    private Converter converter;
 
     @InjectMocks
     private GetAllOrdersUseCaseImpl getAllOrdersUseCase;
@@ -83,15 +87,23 @@ class GetAllOrdersUseCaseImplTest {
         when(userRepositoryMock.findById(requestAccessToken.getId())).thenReturn(Optional.of(user));
         when(orderRepositoryMock.findAllByOwnerOrCustomer(user,user)).thenReturn(orders);
 
-        List<GetAllOrdersResponse>expectedResponses=orders.stream().map(order ->GetAllOrdersResponse.builder()
-                .cityName(order.getProperty().getCity().getName())
-                .price(order.getPrice())
-                .imageUrl(order.getProperty().getImageUrl())
-                .streetName(order.getProperty().getStreetName())
-                .endRent(order.getProperty().getEndRent().toString())
-                .status(order.getStatus())
-                .build()
-        ).toList();
+        List<GetAllOrdersResponse>expectedResponses=new ArrayList<>();
+
+        for (OrderEntity order:orders){
+
+            GetAllOrdersResponse response=GetAllOrdersResponse.builder()
+                    .cityName(order.getProperty().getCity().getName())
+                    .price(order.getPrice())
+                    .imageUrl(order.getProperty().getImageUrl())
+                    .streetName(order.getProperty().getStreetName())
+                    .endRent(order.getProperty().getEndRent().toString())
+                    .status(order.getStatus())
+                    .build();
+
+            when(converter.orderToResponse(order)).thenReturn(response);
+
+            expectedResponses.add(response);
+        }
 
         //Act
         List<GetAllOrdersResponse> actualResponses=getAllOrdersUseCase.getAllOrders();

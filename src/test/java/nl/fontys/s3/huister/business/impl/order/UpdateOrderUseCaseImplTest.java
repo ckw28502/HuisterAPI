@@ -1,11 +1,14 @@
 package nl.fontys.s3.huister.business.impl.order;
 
+import nl.fontys.s3.huister.business.Converter;
 import nl.fontys.s3.huister.business.exception.order.OrderNotFoundException;
 import nl.fontys.s3.huister.business.exception.user.UnauthorizedUserException;
 import nl.fontys.s3.huister.business.exception.utilities.InvalidOperationException;
 import nl.fontys.s3.huister.business.request.order.UpdateOrderRequest;
 import nl.fontys.s3.huister.configuration.security.token.AccessToken;
+import nl.fontys.s3.huister.persistence.PropertyRepository;
 import nl.fontys.s3.huister.persistence.entities.OrderEntity;
+import nl.fontys.s3.huister.persistence.entities.PropertyEntity;
 import nl.fontys.s3.huister.persistence.entities.UserEntity;
 import nl.fontys.s3.huister.persistence.entities.enumerator.OrderStatus;
 import nl.fontys.s3.huister.persistence.entities.enumerator.UserRole;
@@ -17,6 +20,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 
 import java.util.Optional;
 
@@ -29,7 +33,13 @@ class UpdateOrderUseCaseImplTest {
     @Mock
     private OrderRepository orderRepositoryMock;
     @Mock
+    private PropertyRepository propertyRepositoryMock;
+    @Mock
     private AccessToken requestAccessTokenMock;
+    @Mock
+    private Converter converter;
+    @Mock
+    private SimpMessagingTemplate messagingTemplate;
 
     @InjectMocks
     private UpdateOrderUseCaseImpl updateOrderUseCase;
@@ -57,12 +67,13 @@ class UpdateOrderUseCaseImplTest {
      * @verifies update the order when order is found
      * @see UpdateOrderUseCaseImpl#updateOrder(nl.fontys.s3.huister.business.request.order.UpdateOrderRequest)
      */
-    @Test
-    void updateOrder_shouldUpdateTheOrderWhenOrderIsFound() {
+    @ParameterizedTest
+    @ValueSource(strings = {"REJECTED","ACCEPTED","CANCELLED"})
+    void updateOrder_shouldUpdateTheOrderWhenOrderIsFound(OrderStatus status) {
         //Arrange
         UpdateOrderRequest request=UpdateOrderRequest.builder()
                 .id(1L)
-                .status(OrderStatus.ACCEPTED)
+                .status(status)
                 .build();
 
         UserEntity owner=UserEntity.builder()
@@ -75,17 +86,25 @@ class UpdateOrderUseCaseImplTest {
                 .role(UserRole.CUSTOMER)
                 .build();
 
+        PropertyEntity property=PropertyEntity.builder().build();
+
         OrderEntity order=OrderEntity.builder()
                 .id(1L)
                 .customer(customer)
                 .owner(owner)
                 .status(OrderStatus.CREATED)
+                .property(property)
                 .build();
 
         when(orderRepositoryMock.findById(1L)).thenReturn(Optional.of(order));
 
-        when(requestAccessTokenMock.getRole()).thenReturn(UserRole.OWNER);
-        when(requestAccessTokenMock.getId()).thenReturn(1L);
+        if (status.equals(OrderStatus.CANCELLED)){
+            when(requestAccessTokenMock.getRole()).thenReturn(UserRole.CUSTOMER);
+            when(requestAccessTokenMock.getId()).thenReturn(2L);
+        }else{
+            when(requestAccessTokenMock.getRole()).thenReturn(UserRole.OWNER);
+            when(requestAccessTokenMock.getId()).thenReturn(1L);
+        }
 
         //Act
         updateOrderUseCase.updateOrder(request);
@@ -171,7 +190,7 @@ class UpdateOrderUseCaseImplTest {
      */
     @ParameterizedTest
     @ValueSource(strings = {"REJECTED","ACCEPTED","CANCELLED"})
-    void updateOrder_shouldThrowAnUnauthorizedUserExceptionWhenUserDoesNotHaveAuthorityForTheNewStatus(OrderStatus status) {
+        void updateOrder_shouldThrowAnUnauthorizedUserExceptionWhenUserDoesNotHaveAuthorityForTheNewStatus(OrderStatus status) {
         //Arrange
         UpdateOrderRequest request=UpdateOrderRequest.builder()
                 .id(1L)
