@@ -62,7 +62,7 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests(registry ->
                         registry.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()                 // CORS pre-flight requests should be public
                                 .requestMatchers(HttpMethod.POST, "/users", "/users/login"
-                                        ,"/users/forgot","/users/token","/ws/**").permitAll() // Creating a student and login are public
+                                        ,"/users/forgot","/users/token","/ws/**").permitAll()
                                 .requestMatchers(HttpMethod.PUT, "/users/image",
                                         "/users/changePassword","/users/activate").permitAll()
                                 .requestMatchers("/ws/**").permitAll()
