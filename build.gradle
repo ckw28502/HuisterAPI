@@ -9,12 +9,32 @@ plugins {
 
 }
 
-def applicationPropertiesFile = file('src/main/resources/application.properties')
+def determinePropertiesFile(String profile) {
+	logger.quiet(profile)
+	switch (profile) {
+		case 'prod':
+			return 'src/main/resources/application-prod.properties'
+		case 'dev':
+			return 'src/main/resources/application-dev.properties'
+			// Add more cases if needed for other profiles
+		default:
+			throw new GradleException("Invalid or unsupported profile: $profile")
+	}
+}
+
+// Assuming you have 'springProfilesActive' defined somewhere in your project
+def activeProfile = project.hasProperty('springProfilesActive') ? project.springProfilesActive : 'dev'
+
+def applicationPropertiesFile = file(determinePropertiesFile(activeProfile))
 
 if (applicationPropertiesFile.exists()) {
 	def properties = new Properties()
 	applicationPropertiesFile.withInputStream { inputStream ->
 		properties.load(inputStream)
+	}
+
+	properties.each { key, value ->
+		logger.quiet("Loaded property: $key = $value")
 	}
 
 	// Configure Flyway
