@@ -9,7 +9,7 @@ stages:
 build:
  stage: build
  script:
-  - ./gradlew assemble
+  - docker compose up --build
 
 test:
  stage: test
