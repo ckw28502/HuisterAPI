@@ -8,11 +8,8 @@ stages:
 variables:
  DOCKER_IMAGE_TAG: latest
 
-services:
- - docker:dind
-
 before_script:
- - docker info
+ - ./gradlew build
 
 build:
  stage: build
