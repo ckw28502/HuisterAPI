@@ -1,29 +1,53 @@
-image: docker:latest
+#variables:
+# GRADLE_OPTS: "-Dorg.gradle.daemon=false"
+#
+#stages:
+# - build
+# - test
+# - sonarqube-check
+#build:
+# stage: build
+# script:
+#  - ./gradlew assemble
+#test:
+# stage: test
+# script:
+#  - ./gradlew test
+#
+#
+#sonarqube-check:
+# stage: sonarqube-check
+# script: ./gradlew test sonar
+# allow_failure: true
+# only:
+#  - master
+
+variables:
+ GRADLE_OPTS: "-Dorg.gradle.daemon=false"
 
 stages:
  - build
  - test
- - sonar
+ - sonarqube-check
 
-variables:
- DOCKER_IMAGE_TAG: latest
-
-before_script:
- - ./gradlew build
+services:
+ - docker:dind
 
 build:
  stage: build
  script:
-  - docker build -t myapp:$CI_COMMIT_SHORT_SHA .
+  - docker run --rm -v "$PWD":/app -w /app openjdk:11 ./gradlew assemble
 
 test:
  stage: test
  script:
-  - docker run myapp:$CI_COMMIT_SHORT_SHA ./gradlew test
+  - docker run --rm -v "$PWD":/app -w /app openjdk:11 ./gradlew test
 
-sonar:
- stage: sonar
+sonarqube-check:
+ stage: sonarqube-check
  script:
-  - docker run myapp:$CI_COMMIT_SHORT_SHA ./gradlew test sonar
- allow_failure: true  # Optional: Allow the pipeline to succeed even if SonarQube analysis fails
+  - docker run --rm -v "$PWD":/app -w /app openjdk:11 ./gradlew test sonarqube -Dsonar.host.url=<YOUR_SONARQUBE_URL>
+ allow_failure: true
+ only:
+  - master
 
