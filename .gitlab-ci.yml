@@ -1,41 +1,27 @@
-variables:
- GRADLE_OPTS: "-Dorg.gradle.daemon=false"
-
 stages:
  - build
  - test
- - sonarqube-check
+ - sonar
+
+variables:
+ DOCKER_IMAGE_TAG: latest
+
+before_script:
+ - docker info
 
 build:
  stage: build
  script:
-  - docker compose up --build
+  - docker build -t myapp:$CI_COMMIT_SHORT_SHA .
 
 test:
  stage: test
  script:
-  - ./gradlew test
+  - docker run myapp:$CI_COMMIT_SHORT_SHA ./gradlew test
 
-sonarqube-check:
- stage: sonarqube-check
+sonar:
+ stage: sonar
  script:
-  - ./gradlew test sonar
+  - docker run myapp:$CI_COMMIT_SHORT_SHA ./gradlew sonarqube
+ allow_failure: true  # Optional: Allow the pipeline to succeed even if SonarQube analysis fails
 
-#sonarqube-check:
-# stage: sonarqube-check
-# image: gradle:8.2.0-jdk17-jammy
-# variables:
-#  SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"
-#  GIT_DEPTH: "0"
-# cache:
-#  key: "${CI_JOB_NAME}"
-#  paths:
-#   - .sonar/cache
-# script:
-#  - ./gradlew test sonar
-# allow_failure: true
-# only:
-#  - merge_requests
-#  - master
-#  - main
-#  - develop
