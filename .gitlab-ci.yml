@@ -30,9 +30,6 @@ stages:
  - test
  - sonarqube-check
 
-services:
- - docker:dind
-
 build:
  stage: build
  script:
