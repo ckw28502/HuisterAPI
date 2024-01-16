@@ -33,17 +33,17 @@ stages:
 build:
  stage: build
  script:
-  - ./gradlew assemble
+  - gradle assemble
 
 test:
  stage: test
  script:
-  - ./gradlew test
+  - gradle test
 
 sonarqube-check:
  stage: sonarqube-check
  script:
-  - ./gradlew test sonarqube
+  - gradle test sonarqube
  allow_failure: true
  only:
   - master
