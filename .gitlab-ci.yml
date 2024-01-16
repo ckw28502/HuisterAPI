@@ -25,6 +25,9 @@
 variables:
  GRADLE_OPTS: "-Dorg.gradle.daemon=false"
 
+before_script:
+ - chmod +x gradlew
+
 stages:
  - build
  - test
@@ -33,17 +36,17 @@ stages:
 build:
  stage: build
  script:
-  - gradle assemble
+  - ./gradlew assemble
 
 test:
  stage: test
  script:
-  - gradle test
+  - ./gradlew test
 
 sonarqube-check:
  stage: sonarqube-check
  script:
-  - gradle test sonarqube
+  - ./gradlew test sonarqube
  allow_failure: true
  only:
   - master
