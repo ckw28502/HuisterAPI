@@ -49,8 +49,9 @@ build:
 test:
  stage: test
  script:
-  - echo "Active Profiles: $SPRING_PROFILES_ACTIVE"
   - ./gradlew test --scan
+ variables:
+  SPRING_PROFILE_ACTIVE: "prod"
 
 sonarqube-check:
  stage: sonarqube-check
