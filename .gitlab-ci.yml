@@ -49,6 +49,7 @@ build:
 test:
  stage: test
  script:
+  - export SPRING_PROFILES_ACTIVE=production
   - ./gradlew test --scan
 
 sonarqube-check:
