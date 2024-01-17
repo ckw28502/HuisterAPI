@@ -37,8 +37,6 @@ stages:
 build:
  stage: build
  script:
-  - export JAVA_HOME=$(wsl -- echo "/mnt/c/Program\ Files/Java/jdk-17")
-  - export PATH="$JAVA_HOME/bin:$PATH"
   - ./gradlew assemble
 
 test:
