@@ -24,6 +24,8 @@
 
 before_script:
  - chmod +x gradlew
+ - export JAVA_HOME=$JDK_PATH
+ - export PATH=$JAVA_HOME/bin:$PATH
 
 stages:
  - build
