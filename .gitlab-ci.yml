@@ -31,6 +31,8 @@ variables:
  GRADLE_OPTS: "-Dorg.gradle.daemon=false -Dorg.gradle.parallel=true"
  MYSQL_DATABASE: "huister"
  MYSQL_ROOT_PASSWORD: "root"
+ MYSQL_USER: "calvin"
+ MYSQL_PASSWORD: "kwan"
 
 services:
  - name: mysql:8.0
