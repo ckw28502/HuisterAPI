@@ -24,11 +24,16 @@
 
 before_script:
  - chmod +x gradlew
- - java -version
+ - export SPRING_PROFILES_ACTIVE=production
+
 
 variables:
  GRADLE_OPTS: "-Dorg.gradle.daemon=false -Dorg.gradle.parallel=true"
+ MYSQL_DATABASE: "huister"
+ MYSQL_ROOT_PASSWORD: "root"
 
+services:
+ - name: mysql:8.0
 stages:
  - build
  - test
