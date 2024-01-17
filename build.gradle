@@ -18,7 +18,7 @@ def determinePropertiesFile(String profile) {
 			return 'src/main/resources/application-dev.properties'
 			// Add more cases if needed for other profiles
 		default:
-			throw new GradleException("Invalid or unsupported profile: $profile")
+			break
 	}
 }
 
@@ -44,8 +44,6 @@ if (applicationPropertiesFile.exists()) {
 		user = properties.getProperty('spring.datasource.username')
 		password = properties.getProperty('spring.datasource.password')
 	}
-} else {
-	throw new GradleException("application.properties file not found!")
 }
 
 group = 'nl.fontys.s3'
