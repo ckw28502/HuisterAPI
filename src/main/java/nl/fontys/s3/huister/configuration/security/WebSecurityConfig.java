@@ -17,6 +17,8 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
+import java.util.List;
+
 @EnableWebSecurity
 @EnableMethodSecurity(jsr250Enabled = true,securedEnabled = true)
 @Configuration
@@ -34,7 +36,7 @@ public class WebSecurityConfig {
         CorsConfiguration config = new CorsConfiguration();
 
         // Allow requests from localhost:5173 and localhost:4173
-        config.addAllowedOrigin("http://localhost:5173");
+        config.setAllowedOrigins(List.of("http://localhost:5173","http://localhost:4173"));
 
         config.addAllowedMethod("*");
 

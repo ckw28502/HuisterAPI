@@ -42,7 +42,7 @@ build:
 test:
  stage: test
  script:
-  - ./gradlew test
+  - ./gradlew test --scan
 
 sonarqube-check:
  stage: sonarqube-check
