@@ -80,9 +80,8 @@ public class PropertyController {
      */
     @RolesAllowed("OWNER")
     @PostMapping
-    public ResponseEntity<Integer>createProperty(@RequestBody @Valid CreatePropertyRequest request){
-        createPropertyUseCase.createProperty(request);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+    public ResponseEntity<GetPropertyDetailResponse>createProperty(@RequestBody @Valid CreatePropertyRequest request){
+        return ResponseEntity.status(HttpStatus.CREATED).body(createPropertyUseCase.createProperty(request));
     }
 
     /**

@@ -1,6 +1,7 @@
 package nl.fontys.s3.huister.persistence;
 
 import nl.fontys.s3.huister.persistence.entities.OrderEntity;
+import nl.fontys.s3.huister.persistence.entities.PropertyEntity;
 import nl.fontys.s3.huister.persistence.entities.UserEntity;
 import nl.fontys.s3.huister.persistence.entities.enumerator.OrderStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -17,5 +18,6 @@ public interface OrderRepository extends JpaRepository<OrderEntity,Long> {
 
     List<OrderEntity> findAllByOwnerOrCustomer(UserEntity owner,UserEntity customer);
     int countByOwnerAndStatus(UserEntity owner,OrderStatus status);
-    boolean existsById(long id);
+
+    List<OrderEntity>findAllByPropertyAndStatus(PropertyEntity property, OrderStatus status);
 }

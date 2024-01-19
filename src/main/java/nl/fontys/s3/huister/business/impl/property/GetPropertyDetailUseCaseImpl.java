@@ -44,6 +44,7 @@ public class GetPropertyDetailUseCaseImpl implements GetPropertyDetailUseCase {
                 .ownerId(property.getOwner().getId())
                 .streetName(property.getStreetName())
                 .ownerName(property.getOwner().getName())
+                .ownerId(property.getOwner().getId())
                 .postCode(property.getPostCode())
                 .area(property.getArea())
                 .cityName(property.getCity().getName())

@@ -18,9 +18,15 @@ import java.io.IOException;
 @Primary
 @Slf4j
 public class Http401UnauthorizedEntryPoint implements AuthenticationEntryPoint {
+
+
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException)
             throws IOException {
-        response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+        if (request.getHeader("Authorization")!=null){
+            response.sendError(HttpServletResponse.SC_FORBIDDEN);
+        }else{
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+        }
     }
 }

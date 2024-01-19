@@ -114,7 +114,7 @@ class GetAllPropertiesUseCaseImplTest {
             }
             case CUSTOMER -> {
                 properties.add((property2));
-                when(propertyRepositoryMock.findAllByEndRentIsNull()).thenReturn(properties);
+                when(propertyRepositoryMock.findAllByEndRentIsNullAndIsDeletedIsNull()).thenReturn(properties);
             }
         }
 

@@ -58,7 +58,7 @@ public class DatabaseInitializer {
             userRepository.save(owner);
             userRepository.save(UserEntity.builder()
                     .activated(false)
-                    .username("vpluck0")
+                    .username("se ")
                     .role(UserRole.OWNER)
                     .password(passwordEncoder.encode("vpluck0"))
                     .name("Vaughan Pluck")

@@ -8,7 +8,6 @@ import lombok.*;
 @Builder
 @EqualsAndHashCode(callSuper = false)
 public class CreateOrderRequest {
-    private long ownerId;
     private long propertyId;
     private int duration;
 

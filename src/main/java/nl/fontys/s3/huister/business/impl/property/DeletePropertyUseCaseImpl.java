@@ -27,7 +27,7 @@ public class DeletePropertyUseCaseImpl implements DeletePropertyUseCase {
      */
     @Override
     public void deleteProperty(long id) {
-        Optional<PropertyEntity> propertyOptional=propertyRepository.findByIdAndIsDeletedIsNull(id);
+        Optional<PropertyEntity> propertyOptional=propertyRepository.findById(id);
         if (propertyOptional.isEmpty()){
             throw new PropertyNotFoundException();
         }

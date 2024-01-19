@@ -47,7 +47,7 @@ public class GetAllPropertiesUseCaseImpl implements GetAllPropertiesUseCase {
             case OWNER:
                 yield propertyRepository.findAllByOwnerIdAndIsDeletedIsNull(user.getId());
             case CUSTOMER:
-                yield propertyRepository.findAllByEndRentIsNull();
+                yield propertyRepository.findAllByEndRentIsNullAndIsDeletedIsNull();
         };
 
         //Define list of response

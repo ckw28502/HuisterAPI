@@ -36,7 +36,7 @@ class DeletePropertyUseCaseImplTest {
     @Test
     void deleteProperty_shouldThrowPropertyNotFoundExceptionIfIdIsInvalid() {
         //Arrange
-        when(propertyRepositoryMock.findByIdAndIsDeletedIsNull(1L)).thenReturn(Optional.empty());
+        when(propertyRepositoryMock.findById(1L)).thenReturn(Optional.empty());
 
         //Act + Assert
         assertThrows(PropertyNotFoundException.class,()->deletePropertyUseCase.deleteProperty(1L));
@@ -60,7 +60,7 @@ class DeletePropertyUseCaseImplTest {
                 .owner(owner)
                 .build();
 
-        when(propertyRepositoryMock.findByIdAndIsDeletedIsNull(property.getId())).thenReturn(Optional.of(property));
+        when(propertyRepositoryMock.findById(property.getId())).thenReturn(Optional.of(property));
         when(requestAccessTokenMock.getId()).thenReturn(1L);
 
         //Act
@@ -88,7 +88,7 @@ class DeletePropertyUseCaseImplTest {
                 .owner(owner)
                 .build();
 
-        when(propertyRepositoryMock.findByIdAndIsDeletedIsNull(property.getId())).thenReturn(Optional.of(property));
+        when(propertyRepositoryMock.findById(property.getId())).thenReturn(Optional.of(property));
         when(requestAccessTokenMock.getId()).thenReturn(2L);
 
         //Act + Assert

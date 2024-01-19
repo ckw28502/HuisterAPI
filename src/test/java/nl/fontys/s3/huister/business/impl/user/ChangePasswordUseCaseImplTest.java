@@ -9,6 +9,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
 
@@ -19,6 +20,8 @@ import static org.mockito.Mockito.*;
 class ChangePasswordUseCaseImplTest {
     @Mock
     private UserRepository userRepositoryMock;
+    @Mock
+    private PasswordEncoder passwordEncoder;
 
     @InjectMocks
     private ChangePasswordUseCaseImpl changePasswordUseCase;
@@ -54,6 +57,7 @@ class ChangePasswordUseCaseImplTest {
                 .password("password")
                 .build();
         when(userRepositoryMock.findByUsername(request.getUsername())).thenReturn(Optional.of(user));
+        when(passwordEncoder.matches(request.getNewPassword(),user.getPassword())).thenReturn(true);
 
         //Act
         changePasswordUseCase.changePassword(request);
@@ -77,11 +81,13 @@ class ChangePasswordUseCaseImplTest {
                 .password("old password")
                 .build();
         when(userRepositoryMock.findByUsername(request.getUsername())).thenReturn(Optional.of(user));
+        when(passwordEncoder.matches(request.getNewPassword(),user.getPassword())).thenReturn(false);
+
 
         //Act
         changePasswordUseCase.changePassword(request);
 
         //Assert
-        verify(userRepositoryMock).setPassword(user.getId(),request.getNewPassword());
+        verify(userRepositoryMock).setPassword(user.getId(),passwordEncoder.encode(request.getNewPassword()));
     }
 }

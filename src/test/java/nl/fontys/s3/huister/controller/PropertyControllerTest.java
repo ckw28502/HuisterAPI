@@ -205,12 +205,17 @@ class PropertyControllerTest {
         //Arrange
         CreatePropertyRequest request=CreatePropertyRequest.builder().build();
 
+        GetPropertyDetailResponse response=GetPropertyDetailResponse.builder().build();
+        when(createPropertyUseCaseMock.createProperty(request)).thenReturn(response);
+
         //Act + Assert
         mockMvc.perform(post("/properties")
                         .contentType(APPLICATION_JSON_VALUE)
                         .content(gson.toJson(request)))
                 .andDo(print())
-                .andExpect(status().isCreated());
+                .andExpect(status().isCreated())
+                .andExpect(header().string("Content-Type",APPLICATION_JSON_VALUE))
+                .andExpect(content().json(gson.toJson(response)));
 
         verify(createPropertyUseCaseMock).createProperty(request);
 
