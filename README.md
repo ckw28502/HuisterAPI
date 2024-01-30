@@ -21,9 +21,9 @@ To run the application locally without Docker, you need to modify the `applicati
 3. Locate the following lines:
 
     ```properties
-    spring.datasource.url=jdbc:mysql://localhost:3306/huister
-    spring.datasource.username=calvin
-    spring.datasource.password=kwan
+    spring.datasource.url=jdbc:mysql://localhost:3306/[your_database_name]
+    spring.datasource.username=[your_mysql_username]
+    spring.datasource.password=["your_mysql_password]
     ```
 
 4. Modify the `spring.datasource.url` line to match your MySQL connection settings. If you're running MySQL on a different host or port, or if your database name is different, make the necessary changes.
