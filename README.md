@@ -10,11 +10,9 @@ To use this application, follow these steps:
 
 1. Clone this repository to your local machine.
 
-### If you decided to run without docker, follow these following comands
-
 ## Running without Docker
 
-To run the application locally without Docker, you need to modify the `application.properties` file. Follow these steps:
+To run the application locally without Docker, you need to modify the `application.properties` file and build the file. Follow these steps:
 
 1. Navigate to the `src/main/resources` directory in your project.
 
@@ -34,6 +32,10 @@ To run the application locally without Docker, you need to modify the `applicati
 
 5. Modify the username and password according to your mysql username and password
 6.  Save the `application-dev.properties` file.
+7.  Build the application
+    ```bash
+    ./gradlew build
+    ```
 
 ## Dependencies
 
